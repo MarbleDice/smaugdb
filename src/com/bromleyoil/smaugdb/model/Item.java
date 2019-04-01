@@ -1,5 +1,6 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Item {
@@ -11,10 +12,17 @@ public class Item {
 	private String shortDescription;
 	private ItemType itemType;
 	private DamageType damageType;
-	private List<WearFlag> wearLocations;
+	private List<WearFlag> wearLocations = new ArrayList<>();
 	private int minDamage;
 	private int maxDamage;
 	private int damRoll;
+
+	// Wands, staves, potions, pills
+	private int spellLevel;
+	private List<Skill> skills = new ArrayList<>();
+
+	private List<Reset> resets = new ArrayList<>();
+	private List<Reset> contains = new ArrayList<>();
 
 	public Area getArea() {
 		return area;
@@ -106,5 +114,37 @@ public class Item {
 
 	public void setDamRoll(int damRoll) {
 		this.damRoll = damRoll;
+	}
+
+	public int getSpellLevel() {
+		return spellLevel;
+	}
+
+	public void setSpellLevel(int spellLevel) {
+		this.spellLevel = spellLevel;
+	}
+
+	public List<Skill> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
+	}
+
+	public List<Reset> getResets() {
+		return resets;
+	}
+
+	public void setResets(List<Reset> resets) {
+		this.resets = resets;
+	}
+
+	public List<Reset> getContains() {
+		return contains;
+	}
+
+	public void setContains(List<Reset> contains) {
+		this.contains = contains;
 	}
 }

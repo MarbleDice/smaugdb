@@ -1,5 +1,8 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Mob {
 
 	private Area area;
@@ -18,6 +21,7 @@ public class Mob {
 	// private String damageDice;
 	// private int gold;
 	// private int experience;
+	private List<Reset> resets = new ArrayList<>();
 
 	public Area getArea() {
 		return area;
@@ -59,4 +63,11 @@ public class Mob {
 		this.shortDescription = shortDescription;
 	}
 
+	public List<Reset> getResets() {
+		return resets;
+	}
+
+	public void setResets(List<Reset> resets) {
+		this.resets = resets;
+	}
 }

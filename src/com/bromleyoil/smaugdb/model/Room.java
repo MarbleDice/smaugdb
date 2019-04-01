@@ -14,6 +14,7 @@ public class Room {
 	private List<String> extras = new ArrayList<>();
 	// teleports
 	// exits
+	private List<Reset> resets = new ArrayList<>();
 
 	public Area getArea() {
 		return area;
@@ -71,4 +72,11 @@ public class Room {
 		this.extras = extras;
 	}
 
+	public List<Reset> getResets() {
+		return resets;
+	}
+
+	public void setResets(List<Reset> resets) {
+		this.resets = resets;
+	}
 }

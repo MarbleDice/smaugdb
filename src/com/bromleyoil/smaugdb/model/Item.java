@@ -10,7 +10,7 @@ public class Item {
 	private String shortDescription;
 	private ItemType itemType;
 	private DamageType damageType;
-	private List<WearLocation> wearLocations;
+	private List<WearFlag> wearLocations;
 	private int minDamage;
 	private int maxDamage;
 	private int damRoll;
@@ -67,11 +67,11 @@ public class Item {
 		return damageType.getWeaponSkill();
 	}
 
-	public List<WearLocation> getWearLocations() {
+	public List<WearFlag> getWearLocations() {
 		return wearLocations;
 	}
 
-	public void setWearLocations(List<WearLocation> wearLocations) {
+	public void setWearLocations(List<WearFlag> wearLocations) {
 		this.wearLocations = wearLocations;
 	}
 

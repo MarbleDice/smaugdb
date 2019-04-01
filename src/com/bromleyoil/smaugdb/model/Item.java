@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Item {
 
+	private Area area;
 	private int vnum;
 	private String name;
 	private String keywords;
@@ -14,6 +15,14 @@ public class Item {
 	private int minDamage;
 	private int maxDamage;
 	private int damRoll;
+
+	public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
 
 	public int getVnum() {
 		return vnum;

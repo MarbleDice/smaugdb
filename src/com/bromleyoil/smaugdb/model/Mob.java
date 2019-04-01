@@ -2,6 +2,7 @@ package com.bromleyoil.smaugdb.model;
 
 public class Mob {
 
+	private Area area;
 	int vnum;
 	private String name;
 	private String keywords;
@@ -17,6 +18,14 @@ public class Mob {
 	// private String damageDice;
 	// private int gold;
 	// private int experience;
+
+	public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
 
 	public int getVnum() {
 		return vnum;

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Pop {
 
-	private static final Logger log = LoggerFactory.getLogger(Spawn.class);
+	private static final Logger log = LoggerFactory.getLogger(Pop.class);
 
 	private int minItemLevel;
 	private int maxItemLevel;
@@ -26,7 +26,7 @@ public class Pop {
 	}
 
 	public static Pop found(Item item, Room room) {
-		log.trace("Dropping {} in {}", item, room);
+		log.debug("Dropping {} in {}", item, room);
 		Pop pop = new Pop();
 		pop.setType(PopType.FOUND);
 		pop.setItem(item);
@@ -37,7 +37,7 @@ public class Pop {
 	}
 
 	public static Pop contained(Item item, Item container) {
-		log.trace("Putting {} inside {}", item, container);
+		log.debug("Putting {} inside {}", item, container);
 		Pop pop = new Pop();
 		pop.setType(PopType.CONTAINED);
 		pop.setItem(item);
@@ -48,7 +48,7 @@ public class Pop {
 	}
 
 	public static Pop held(Item item, Mob mob) {
-		log.trace("Giving {} to {}", item, mob);
+		log.debug("Giving {} to {}", item, mob);
 		Pop pop = new Pop();
 		pop.setType(PopType.HELD);
 		pop.setItem(item);
@@ -59,7 +59,7 @@ public class Pop {
 	}
 
 	public static Pop worn(Item item, Mob mob) {
-		log.trace("Equipping {} to {}", item, mob);
+		log.debug("Equipping {} to {}", item, mob);
 		Pop pop = new Pop();
 		pop.setType(PopType.WORN);
 		pop.setItem(item);
@@ -72,15 +72,15 @@ public class Pop {
 	@Override
 	public String toString() {
 		if (type == PopType.FOUND) {
-			return String.format("found in %s", room);
+			return String.format("%s found in %s", item, room);
 		} else if (type == PopType.CONTAINED) {
-			return String.format("contained in %s", container);
+			return String.format("%s contained in %s", item, container);
 		} else if (type == PopType.WORN) {
-			return String.format("worn by %s", mob);
+			return String.format("%s worn by %s", item, mob);
 		} else if (type == PopType.HELD) {
-			return String.format("held by %s", mob);
+			return String.format("%s held by %s", item, mob);
 		} else {
-			return "appears in an unknown location";
+			return String.format("%s appears in an unknown location", item);
 		}
 	}
 

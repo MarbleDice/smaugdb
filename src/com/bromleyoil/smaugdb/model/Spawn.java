@@ -20,7 +20,7 @@ public class Spawn {
 	}
 
 	public static Mob in(Mob mob, Room room, int limit) {
-		log.trace("Adding {} to {} with limit {}", mob, room, limit);
+		log.debug("Spawning {} in {} with limit {}", mob, room, limit);
 		Spawn spawn = new Spawn(mob, room, limit);
 		mob.addSpawn(spawn);
 		room.addSpawn(spawn);

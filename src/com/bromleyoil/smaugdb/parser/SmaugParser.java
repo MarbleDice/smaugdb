@@ -167,7 +167,7 @@ public class SmaugParser {
 						Integer.valueOf(matcher.group(3)),
 						Integer.valueOf(matcher.group(4)),
 						Optional.ofNullable(matcher.group(5)).map(Integer::valueOf).orElse(0));
-
+				nextLine(reader);
 			} else if (line.startsWith("#")) {
 				// We hit the end of the section
 				return;
@@ -175,8 +175,6 @@ public class SmaugParser {
 				// Keep moving down to look for the next reset
 				nextLine(reader);
 			}
-
-			nextLine(reader);
 		}
 	}
 

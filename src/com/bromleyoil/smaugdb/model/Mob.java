@@ -23,6 +23,11 @@ public class Mob {
 	// private int experience;
 	private List<Reset> resets = new ArrayList<>();
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 	public Area getArea() {
 		return area;
 	}

@@ -24,6 +24,11 @@ public class Item {
 	private List<Reset> resets = new ArrayList<>();
 	private List<Reset> contains = new ArrayList<>();
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 	public Area getArea() {
 		return area;
 	}

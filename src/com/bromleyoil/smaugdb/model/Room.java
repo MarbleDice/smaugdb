@@ -16,6 +16,11 @@ public class Room {
 	// exits
 	private List<Reset> resets = new ArrayList<>();
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 	public Area getArea() {
 		return area;
 	}

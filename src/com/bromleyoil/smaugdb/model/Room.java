@@ -14,7 +14,8 @@ public class Room {
 	private List<String> extras = new ArrayList<>();
 	// teleports
 	// exits
-	private List<Reset> resets = new ArrayList<>();
+	private List<Pop> pops = new ArrayList<>();
+	private List<Spawn> spawns = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -77,11 +78,20 @@ public class Room {
 		this.extras = extras;
 	}
 
-	public List<Reset> getResets() {
-		return resets;
+	public List<Pop> getPops() {
+		return pops;
 	}
 
-	public void setResets(List<Reset> resets) {
-		this.resets = resets;
+	public void addPop(Pop pop) {
+		pops.add(pop);
 	}
+
+	public List<Spawn> getSpawns() {
+		return spawns;
+	}
+
+	public void addSpawn(Spawn spawn) {
+		spawns.add(spawn);
+	}
+
 }

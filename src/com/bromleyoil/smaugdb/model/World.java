@@ -27,8 +27,15 @@ public class World {
 		return rooms;
 	}
 
+	public Room getRoom(int vnum) {
+		if (!rooms.containsKey(vnum)) {
+			log.warn("Room not found: {}", vnum);
+		}
+		return rooms.get(vnum);
+	}
+
 	public void addRoom(Room room, Area area) {
-		log.info("Adding room \"{}\" to {}", room, area);
+		log.trace("Adding room \"{}\" to {}", room, area);
 		room.setArea(area);
 		area.addRoom(room);
 		rooms.put(room.getVnum(), room);
@@ -38,8 +45,15 @@ public class World {
 		return mobs;
 	}
 
+	public Mob getMob(int vnum) {
+		if (!mobs.containsKey(vnum)) {
+			log.warn("Mob not found: {}", vnum);
+		}
+		return mobs.get(vnum);
+	}
+
 	public void addMob(Mob mob, Area area) {
-		log.info("Adding mob \"{}\" to {}", mob, area);
+		log.trace("Adding mob \"{}\" to {}", mob, area);
 		mob.setArea(area);
 		area.addMob(mob);
 		mobs.put(mob.getVnum(), mob);
@@ -49,8 +63,15 @@ public class World {
 		return items;
 	}
 
+	public Item getItem(int vnum) {
+		if (!items.containsKey(vnum)) {
+			log.warn("Item not found: {}", vnum);
+		}
+		return items.get(vnum);
+	}
+
 	public void addItem(Item item, Area area) {
-		log.info("Adding item \"{}\" to {}", item, area);
+		log.trace("Adding item \"{}\" to {}", item, area);
 		item.setArea(area);
 		area.addItem(item);
 		items.put(item.getVnum(), item);

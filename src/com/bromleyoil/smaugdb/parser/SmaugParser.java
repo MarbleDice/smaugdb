@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
+import com.bromleyoil.smaugdb.model.Pop;
 import com.bromleyoil.smaugdb.model.Room;
+import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 
 public class SmaugParser {
@@ -27,10 +29,16 @@ public class SmaugParser {
 
 	private static final Pattern vnumPattern = Pattern.compile("^\\s*#\\s*([1-9]\\d*)\\s*$");
 	private static final Pattern stringPattern = Pattern.compile("^(.+)~$");
+	private static final Pattern resetPattern = Pattern.compile("^\\s*([OPMEG])\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*(\\d+)?");
 
 	private World world;
 	private Area area;
+
+	/** The current line of text from the area file */
 	private String line;
+
+	/** The last mob processed while parsing resets */
+	private Mob lastMob;
 
 	public World parseWorld(String path) {
 		world = new World();
@@ -60,8 +68,7 @@ public class SmaugParser {
 				} else if (line.startsWith("#ROOMS")) {
 					parseVnumBlock(reader, this::parseRoom);
 				} else if (line.startsWith("#RESETS")) {
-					// TODO - skip
-					nextLine(reader);
+					parseResets(reader);
 				} else {
 					nextLine(reader);
 				}
@@ -71,9 +78,9 @@ public class SmaugParser {
 		}
 	}
 
-	private void parseArea(BufferedReader reader) throws IOException {
+	private void parseArea(BufferedReader reader) {
 		Matcher matcher = matches(line, "#AREA\\s+([^~]+)~")
-				.orElseThrow(() -> new IOException("Invalid #AREA line: " + line));
+				.orElseThrow(() -> new ParseException("Invalid #AREA line: " + line));
 
 		area = new Area();
 		area.setName(matcher.group(1));
@@ -82,18 +89,17 @@ public class SmaugParser {
 		nextLine(reader);
 	}
 
-	private void parseRanges(BufferedReader reader) throws IOException {
+	private void parseRanges(BufferedReader reader) {
 		nextLine(reader);
 
 		Matcher matcher = matches(line, "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
-				.orElseThrow(() -> new IOException("Invalid #RANGES line: " + line));
+				.orElseThrow(() -> new ParseException("Invalid #RANGES line: " + line));
 
 		area.setLowSoftRange(Integer.valueOf(matcher.group(1)));
 		area.setHighSoftRange(Integer.valueOf(matcher.group(2)));
 	}
 
-	private void parseVnumBlock(BufferedReader reader, BiConsumer<BufferedReader, Integer> vnumParser)
-			throws IOException {
+	private void parseVnumBlock(BufferedReader reader, BiConsumer<BufferedReader, Integer> vnumParser) {
 		nextLine(reader);
 
 		while (line != null) {
@@ -148,6 +154,53 @@ public class SmaugParser {
 		world.addRoom(room, area);
 	}
 
+	private void parseResets(BufferedReader reader) {
+		nextLine(reader);
+
+		while (line != null) {
+			Matcher matcher = resetPattern.matcher(line);
+			if (matcher.matches()) {
+				log.trace("Got \"{}\": v2={} v3={} v4={} n={}", line, matcher.group(3), matcher.group(4),
+						matcher.group(5), matcher.groupCount());
+				// Found a reset. Groups are 1=code, 2=ignored, 3=vnum, 4=limit/ignored, 5=vnum/absent
+				parseReset(matcher.group(1).charAt(0),
+						Integer.valueOf(matcher.group(3)),
+						Integer.valueOf(matcher.group(4)),
+						Optional.ofNullable(matcher.group(5)).map(Integer::valueOf).orElse(0));
+
+			} else if (line.startsWith("#")) {
+				// We hit the end of the section
+				return;
+			} else {
+				// Keep moving down to look for the next reset
+				nextLine(reader);
+			}
+
+			nextLine(reader);
+		}
+	}
+
+	private void parseReset(char code, int vnum1, int limit, int vnum2) {
+		if (code == 'O') {
+			Pop.found(world.getItem(vnum1), world.getRoom(vnum2));
+		} else if (code == 'P') {
+			Pop.contained(world.getItem(vnum1), world.getItem(vnum2));
+		} else if (code == 'M') {
+			lastMob = Spawn.in(world.getMob(vnum1), world.getRoom(vnum2), limit);
+		} else if (code == 'E') {
+			Pop.worn(world.getItem(vnum1), lastMob);
+		} else if (code == 'G') {
+			Pop.held(world.getItem(vnum1), lastMob);
+		} else {
+			throw new ParseException("Unknown reset code: " + code);
+		}
+	}
+
+	/**
+	 * 
+	 * @param reader
+	 * @throws UncheckedIOException
+	 */
 	private void nextLine(BufferedReader reader) {
 		try {
 			line = reader.readLine();

@@ -21,7 +21,8 @@ public class Mob {
 	// private String damageDice;
 	// private int gold;
 	// private int experience;
-	private List<Reset> resets = new ArrayList<>();
+	private List<Spawn> spawns = new ArrayList<>();
+	private List<Pop> containedPops = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -68,11 +69,19 @@ public class Mob {
 		this.shortDescription = shortDescription;
 	}
 
-	public List<Reset> getResets() {
-		return resets;
+	public List<Spawn> getSpawns() {
+		return spawns;
 	}
 
-	public void setResets(List<Reset> resets) {
-		this.resets = resets;
+	public void addSpawn(Spawn spawn) {
+		spawns.add(spawn);
+	}
+
+	public List<Pop> getContainedPops() {
+		return containedPops;
+	}
+
+	public void addContainedPop(Pop pop) {
+		containedPops.add(pop);
 	}
 }

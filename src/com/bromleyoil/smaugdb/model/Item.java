@@ -21,8 +21,8 @@ public class Item {
 	private int spellLevel;
 	private List<Skill> skills = new ArrayList<>();
 
-	private List<Reset> resets = new ArrayList<>();
-	private List<Reset> contains = new ArrayList<>();
+	private List<Pop> pops = new ArrayList<>();
+	private List<Pop> containedPops = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -137,19 +137,19 @@ public class Item {
 		this.skills = skills;
 	}
 
-	public List<Reset> getResets() {
-		return resets;
+	public List<Pop> getPops() {
+		return pops;
 	}
 
-	public void setResets(List<Reset> resets) {
-		this.resets = resets;
+	public void addPop(Pop pop) {
+		pops.add(pop);
 	}
 
-	public List<Reset> getContains() {
-		return contains;
+	public List<Pop> getContainedPops() {
+		return containedPops;
 	}
 
-	public void setContains(List<Reset> contains) {
-		this.contains = contains;
+	public void addContainedPop(Pop pop) {
+		containedPops.add(pop);
 	}
 }

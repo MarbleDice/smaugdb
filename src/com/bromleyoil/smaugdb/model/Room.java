@@ -3,6 +3,9 @@ package com.bromleyoil.smaugdb.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bromleyoil.smaugdb.model.enums.RoomFlag;
+import com.bromleyoil.smaugdb.model.enums.SectorType;
+
 public class Room {
 
 	private Area area;

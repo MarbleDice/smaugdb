@@ -3,6 +3,8 @@ package com.bromleyoil.smaugdb.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bromleyoil.smaugdb.model.enums.PopType;
+
 /**
  * Represents a location where an item appears.
  * 

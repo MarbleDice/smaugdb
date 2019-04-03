@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum ExtraFlag {
 	GLOW, HUM, DARK, LOYAL, EVIL, INVIS, MAGIC, NODROP, BLESS, ANTI_GOOD, ANTI_EVIL, ANTI_NEUTRAL, NOREMOVE, INVENTORY,

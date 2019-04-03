@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum PopType {
 	/** Found in a room */

@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum ActFlag {
 	IS_NPC, SENTINEL, SCAVENGER, NOLOCATE, AGGRESSIVE, STAY_AREA, WIMPY, PET, TRAIN, PRACTICE, IMMORTAL, DEADLY,

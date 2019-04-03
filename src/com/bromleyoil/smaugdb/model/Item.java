@@ -3,6 +3,11 @@ package com.bromleyoil.smaugdb.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bromleyoil.smaugdb.model.enums.DamageType;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.WeaponSkill;
+import com.bromleyoil.smaugdb.model.enums.WearFlag;
+
 public class Item {
 
 	private Area area;

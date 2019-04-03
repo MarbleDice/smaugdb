@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum DefenseFlag {
 	PARRY, DODGE, HEAL, CURELIGHT, CURESERIOUS, CURECRITICAL, DISPELMAGIC, DISPELEVIL, SANCTUARY, FIRESHIELD,

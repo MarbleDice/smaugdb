@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum ResistFlag {
 	FIRE, COLD, ELECTRICITY, ENERGY, BLUNT, PIERCE, SLASH, ACID, POISON, DRAIN, SLEEP, CHARM, HOLD, NONMAGIC, PLUS1,

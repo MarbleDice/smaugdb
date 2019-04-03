@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum RoomFlag {
 	DARK, DEATH, NO_MOB, INDOORS, HOUSE, NEUTRAL, CHAOTIC, NO_MAGIC, NOLOCATE, PRIVATE, SAFE, SOLITARY, PET_SHOP,

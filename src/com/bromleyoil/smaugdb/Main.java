@@ -31,6 +31,7 @@ public class Main {
 			}
 		}
 	}
+
 	public static void logMobs() {
 		for (Mob mob : world.getMobs().values()) {
 			log.info("{}", mob);

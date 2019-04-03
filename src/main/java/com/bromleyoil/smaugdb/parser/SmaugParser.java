@@ -40,15 +40,18 @@ public class SmaugParser {
 	/** The last mob processed while parsing resets */
 	private Mob lastMob;
 
-	public World parseWorld(String path) {
-		world = new World();
-		area = null;
+	private SmaugParser(World world) {
+		// Private constructor
+		this.world = world;
+	}
+
+	public static void parseWorld(World world, String path) {
+		// Create a parser to store the parsing context
+		SmaugParser parser = new SmaugParser(world);
 
 		String areaPath = path + File.separator + "area" + File.separator + "manor.are";
 
-		parseArea(areaPath);
-
-		return world;
+		parser.parseArea(areaPath);
 	}
 
 	private void parseArea(String areaPath) {

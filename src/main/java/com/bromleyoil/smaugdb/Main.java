@@ -1,43 +1,36 @@
 package com.bromleyoil.smaugdb;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
-import com.bromleyoil.smaugdb.model.Item;
-import com.bromleyoil.smaugdb.model.Mob;
-import com.bromleyoil.smaugdb.model.Pop;
 import com.bromleyoil.smaugdb.model.World;
-import com.bromleyoil.smaugdb.parser.SmaugParser;
 
-public class Main {
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 
-	private static final Logger log = LoggerFactory.getLogger(Main.class);
-
-	private static World world;
+@SpringBootApplication
+public class Main implements ApplicationRunner {
 
 	public static void main(String[] args) {
-		SmaugParser parser = new SmaugParser();
-		world = parser.parseWorld("C:\\Users\\Billy\\Downloads\\smaug1.8\\");
-		// world = parser.parseWorld("/Users/moorwi/Downloads/smaug1.8b/");
-
-		logMobs();
+		SpringApplication.run(Main.class, args);
 	}
 
-	public static void logItems() {
-		for (Item item : world.getItems().values()) {
-			log.info("{}", item);
-			for (Pop pop : item.getPops()) {
-				log.info("    {}", pop);
-			}
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		if (!args.containsOption("mud.path")) {
+			throw new IllegalArgumentException("You must specify --mud.path=<PATH TO MUD> as an argument!");
 		}
 	}
 
-	public static void logMobs() {
-		for (Mob mob : world.getMobs().values()) {
-			log.info("{}", mob);
-			for (Pop pop : mob.getContainedPops()) {
-				log.info("    {}", pop);
-			}
-		}
+	@Bean
+	public LayoutDialect layoutDialect() {
+		return new LayoutDialect();
+	}
+
+	@Bean
+	public World world() {
+		return new World();
 	}
 }

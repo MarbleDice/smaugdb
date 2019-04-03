@@ -3,17 +3,32 @@ package com.bromleyoil.smaugdb.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import com.bromleyoil.smaugdb.parser.SmaugParser;
+
+@Component
 public class World {
 
 	private static final Logger log = LoggerFactory.getLogger(World.class);
+
+	@Value("${mud.path}")
+	private String mudPath;
 
 	private Map<String, Area> areas = new HashMap<>();
 	private Map<Integer, Room> rooms = new HashMap<>();
 	private Map<Integer, Mob> mobs = new HashMap<>();
 	private Map<Integer, Item> items = new HashMap<>();
+
+	@PostConstruct
+	public void postConstruct() {
+		SmaugParser.parseWorld(this, mudPath);
+	}
 
 	public Map<String, Area> getAreas() {
 		return areas;

@@ -28,7 +28,7 @@ public class World {
 
 	@PostConstruct
 	public void postConstruct() {
-		SmaugParser.parseWorld(this, mudPath);
+		SmaugParser.loadWorld(this, mudPath);
 	}
 
 	public Map<String, Area> getAreas() {

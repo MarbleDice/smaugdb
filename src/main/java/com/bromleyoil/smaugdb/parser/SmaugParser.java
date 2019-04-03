@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +35,6 @@ public class SmaugParser {
 	private static final Logger log = LoggerFactory.getLogger(SmaugParser.class);
 
 	private static final Pattern vnumPattern = Pattern.compile("^\\s*#\\s*([1-9]\\d*)\\s*$");
-	private static final Pattern stringPattern = Pattern.compile("^(.+)~$");
 	private static final Pattern resetPattern = Pattern.compile("^\\s*([OPMEG])\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*(\\d+)?");
 
 	private World world;
@@ -50,17 +51,45 @@ public class SmaugParser {
 		this.world = world;
 	}
 
-	public static void parseWorld(World world, String path) {
-		// Create a parser to store the parsing context
-		SmaugParser parser = new SmaugParser(world);
+	/**
+	 * Loads all areas in the area.list file contained inside the mudPath into the given world.
+	 * 
+	 * @param world
+	 * @param mudPath
+	 */
+	public static void loadWorld(World world, String mudPath) {
+		String areaPath = mudPath + File.separator + "area";
 
-		String areaPath = path + File.separator + "area" + File.separator + "manor.are";
+		// Read the area.list file
+		List<String> areaFiles;
+		try {
+			areaFiles = Files.readAllLines(Paths.get(areaPath + File.separator + "area.lst"));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 
-		parser.parseArea(areaPath);
+		// Load all areas
+		SmaugParser parser;
+		for (String areaFile : areaFiles) {
+			String areaFilePath = areaPath + File.separator + areaFile;
+			if (Paths.get(areaFilePath).toFile().isFile()) {
+				log.info("Loading {}", areaFilePath);
+				// Create a new parser to store the parsing context
+				parser = new SmaugParser(world);
+				parser.parseArea(areaFilePath);
+			} else if (!"$".equals(areaFile)) {
+				log.warn("Listed area file does not exist at {}", areaFilePath);
+			}
+		}
 	}
 
-	private void parseArea(String areaPath) {
-		try (BufferedReader reader = new BufferedReader(new FileReader(areaPath))) {
+	/**
+	 * Parses an area file, loading all data contained within.
+	 * 
+	 * @param areaFilePath
+	 */
+	private void parseArea(String areaFilePath) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(areaFilePath))) {
 			nextLine(reader);
 
 			while (line != null) {
@@ -82,10 +111,15 @@ public class SmaugParser {
 				}
 			}
 		} catch (IOException e) {
-			log.info("Could not read: " + areaPath, e);
+			log.info("Could not read: " + areaFilePath, e);
 		}
 	}
 
+	/**
+	 * Parses the #AREA tag
+	 * 
+	 * @param reader
+	 */
 	private void parseArea(BufferedReader reader) {
 		Matcher matcher = matches(line, "#AREA\\s+([^~]+)~")
 				.orElseThrow(() -> new ParseException("Invalid #AREA line: " + line));
@@ -97,6 +131,11 @@ public class SmaugParser {
 		nextLine(reader);
 	}
 
+	/**
+	 * Parses the #RANGES tag
+	 * 
+	 * @param reader
+	 */
 	private void parseRanges(BufferedReader reader) {
 		nextLine(reader);
 
@@ -107,15 +146,23 @@ public class SmaugParser {
 		area.setHighSoftRange(Integer.valueOf(matcher.group(2)));
 	}
 
-	private void parseVnumBlock(BufferedReader reader, BiConsumer<BufferedReader, Integer> vnumParser) {
+	/**
+	 * Parses a block of vnum (#MOBILES, #OBJECTS, or #ROOMS) deferring to the given handler for processing a single
+	 * entry.
+	 * 
+	 * @param reader
+	 * @param handler
+	 *        Accepts a buffered reader and the vnum of the object being parsed
+	 */
+	private void parseVnumBlock(BufferedReader reader, BiConsumer<BufferedReader, Integer> handler) {
 		nextLine(reader);
 
 		while (line != null) {
 			Matcher matcher = vnumPattern.matcher(line);
 			if (matcher.matches()) {
 				// Found a vnum, read a mob
-				vnumParser.accept(reader, Integer.valueOf(matcher.group(1)));
-			} else if (line.startsWith("#")) {
+				handler.accept(reader, Integer.valueOf(matcher.group(1)));
+			} else if ("#0".equals(line)) {
 				// We hit the end of the section
 				return;
 			} else {
@@ -125,7 +172,15 @@ public class SmaugParser {
 		}
 	}
 
+	/**
+	 * Parses a single mobile.
+	 * 
+	 * @param reader
+	 * @param vnum
+	 */
 	private void parseMobile(BufferedReader reader, int vnum) {
+		log.trace("Reading mobile {}", vnum);
+
 		Mob mob = new Mob();
 		mob.setVnum(vnum);
 		mob.setKeywords(convertKeywords(nextString(reader)));
@@ -134,7 +189,14 @@ public class SmaugParser {
 		world.addMob(mob, area);
 	}
 
+	/**
+	 * Parses a single object.
+	 * 
+	 * @param reader
+	 * @param vnum
+	 */
 	private void parseObject(BufferedReader reader, int vnum) {
+		log.trace("Reading object {}", vnum);
 		List<Integer> values;
 
 		Item item = new Item();
@@ -151,7 +213,7 @@ public class SmaugParser {
 		item.setExtraFlags(convertBitVector(ExtraFlag.class, values.get(1)));
 		item.setWearFlags(convertBitVector(WearFlag.class, values.get(2)));
 		if (values.size() > 3) {
-			log.info("Encountered an object with layers/levels: {} has \"{}\"", item, line);
+			log.info("Got an object with layers/levels: {} has \"{}\"", item, line);
 		}
 
 		// "the values line" requires interpretation by type
@@ -165,13 +227,26 @@ public class SmaugParser {
 		world.addItem(item, area);
 	}
 
+	/**
+	 * Interprets the values for an object... this'll be big and nasty.
+	 * 
+	 * @param item
+	 * @param values
+	 */
 	private void interpretValues(Item item, List<Integer> values) {
 		if (values.size() > 4) {
 			log.info("Got an item with more than 4 values: {} has \"{}\"", item, values);
 		}
 	}
 
+	/**
+	 * Parses a single room.
+	 * 
+	 * @param reader
+	 * @param vnum
+	 */
 	private void parseRoom(BufferedReader reader, int vnum) {
+		log.trace("Reading room {}", vnum);
 		Room room = new Room();
 		room.setVnum(vnum);
 
@@ -180,6 +255,11 @@ public class SmaugParser {
 		world.addRoom(room, area);
 	}
 
+	/**
+	 * Parses the #RESETS tag.
+	 * 
+	 * @param reader
+	 */
 	private void parseResets(BufferedReader reader) {
 		nextLine(reader);
 
@@ -204,6 +284,18 @@ public class SmaugParser {
 		}
 	}
 
+	/**
+	 * Parses a single reset.
+	 * 
+	 * @param code
+	 *        The type of reset.
+	 * @param vnum1
+	 *        The object or mob being reset.
+	 * @param limit
+	 *        The mob spawning limit (only used for mob resets)
+	 * @param vnum2
+	 *        The room, mob, or object containing the mob or object being reset.
+	 */
 	private void parseReset(char code, int vnum1, int limit, int vnum2) {
 		if (code == 'O') {
 			Pop.found(world.getItem(vnum1), world.getRoom(vnum2));
@@ -242,13 +334,10 @@ public class SmaugParser {
 	 * @param reader
 	 */
 	private String nextString(BufferedReader reader) {
-		nextLine(reader);
-		Matcher matcher = stringPattern.matcher(line);
-		if (matcher.matches()) {
-			return matcher.group(1);
-		} else {
-			throw new ParseException("Could not read string from: " + line);
-		}
+		return nextBlock(reader).stream()
+				.map(String::trim)
+				.filter(s -> !s.isEmpty())
+				.collect(Collectors.joining(" "));
 	}
 
 	/**
@@ -265,10 +354,16 @@ public class SmaugParser {
 	private List<String> nextBlock(BufferedReader reader) {
 		List<String> lines = new ArrayList<>();
 
-		nextLine(reader);
-		while (line != null && !"~".equals(line)) {
-			lines.add(line);
+		while (line != null) {
 			nextLine(reader);
+
+			if (line.endsWith("~")) {
+				// Last line, drop the tilde
+				lines.add(line.substring(0, line.length() - 1));
+				break;
+			} else {
+				lines.add(line);
+			}
 		}
 
 		return lines;
@@ -323,5 +418,4 @@ public class SmaugParser {
 
 		return flags;
 	}
-
 }

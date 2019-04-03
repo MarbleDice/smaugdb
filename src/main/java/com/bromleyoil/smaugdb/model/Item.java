@@ -3,7 +3,10 @@ package com.bromleyoil.smaugdb.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thymeleaf.util.StringUtils;
+
 import com.bromleyoil.smaugdb.model.enums.DamageType;
+import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WeaponSkill;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
@@ -14,10 +17,14 @@ public class Item {
 	private int vnum;
 	private String name;
 	private String keywords;
-	private String shortDescription;
-	private ItemType itemType;
+	private String description;
+	private ItemType type;
+	private List<ExtraFlag> extraFlags = new ArrayList<>();
+	private List<WearFlag> wearFlags = new ArrayList<>();
+	private int weight;
+	private int cost;
+
 	private DamageType damageType;
-	private List<WearFlag> wearLocations = new ArrayList<>();
 	private int minDamage;
 	private int maxDamage;
 	private int damRoll;
@@ -32,6 +39,10 @@ public class Item {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	public boolean getExists() {
+		return !pops.isEmpty();
 	}
 
 	public Area getArea() {
@@ -58,6 +69,10 @@ public class Item {
 		this.name = name;
 	}
 
+	public String getTitle() {
+		return StringUtils.capitalize(name);
+	}
+
 	public String getKeywords() {
 		return keywords;
 	}
@@ -66,20 +81,52 @@ public class Item {
 		this.keywords = keywords;
 	}
 
-	public String getShortDescription() {
-		return shortDescription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public ItemType getItemType() {
-		return itemType;
+	public ItemType getType() {
+		return type;
 	}
 
-	public void setItemType(ItemType itemType) {
-		this.itemType = itemType;
+	public void setType(ItemType type) {
+		this.type = type;
+	}
+
+	public List<ExtraFlag> getExtraFlags() {
+		return extraFlags;
+	}
+
+	public void setExtraFlags(List<ExtraFlag> extraFlags) {
+		this.extraFlags = extraFlags;
+	}
+
+	public List<WearFlag> getWearFlags() {
+		return wearFlags;
+	}
+
+	public void setWearFlags(List<WearFlag> wearFlags) {
+		this.wearFlags = wearFlags;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 
 	public DamageType getDamageType() {
@@ -92,14 +139,6 @@ public class Item {
 
 	public WeaponSkill getWeaponSkill() {
 		return damageType.getWeaponSkill();
-	}
-
-	public List<WearFlag> getWearLocations() {
-		return wearLocations;
-	}
-
-	public void setWearLocations(List<WearFlag> wearLocations) {
-		this.wearLocations = wearLocations;
 	}
 
 	public int getMinDamage() {

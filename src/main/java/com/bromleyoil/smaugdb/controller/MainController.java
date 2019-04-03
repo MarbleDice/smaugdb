@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bromleyoil.smaugdb.model.Item;
-import com.bromleyoil.smaugdb.model.Mob;
-import com.bromleyoil.smaugdb.model.Pop;
 import com.bromleyoil.smaugdb.model.World;
 
 @Controller
@@ -23,32 +20,34 @@ public class MainController {
 
 	@RequestMapping("/")
 	public String index() {
-		logMobs();
 		return "index";
 	}
 
+	@RequestMapping("/area-list")
+	public ModelAndView areaList() {
+		ModelAndView mav = new ModelAndView("area-list");
+		mav.addObject("areas", world.getAreas().values());
+		return mav;
+	}
+
+	@RequestMapping("/area/{urlSafeName}")
+	public ModelAndView area(@PathVariable String urlSafeName) {
+		ModelAndView mav = new ModelAndView("area");
+		mav.addObject("area", world.getArea(urlSafeName));
+		return mav;
+	}
+
 	@RequestMapping("/item/{vnum}")
-	public ModelAndView skill(@PathVariable Integer vnum) {
+	public ModelAndView item(@PathVariable Integer vnum) {
 		ModelAndView mav = new ModelAndView("item");
 		mav.addObject("item", world.getItem(vnum));
 		return mav;
 	}
 
-	public void logItems() {
-		for (Item item : world.getItems().values()) {
-			log.info("{}", item);
-			for (Pop pop : item.getPops()) {
-				log.info("    {}", pop);
-			}
-		}
-	}
-
-	public void logMobs() {
-		for (Mob mob : world.getMobs().values()) {
-			log.info("{}", mob);
-			for (Pop pop : mob.getContainedPops()) {
-				log.info("    {}", pop);
-			}
-		}
+	@RequestMapping("/mob/{vnum}")
+	public ModelAndView mob(@PathVariable Integer vnum) {
+		ModelAndView mav = new ModelAndView("mob");
+		mav.addObject("mob", world.getMob(vnum));
+		return mav;
 	}
 }

@@ -1,5 +1,6 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,15 +32,19 @@ public class World {
 	}
 
 	public Map<String, Area> getAreas() {
-		return areas;
+		return Collections.unmodifiableMap(areas);
+	}
+
+	public Area getArea(String urlSafeName) {
+		return areas.get(urlSafeName);
 	}
 
 	public void addArea(Area area) {
-		areas.put(area.getName(), area);
+		areas.put(area.getUrlSafeName(), area);
 	}
 
 	public Map<Integer, Room> getRooms() {
-		return rooms;
+		return Collections.unmodifiableMap(rooms);
 	}
 
 	public Room getRoom(int vnum) {
@@ -57,7 +62,7 @@ public class World {
 	}
 
 	public Map<Integer, Mob> getMobs() {
-		return mobs;
+		return Collections.unmodifiableMap(mobs);
 	}
 
 	public Mob getMob(int vnum) {
@@ -75,7 +80,7 @@ public class World {
 	}
 
 	public Map<Integer, Item> getItems() {
-		return items;
+		return Collections.unmodifiableMap(items);
 	}
 
 	public Item getItem(int vnum) {

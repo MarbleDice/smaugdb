@@ -29,6 +29,10 @@ public class Mob {
 		return getName();
 	}
 
+	public boolean getExists() {
+		return !spawns.isEmpty();
+	}
+
 	public Area getArea() {
 		return area;
 	}

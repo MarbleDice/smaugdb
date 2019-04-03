@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title=${area.name}">
+<th:block layout:fragment="content">
+
+<table>
+	<tr>
+		<td>Level Range</td>
+		<td th:text="${area.lowSoftRange + ' - ' + area.highSoftRange}">Level range</td>
+	</tr>
+	<tr>
+		<td>Author</td>
+		<td th:text="${area.author}">Author</td>
+	</tr>
+</table>
+
+<h3>Mobiles</h3>
+
+<ul>
+<th:block th:each="mob : ${area.mobs.?[exists == true]}">
+	<li><a th:href="@{${'/mob/' + mob.vnum}}" th:text="${mob.name}">Mob</a></li>
+</th:block>
+</ul>
+
+<h3>Items</h3>
+
+<ul>
+<th:block th:each="item : ${area.items.?[exists == true]}">
+	<li><a th:href="@{${'/item/' + item.vnum}}" th:text="${item.name}">Item</a></li>
+</th:block>
+</ul>
+
+</th:block>
+</html>

@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,9 @@ import com.bromleyoil.smaugdb.model.Pop;
 import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class SmaugParser {
 
@@ -87,7 +92,7 @@ public class SmaugParser {
 
 		area = new Area();
 		area.setName(matcher.group(1));
-		world.getAreas().put(area.getName(), area);
+		world.addArea(area);
 
 		nextLine(reader);
 	}
@@ -123,36 +128,54 @@ public class SmaugParser {
 	private void parseMobile(BufferedReader reader, int vnum) {
 		Mob mob = new Mob();
 		mob.setVnum(vnum);
-		nextLine(reader);
-		mob.setKeywords(matchString(line)
-				.orElseThrow(() -> new ParseException("Invalid keywords: " + line)));
-		nextLine(reader);
-		mob.setName(matchString(line)
-				.orElseThrow(() -> new ParseException("Invalid name: " + line)));
+		mob.setKeywords(convertKeywords(nextString(reader)));
+		mob.setName(nextString(reader));
 
 		world.addMob(mob, area);
 	}
 
 	private void parseObject(BufferedReader reader, int vnum) {
+		List<Integer> values;
+
 		Item item = new Item();
 		item.setVnum(vnum);
-		nextLine(reader);
-		item.setKeywords(matchString(line)
-				.orElseThrow(() -> new ParseException("Invalid keywords: " + line)));
-		nextLine(reader);
-		item.setName(matchString(line)
-				.orElseThrow(() -> new ParseException("Invalid name: " + line)));
+		item.setKeywords(convertKeywords(nextString(reader)));
+		item.setName(nextString(reader));
+		item.setDescription(nextString(reader));
+		// The next "action description" is unused
+		nextBlock(reader);
+
+		// type extra wear [layers [level]]
+		values = nextValues(reader);
+		item.setType(ItemType.values()[values.get(0)]);
+		item.setExtraFlags(convertBitVector(ExtraFlag.class, values.get(1)));
+		item.setWearFlags(convertBitVector(WearFlag.class, values.get(2)));
+		if (values.size() > 3) {
+			log.info("Encountered an object with layers/levels: {} has \"{}\"", item, line);
+		}
+
+		// "the values line" requires interpretation by type
+		values = nextValues(reader);
+		interpretValues(item, values);
+
+		// weight cost rent
+		values = nextValues(reader);
+		item.setWeight(values.get(0));
 
 		world.addItem(item, area);
+	}
+
+	private void interpretValues(Item item, List<Integer> values) {
+		if (values.size() > 4) {
+			log.info("Got an item with more than 4 values: {} has \"{}\"", item, values);
+		}
 	}
 
 	private void parseRoom(BufferedReader reader, int vnum) {
 		Room room = new Room();
 		room.setVnum(vnum);
 
-		nextLine(reader);
-		room.setName(matchString(line)
-				.orElseThrow(() -> new ParseException("Invalid name: " + line)));
+		room.setName(nextString(reader));
 
 		world.addRoom(room, area);
 	}
@@ -198,6 +221,7 @@ public class SmaugParser {
 	}
 
 	/**
+	 * Advances the reader by one line.
 	 * 
 	 * @param reader
 	 * @throws UncheckedIOException
@@ -210,14 +234,73 @@ public class SmaugParser {
 		}
 	}
 
-	private Optional<String> matchString(String input) {
-		Matcher matcher = stringPattern.matcher(input);
-		return matcher.matches() ? Optional.of(matcher.group(1)) : Optional.empty();
+	/**
+	 * Reads the next line from the file as a string, such as the following:
+	 * 
+	 * Some short description ended with a tilde~
+	 * 
+	 * @param reader
+	 */
+	private String nextString(BufferedReader reader) {
+		nextLine(reader);
+		Matcher matcher = stringPattern.matcher(line);
+		if (matcher.matches()) {
+			return matcher.group(1);
+		} else {
+			throw new ParseException("Could not read string from: " + line);
+		}
 	}
+
+	/**
+	 * Reads the next set of lines as a multi-line text block, such as the following:
+	 * 
+	 * A longer description with
+	 * lines breaks that's terminated
+	 * by a tilde on a new line
+	 * ~
+	 * 
+	 * @param reader
+	 * @return
+	 */
+	private List<String> nextBlock(BufferedReader reader) {
+		List<String> lines = new ArrayList<>();
+
+		nextLine(reader);
+		while (line != null && !"~".equals(line)) {
+			lines.add(line);
+			nextLine(reader);
+		}
+
+		return lines;
+	}
+
+	/**
+	 * Reads the next line as a list of values, such as the following:
+	 * 
+	 * 1014 0 1212
+	 * 
+	 * @param reader
+	 * @return
+	 */
+	private List<Integer> nextValues(BufferedReader reader) {
+		nextLine(reader);
+		return Stream.of(line.split("\\s+")).map(Integer::valueOf).collect(Collectors.toList());
+	}
+
 
 	private Optional<Matcher> matches(String input, String regex) {
 		Matcher matcher = Pattern.compile(regex).matcher(input);
 		return matcher.matches() ? Optional.of(matcher) : Optional.empty();
+	}
+
+	/**
+	 * Converts a set of whitespace-delimited keywords into a comma-separated list of keywords.
+	 * 
+	 * @param keywords
+	 * @return
+	 */
+	public String convertKeywords(String keywords) {
+		return String.join(", ", keywords.split("\\s+"));
 	}
 
 	/**
@@ -227,7 +310,7 @@ public class SmaugParser {
 	 *        A bit vector of 9 would be 1001 in binary, which results in a list of the first and fourth enums.
 	 * @return
 	 */
-	public static <T extends Enum<?>> List<T> createFlagList(Class<T> enumType, int bitVector) {
+	public <T extends Enum<?>> List<T> convertBitVector(Class<T> enumType, int bitVector) {
 		List<T> flags = new ArrayList<>();
 
 		for (int i = enumType.getEnumConstants().length - 1; i >= 0; i--) {

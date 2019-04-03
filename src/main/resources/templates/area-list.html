@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title='Areas'">
+<th:block layout:fragment="content">
+
+<table class="data">
+	<tr>
+		<th>Area Name</th>
+		<th>Low Level Range</th>
+		<th>High Level Range</th>
+	</tr>
+<th:block th:each="area : ${areas}">
+	<tr>
+		<td><a th:href="@{${'/area/' + area.urlSafeName}}" th:text="${area.name}">Area name</a></td>
+		<td th:text="${area.lowSoftRange}"></td>
+		<td th:text="${area.HighSoftRange}"></td>
+	</tr>
+</th:block>
+</table>
+
+</th:block>
+</html>

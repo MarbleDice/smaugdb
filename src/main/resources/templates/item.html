@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title=${item.title}">
+<th:block layout:fragment="content">
+
+<table>
+	<tr>
+		<td>Description</td>
+		<td th:text="${item.description}"></td>
+	</tr>
+	<tr>
+		<td>Keywords</td>
+		<td th:text="${item.keywords}"></td>
+	</tr>
+	<tr>
+		<td>Type</td>
+		<td th:text="${item.type}"></td>
+	</tr>
+	<tr>
+		<td>Wearable</td>
+		<td th:text="${item.wearFlags}"></td>
+	</tr>
+	<tr>
+		<td>Extra</td>
+		<td th:text="${item.extraFlags}"></td>
+	</tr>
+	<tr>
+		<td>Weight</td>
+		<td th:text="${item.weight}"></td>
+	</tr>
+</table>
+
+</th:block>
+</html>

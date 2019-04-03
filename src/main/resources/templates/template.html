@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<title th:text="'SMAUG MUD DB - ' + ${title}">SMAUG MUD DB</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" th:href="@{/styles/default.css}" />
+</head>
+<body>
+<header>
+	<h1>SMAUG MUD DB</h1>
+</header>
+<nav>
+	<ul>
+		<li><a th:href="@{/}">Home</a></li>
+		<li><a th:href="@{/area-list}">Areas</a></li>
+		<li><a th:href="@{/item-search}">Items</a></li>
+		<li><a th:href="@{/mob-search}">Creatures</a></li>
+	</ul>
+</nav>
+<main>
+	<h2 th:text="${title}">Page Title</h2>
+	<th:block layout:fragment="content"></th:block>
+</main>
+<footer>
+</footer>
+</body>
+</html>

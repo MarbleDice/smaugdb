@@ -1,0 +1,173 @@
+/**
+ * Main elements
+ */
+h1, h2, h3, p {
+	margin: 10px 0;
+}
+
+ul.unstyled {
+	list-style-type: none;
+	padding: 0;
+}
+
+a, a:visited {
+	color: #b0530e;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #ea7c10;
+}
+
+button {
+	cursor: pointer;
+}
+
+/**
+ * Main layout
+ */
+html {
+	background-color: #669;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+header, nav, main, footer {
+	width: 1100px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+header {
+	padding: 20px 0;
+}
+
+header, nav, footer {
+	background-color: black;
+}
+
+main {
+	width: 1060px;
+	min-height: 800px;
+	padding: 10px 20px;
+	background-color: white;
+}
+
+header h1 {
+	color: white;
+	text-align: center;
+}
+
+nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+nav li {
+	display: inline-block;
+}
+
+nav li a {
+	color: #ffffff;
+	background-color: #000000;
+	padding: 8px 16px;
+	display: block;
+}
+
+nav li a:hover {
+	background-color: #333;
+}
+
+/**
+ * General table
+ */
+tr.odd {
+	background-color: #e2e2f5;
+}
+
+tr.even {
+	background-color: #bdbdfb;
+}
+
+td.empty {
+	background-color: #ccc;
+}
+
+table.equipment td:first-child {
+	width: 125px;
+}
+
+table.equipment td {
+	width: 170px;
+}
+
+/**
+ * Data tables
+ */
+table.data {
+	border-collapse: collapse;
+	margin: 10px 0;
+}
+
+table.data th, table.data td {
+	border: 1px solid black;
+	padding: 4px 8px;
+}
+
+table.set.data th:first-child {
+	width: 160px;
+}
+
+/* First-row column headers */
+table.data tr:first-child th {
+	background-color: #b1b1b1;
+	vertical-align: center;
+}
+
+/* Row-headers */
+table.data th {
+	vertical-align: center;
+}
+
+table.data td {
+	vertical-align: top;
+}
+
+/**
+ * Form tables
+ */
+table.form {
+	border: 1px solid black;
+	border-collapse: collapse;
+	margin: 10px 0;
+}
+
+table.form th, table.form td {
+	padding: 4px 8px;
+}
+
+table.form th {
+	background-color: #eee;
+}
+
+table.form th.subheader {
+	background-color: #ddd;
+	font-weight: normal;
+	font-size: smaller;
+}
+
+input.numberBox {
+	width: 20px;
+}
+
+.actions {
+	margin: 10px 0;
+}
+
+.errors, .field-error {
+	color: red;
+}

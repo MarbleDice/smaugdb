@@ -122,6 +122,19 @@ table.set.data th:first-child {
 	width: 160px;
 }
 
+/**
+ * Multi-column layout tables
+ */
+
+table.three-column {
+	margin: 0 auto;
+	width: 100%;
+}
+
+table.three-column td {
+	width: 33%;
+}
+
 /* First-row column headers */
 table.data tr:first-child th {
 	background-color: #b1b1b1;

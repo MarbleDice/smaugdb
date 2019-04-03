@@ -13,10 +13,8 @@
 	<tr>
 		<td>Long Description</td>
 		<td>
-			<ul>
-			<th:block th:each="line : ${mob.longDescription}">
-				<li th:text="${line}">Lorem ipsum dolor sit amet</li>
-			</th:block>
+			<ul class="unstyled">
+				<li th:text="${line}" th:each="line : ${mob.longDescription}">Lorem ipsum dolor sit amet</li>
 			</ul>
 		</td>
 	</tr>

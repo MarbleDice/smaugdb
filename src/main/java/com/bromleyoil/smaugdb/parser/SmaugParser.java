@@ -23,9 +23,12 @@ import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Pop;
+import com.bromleyoil.smaugdb.model.Range;
 import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
@@ -180,11 +183,41 @@ public class SmaugParser {
 	 */
 	private void parseMobile(BufferedReader reader, int vnum) {
 		log.trace("Reading mobile {}", vnum);
+		char recordType;
+		List<String> strings;
+		List<Integer> values;
 
 		Mob mob = new Mob();
 		mob.setVnum(vnum);
 		mob.setKeywords(convertKeywords(nextString(reader)));
 		mob.setName(nextString(reader));
+		mob.setDescription(nextString(reader));
+		mob.setLongDescription(nextBlock(reader));
+
+		// act affected alignment recordType
+		strings = nextStringValues(reader);
+		mob.setActFlags(convertBitVector(ActFlag.class, Integer.parseInt(strings.get(0))));
+		mob.setAffectFlags(convertBitVector(AffectFlag.class, Integer.parseInt(strings.get(1))));
+		mob.setAlignment(Integer.parseInt(strings.get(2)));
+		recordType = strings.get(3).charAt(0);
+
+		if (recordType != 'C') {
+			// Not that uncommon
+			// log.info("Got a mob with record type: {}", recordType);
+		}
+
+		// level hitroll armor hpdice damdice
+		strings = nextStringValues(reader);
+		mob.setLevel(Integer.parseInt(strings.get(0)));
+		mob.setHitroll(Integer.parseInt(strings.get(1)));
+		mob.setArmor(Integer.parseInt(strings.get(2)));
+		mob.setHp(Range.of(strings.get(3)));
+		mob.setDamage(Range.of(strings.get(4)));
+
+		// gold exp
+		values = nextValues(reader);
+		mob.setGold(values.get(0));
+		mob.setExperience(values.get(1));
 
 		world.addMob(mob, area);
 	}
@@ -358,8 +391,11 @@ public class SmaugParser {
 			nextLine(reader);
 
 			if (line.endsWith("~")) {
-				// Last line, drop the tilde
-				lines.add(line.substring(0, line.length() - 1));
+				// Last line
+				if (line.length() > 1) {
+					// Drop the tilde before adding the last content
+					lines.add(line.substring(0, line.length() - 1));
+				}
 				break;
 			} else {
 				lines.add(line);
@@ -382,6 +418,10 @@ public class SmaugParser {
 		return Stream.of(line.split("\\s+")).map(Integer::valueOf).collect(Collectors.toList());
 	}
 
+	private List<String> nextStringValues(BufferedReader reader) {
+		nextLine(reader);
+		return Stream.of(line.split("\\s+")).collect(Collectors.toList());
+	}
 
 	private Optional<Matcher> matches(String input, String regex) {
 		Matcher matcher = Pattern.compile(regex).matcher(input);

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title=${mob.title}">
+<th:block layout:fragment="content">
+
+<table>
+	<tr>
+		<td>Description</td>
+		<td th:text="${mob.description}"></td>
+	</tr>
+	<tr>
+		<td>Long Description</td>
+		<td>
+			<ul>
+			<th:block th:each="line : ${mob.longDescription}">
+				<li th:text="${line}">Lorem ipsum dolor sit amet</li>
+			</th:block>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>Keywords</td>
+		<td th:text="${mob.keywords}"></td>
+	</tr>
+	<tr>
+		<td>Level</td>
+		<td th:text="${mob.level}"></td>
+	</tr>
+	<tr>
+		<td>Alignment</td>
+		<td th:text="${mob.alignment}"></td>
+	</tr>
+	<tr>
+		<td>Gold</td>
+		<td th:text="${mob.gold}"></td>
+	</tr>
+	<tr>
+		<td>Experience</td>
+		<td th:text="${mob.experience}"></td>
+	</tr>
+	<tr>
+		<td>Act Flags</td>
+		<td th:text="${mob.actFlags}"></td>
+	</tr>
+	<tr>
+		<td>Affect Flags</td>
+		<td th:text="${mob.affectFlags}"></td>
+	</tr>
+	<tr>
+		<td>Hit Roll</td>
+		<td th:text="${mob.hitroll}"></td>
+	</tr>
+	<tr>
+		<td>Damage</td>
+		<td th:text="${mob.damage}"></td>
+	</tr>
+	<tr>
+		<td>Hit Points</td>
+		<td th:text="${mob.hp}"></td>
+	</tr>
+	<tr>
+		<td>Armor</td>
+		<td th:text="${mob.armor}"></td>
+	</tr>
+</table>
+
+</th:block>
+</html>

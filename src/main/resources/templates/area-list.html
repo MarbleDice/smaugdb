@@ -11,13 +11,11 @@
 		<th>Low Level Range</th>
 		<th>High Level Range</th>
 	</tr>
-<th:block th:each="area : ${areas}">
-	<tr>
+	<tr th:each="area : ${areas}">
 		<td><a th:href="@{${'/area/' + area.urlSafeName}}" th:text="${area.name}">Area name</a></td>
 		<td th:text="${area.lowSoftRange}"></td>
 		<td th:text="${area.HighSoftRange}"></td>
 	</tr>
-</th:block>
 </table>
 
 </th:block>

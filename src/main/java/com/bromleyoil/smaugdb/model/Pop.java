@@ -86,6 +86,16 @@ public class Pop {
 		}
 	}
 
+	public String getMobDescription() {
+		if (type == PopType.WORN) {
+			return "Equipped with ";
+		} else if (type == PopType.HELD) {
+			return "Carrying ";
+		} else {
+			return "Unrelated to ";
+		}
+	}
+
 	/** Minimum level the item can appear at this location */
 	public int getMinItemLevel() {
 		return minItemLevel;

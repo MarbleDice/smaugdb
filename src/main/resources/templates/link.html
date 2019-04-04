@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title='Link Fragments'">
+<th:block layout:fragment="content">
+	<a th:fragment="item (item)" th:href="@{${'/item/' + item.vnum}}" th:text="${item.name}"></a>
+	<a th:fragment="mob (mob)" th:href="@{${'/mob/' + mob.vnum}}" th:text="${mob.name}"></a>
+</th:block>
+</html>

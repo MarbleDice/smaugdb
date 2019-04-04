@@ -64,5 +64,23 @@
 	</tr>
 </table>
 
+<h3>Appearances</h3>
+
+<ul>
+	<li th:each="spawn : ${mob.spawns}">
+		<span th:text="${spawn.mobDescription + ' ' + spawn.room}">Appears in a room</span>
+		<span th:text="${'(maximum ' + spawn.limit + ')'}" th:if="${spawn.limit != mob.spawns.size()}">(maximum 1)</span>
+	</li>
+</ul>
+
+<h3>Possessions</h3>
+
+<ul>
+	<li th:each="pop : ${mob.containedPops}">
+		<span th:text="${pop.mobDescription}">Equipped with</span>
+		<a th:replace="~{link::item(${pop.item})}"></a>
+	</li>
+</ul>
+
 </th:block>
 </html>

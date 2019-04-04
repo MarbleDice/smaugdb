@@ -3,6 +3,8 @@ package com.bromleyoil.smaugdb.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
+
 public class Spawn {
 
 	private static final Logger log = LoggerFactory.getLogger(Spawn.class);
@@ -15,8 +17,6 @@ public class Spawn {
 		this.mob = mob;
 		this.room = room;
 		this.limit = limit;
-		mob.addSpawn(this);
-		room.addSpawn(this);
 	}
 
 	public static Mob in(Mob mob, Room room, int limit) {
@@ -25,6 +25,16 @@ public class Spawn {
 		mob.addSpawn(spawn);
 		room.addSpawn(spawn);
 		return mob;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s in %s%s", mob, room, limit == 1 ? "" : (" (max " + limit + ")"));
+	}
+
+	/** Gets a description of this spawn from the mob's perspective. */
+	public String getMobDescription() {
+		return "May be found " + (mob.hasActFlag(ActFlag.SENTINEL) ? "in " : "around ");
 	}
 
 	/** The mob the item pops on or in */

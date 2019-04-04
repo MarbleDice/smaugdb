@@ -95,12 +95,20 @@ public class Mob {
 		return actFlags;
 	}
 
+	public boolean hasActFlag(ActFlag actFlag) {
+		return actFlags.contains(actFlag);
+	}
+
 	public void setActFlags(List<ActFlag> actFlags) {
 		this.actFlags = actFlags;
 	}
 
 	public List<AffectFlag> getAffectFlags() {
 		return affectFlags;
+	}
+
+	public boolean hasAffectFlag(AffectFlag affectFlag) {
+		return affectFlags.contains(affectFlag);
 	}
 
 	public void setAffectFlags(List<AffectFlag> affectFlags) {

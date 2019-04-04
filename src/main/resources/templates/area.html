@@ -20,7 +20,9 @@
 
 <table class="three-column">
 	<tr th:each="row : ${@utils.partition(area.mobs.?[exists == true], 3)}">
-		<td th:each="mob : ${row}"><a th:href="@{${'/mob/' + mob.vnum}}" th:text="${mob.name}">Mob</a></td>
+		<td th:each="mob : ${row}">
+			<a th:replace="~{link::mob(${mob})}"></a>
+		</td>
 	</tr>
 </table>
 
@@ -28,7 +30,9 @@
 
 <table class="three-column">
 	<tr th:each="row : ${@utils.partition(area.items.?[exists == true], 3)}">
-		<td th:each="item : ${row}"><a th:href="@{${'/item/' + item.vnum}}" th:text="${item.name}">Item</a></td>
+		<td th:each="item : ${row}">
+			<a th:replace="~{link::item(${item})}"></a>
+		</td>
 	</tr>
 </table>
 

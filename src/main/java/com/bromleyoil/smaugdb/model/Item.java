@@ -36,6 +36,25 @@ public class Item {
 	private List<Pop> pops = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
+	public String getCssClass() {
+		if (!hasWearFlag(WearFlag.TAKE)) {
+			return "item decoration";
+		} else if (isEquipment()) {
+			return "item equipment";
+		} else {
+			return "item object";
+		}
+	}
+
+	public boolean isEquipment() {
+		for (WearFlag wearFlag : wearFlags) {
+			if (WearFlag.EQUIP_FLAGS.contains(wearFlag)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		return getName();
@@ -101,12 +120,20 @@ public class Item {
 		return extraFlags;
 	}
 
+	public boolean hasExtraFlag(ExtraFlag extraFlag) {
+		return extraFlags.contains(extraFlag);
+	}
+
 	public void setExtraFlags(List<ExtraFlag> extraFlags) {
 		this.extraFlags = extraFlags;
 	}
 
 	public List<WearFlag> getWearFlags() {
 		return wearFlags;
+	}
+
+	public boolean hasWearFlag(WearFlag wearFlag) {
+		return wearFlags.contains(wearFlag);
 	}
 
 	public void setWearFlags(List<WearFlag> wearFlags) {

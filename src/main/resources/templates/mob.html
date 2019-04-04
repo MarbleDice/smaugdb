@@ -66,7 +66,7 @@
 
 <h3>Location and Possessions</h3>
 
-<ul class="nested">
+<ul class="multi-level">
 	<li th:each="spawn : ${mob.spawns}">
 		<span th:text="${spawn.mobDescription + ' ' + spawn.room}">Appears in a room</span>
 		<span th:text="${'(maximum ' + spawn.limit + ')'}" th:if="${spawn.limit != mob.spawns.size()}">(maximum 1)</span>

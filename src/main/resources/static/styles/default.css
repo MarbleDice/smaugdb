@@ -10,10 +10,17 @@ ul.unstyled {
 	padding: 0;
 }
 
-ul.nested > li {
+ul.multi-level > li {
 	margin-bottom:10px;
 }
 
+button {
+	cursor: pointer;
+}
+
+/**
+ * Links
+ */
 a, a:visited {
 	color: #b0530e;
 	text-decoration: none;
@@ -23,9 +30,26 @@ a:hover {
 	color: #ea7c10;
 }
 
-button {
-	cursor: pointer;
+a.mob.non-aggressive {
+	color: #cc7a00;
 }
+
+a.mob.aggressive {
+	color: #ff4000;
+}
+
+a.item.decoration {
+	color: #ccbb00;
+}
+
+a.item.equipment {
+	color: #009933;
+}
+
+a.item.object {
+	color: #0052cc;
+}
+
 
 /**
  * Main layout

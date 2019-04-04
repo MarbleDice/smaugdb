@@ -30,6 +30,10 @@ public class Mob {
 	private List<Spawn> spawns = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
+	public String getCssClass() {
+		return hasActFlag(ActFlag.AGGRESSIVE) ? "mob aggressive" : "mob non-aggressive";
+	}
+
 	@Override
 	public String toString() {
 		return getName();
@@ -132,6 +136,7 @@ public class Mob {
 	}
 
 	public int getHitroll() {
+		// TODO autogen
 		return hitroll;
 	}
 
@@ -140,6 +145,7 @@ public class Mob {
 	}
 
 	public int getArmor() {
+		// TODO autogen
 		return armor;
 	}
 
@@ -148,6 +154,7 @@ public class Mob {
 	}
 
 	public Range getHp() {
+		// TODO autogen
 		return hp;
 	}
 
@@ -156,6 +163,7 @@ public class Mob {
 	}
 
 	public Range getDamage() {
+		// TODO autogen
 		return damage;
 	}
 

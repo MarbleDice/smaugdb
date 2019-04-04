@@ -19,6 +19,10 @@ public class Pop {
 	public static final Comparator<Pop> EQUIPMENT_FIRST = Comparator.comparing((Pop x) -> x.getType() != PopType.WORN)
 			.thenComparing(x -> x.getItem().getName());
 
+	public static final Comparator<Pop> EQUIP_ORDER = Comparator
+			.comparing((Pop x) -> x.getWearFlag() == null ? WearFlag.values().length : x.getWearFlag().ordinal())
+			.thenComparing(x -> x.getItem().getName());
+
 	private int minItemLevel;
 	private int maxItemLevel;
 	private Item item;

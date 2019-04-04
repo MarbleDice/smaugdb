@@ -47,8 +47,8 @@
 		<td th:text="${mob.affectFlags}"></td>
 	</tr>
 	<tr>
-		<td>Hit Roll</td>
-		<td th:text="${mob.hitroll}"></td>
+		<td>THAC0</td>
+		<td th:text="${mob.thac0 + ' (' + mob.accuracy + ')'}"></td>
 	</tr>
 	<tr>
 		<td>Damage</td>

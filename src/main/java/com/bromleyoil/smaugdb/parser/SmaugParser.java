@@ -202,15 +202,14 @@ public class SmaugParser {
 		mob.setAlignment(Integer.parseInt(strings.get(2)));
 		recordType = strings.get(3).charAt(0);
 
-		if (recordType != 'C') {
-			// Not that uncommon
-			// log.info("Got a mob with record type: {}", recordType);
+		if (recordType != 'C' && recordType != 'S') {
+			log.info("Got a mob with record type {}: {}", recordType, mob.getName());
 		}
 
-		// level hitroll armor hpdice damdice
+		// level thac0 armor hpdice damdice
 		strings = nextStringValues(reader);
 		mob.setLevel(Integer.parseInt(strings.get(0)));
-		mob.setHitroll(Integer.parseInt(strings.get(1)));
+		mob.setThac0(Integer.parseInt(strings.get(1)));
 		mob.setArmor(Integer.parseInt(strings.get(2)));
 		mob.setHp(Range.of(strings.get(3)));
 		mob.setDamage(Range.of(strings.get(4)));
@@ -219,6 +218,24 @@ public class SmaugParser {
 		values = nextValues(reader);
 		mob.setGold(values.get(0));
 		mob.setExperience(values.get(1));
+
+		// position defposition gender
+		nextValues(reader);
+
+		// Complex and very complex records have extra fields
+		if (recordType == 'C' || recordType == 'V') {
+			// str int wis dex con cha lck
+			nextValues(reader);
+
+			// Saves vs poison/death wand para/petrify breath spell/staff
+			nextValues(reader);
+
+			// race class height weight speaks speaking numattacks
+			values = nextValues(reader);
+
+			// hitroll damroll xflags resist immune suscept attacks defenses
+			values = nextValues(reader);
+		}
 
 		world.addMob(mob, area);
 	}

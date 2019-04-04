@@ -5,9 +5,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 
+/**
+ * Represents a mobile.
+ * 
+ */
 public class Mob {
 
 	private Area area;
@@ -20,6 +25,7 @@ public class Mob {
 	private List<AffectFlag> affectFlags;
 	private int alignment;
 	private int level;
+	private int thac0;
 	private int hitroll;
 	private int armor;
 	private Range hp;
@@ -128,6 +134,7 @@ public class Mob {
 	}
 
 	public int getLevel() {
+		// TODO fuzzed
 		return level;
 	}
 
@@ -135,13 +142,40 @@ public class Mob {
 		this.level = level;
 	}
 
+	/**
+	 * Mob THAC0 - Higher is better. Mobs gain +(1/32) hitroll per level for each point.
+	 * Players interpolate between 18 and 6-12 based on class over 32 levels, gaining 9-18 hitroll at level 50.
+	 * 
+	 * 1 hitroll = 5% chance to hit
+	 * Armor class = Lower is better. The best is -190. Target AC reduces hitroll at 10 AC = -1 hitroll.
+	 * Weapon not visible is +1 hitroll
+	 * Can't see opponent is -4 hitroll
+	 * Weapon proficiency is -5 to +4 hitroll
+	 * Smarter combatant gains +0.1 hitroll per logged player kill per point of int difference
+	 * 
+	 */
+	public int getThac0() {
+		return thac0;
+	}
+
+	public void setThac0(int thac0) {
+		this.thac0 = thac0;
+	}
+
 	public int getHitroll() {
-		// TODO autogen
 		return hitroll;
 	}
 
 	public void setHitroll(int hitroll) {
 		this.hitroll = hitroll;
+	}
+
+	public String getAccuracy() {
+		int opponentArmor = -100;
+
+		int acc = Utils.interpolate(level, 0, thac0, 32, 0);
+
+		return String.valueOf(acc);
 	}
 
 	public int getArmor() {

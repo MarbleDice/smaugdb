@@ -29,6 +29,7 @@ import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
+import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
@@ -46,8 +47,8 @@ public class SmaugParser {
 	/** The current line of text from the area file */
 	private String line;
 
-	/** The last mob processed while parsing resets */
-	private Mob lastMob;
+	/** The last mob spawn processed while parsing resets */
+	private Spawn lastSpawn;
 
 	private SmaugParser(World world) {
 		// Private constructor
@@ -326,20 +327,20 @@ public class SmaugParser {
 	 *        The object or mob being reset.
 	 * @param limit
 	 *        The mob spawning limit (only used for mob resets)
-	 * @param vnum2
-	 *        The room, mob, or object containing the mob or object being reset.
+	 * @param arg
+	 *        The containing room, mob, object, or wear location of the mob/object being reset.
 	 */
-	private void parseReset(char code, int vnum1, int limit, int vnum2) {
+	private void parseReset(char code, int vnum1, int limit, int arg) {
 		if (code == 'O') {
-			Pop.found(world.getItem(vnum1), world.getRoom(vnum2));
+			Pop.found(world.getItem(vnum1), world.getRoom(arg));
 		} else if (code == 'P') {
-			Pop.contained(world.getItem(vnum1), world.getItem(vnum2));
+			Pop.contained(world.getItem(vnum1), world.getItem(arg));
 		} else if (code == 'M') {
-			lastMob = Spawn.in(world.getMob(vnum1), world.getRoom(vnum2), limit);
+			lastSpawn = Spawn.in(world.getMob(vnum1), world.getRoom(arg), limit);
 		} else if (code == 'E') {
-			Pop.worn(world.getItem(vnum1), lastMob);
+			Pop.worn(world.getItem(vnum1), lastSpawn, EquipSlot.values()[arg].getWearFlag());
 		} else if (code == 'G') {
-			Pop.held(world.getItem(vnum1), lastMob);
+			Pop.held(world.getItem(vnum1), lastSpawn);
 		} else {
 			throw new ParseException("Unknown reset code: " + code);
 		}

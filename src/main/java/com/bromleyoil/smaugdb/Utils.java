@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 /**
  * Contains various helper methods for use in thymeleaf templates.
  * 
- * @author moorwi
  */
 @Component
 public class Utils {

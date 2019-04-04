@@ -10,6 +10,10 @@ ul.unstyled {
 	padding: 0;
 }
 
+ul.nested > li {
+	margin-bottom:10px;
+}
+
 a, a:visited {
 	color: #b0530e;
 	text-decoration: none;

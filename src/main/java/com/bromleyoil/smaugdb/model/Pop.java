@@ -1,25 +1,31 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.util.Comparator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bromleyoil.smaugdb.model.enums.PopType;
+import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 /**
  * Represents a location where an item appears.
  * 
- * @author moorwi
  */
 public class Pop {
 
 	private static final Logger log = LoggerFactory.getLogger(Pop.class);
+
+	public static final Comparator<Pop> EQUIPMENT_FIRST = Comparator.comparing((Pop x) -> x.getType() != PopType.WORN)
+			.thenComparing(x -> x.getItem().getName());
 
 	private int minItemLevel;
 	private int maxItemLevel;
 	private Item item;
 	private PopType type;
 
-	private Mob mob;
+	private Spawn spawn;
+	private WearFlag wearFlag;
 	private Item container;
 	private Room room;
 
@@ -49,25 +55,26 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop held(Item item, Mob mob) {
-		log.debug("Giving {} to {}", item, mob);
+	public static Pop held(Item item, Spawn spawn) {
+		log.debug("Giving {} to {}", item, spawn.getMob());
 		Pop pop = new Pop();
 		pop.setType(PopType.HELD);
 		pop.setItem(item);
-		pop.setMob(mob);
+		pop.setSpawn(spawn);
 		item.addPop(pop);
-		mob.addContainedPop(pop);
+		spawn.addContainedPop(pop);
 		return pop;
 	}
 
-	public static Pop worn(Item item, Mob mob) {
-		log.debug("Equipping {} to {}", item, mob);
+	public static Pop worn(Item item, Spawn spawn, WearFlag wearFlag) {
+		log.debug("Equipping {} to {}", item, spawn.getMob());
 		Pop pop = new Pop();
 		pop.setType(PopType.WORN);
 		pop.setItem(item);
-		pop.setMob(mob);
+		pop.setSpawn(spawn);
+		pop.setWearFlag(wearFlag);
 		item.addPop(pop);
-		mob.addContainedPop(pop);
+		spawn.addContainedPop(pop);
 		return pop;
 	}
 
@@ -78,9 +85,9 @@ public class Pop {
 		} else if (type == PopType.CONTAINED) {
 			return String.format("%s contained in %s", item, container);
 		} else if (type == PopType.WORN) {
-			return String.format("%s worn by %s", item, mob);
+			return String.format("%s worn by %s", item, spawn.getMob());
 		} else if (type == PopType.HELD) {
-			return String.format("%s held by %s", item, mob);
+			return String.format("%s held by %s", item, spawn.getMob());
 		} else {
 			return String.format("%s appears in an unknown location", item);
 		}
@@ -131,13 +138,27 @@ public class Pop {
 		this.type = type;
 	}
 
-	/** The mob the item pops on or in */
-	public Mob getMob() {
-		return mob;
+	/** The specific spawn to which the item is assigned */
+	public Spawn getSpawn() {
+		return spawn;
 	}
 
-	public void setMob(Mob mob) {
-		this.mob = mob;
+	public void setSpawn(Spawn spawn) {
+		this.spawn = spawn;
+	}
+
+	/** The spawned mob the item pops on or in */
+	public Mob getMob() {
+		return spawn.getMob();
+	}
+
+	/** The location the item is equipped */
+	public WearFlag getWearFlag() {
+		return wearFlag;
+	}
+
+	public void setWearFlag(WearFlag wearFlag) {
+		this.wearFlag = wearFlag;
 	}
 
 	/** The contain the item pops in */

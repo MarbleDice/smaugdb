@@ -1,5 +1,10 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +17,7 @@ public class Spawn {
 	private Mob mob;
 	private Room room;
 	private int limit;
+	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIPMENT_FIRST);
 
 	private Spawn(Mob mob, Room room, int limit) {
 		this.mob = mob;
@@ -19,12 +25,12 @@ public class Spawn {
 		this.limit = limit;
 	}
 
-	public static Mob in(Mob mob, Room room, int limit) {
+	public static Spawn in(Mob mob, Room room, int limit) {
 		log.debug("Spawning {} in {} with limit {}", mob, room, limit);
 		Spawn spawn = new Spawn(mob, room, limit);
 		mob.addSpawn(spawn);
 		room.addSpawn(spawn);
-		return mob;
+		return spawn;
 	}
 
 	@Override
@@ -62,5 +68,13 @@ public class Spawn {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public Collection<Pop> getContainedPops() {
+		return Collections.unmodifiableCollection(containedPops);
+	}
+
+	public void addContainedPop(Pop containedPop) {
+		containedPops.add(containedPop);
 	}
 }

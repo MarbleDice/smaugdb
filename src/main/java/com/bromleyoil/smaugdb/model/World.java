@@ -1,11 +1,13 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +20,7 @@ public class World {
 
 	private static final Logger log = LoggerFactory.getLogger(World.class);
 
-	@Value("${mud.path}")
+	@Value("${mud.path:}")
 	private String mudPath;
 
 	private Map<String, Area> areas = new HashMap<>();
@@ -28,6 +30,12 @@ public class World {
 
 	@PostConstruct
 	public void postConstruct() {
+		if (StringUtils.isBlank(mudPath)) {
+			throw new IllegalArgumentException("You must specify --mud.path=<PATH TO MUD> as an argument!");
+		} else if (!Paths.get(mudPath).toFile().isDirectory()) {
+			throw new IllegalArgumentException("Invalid mud.path: " + mudPath);
+		}
+
 		SmaugParser.loadWorld(this, mudPath);
 	}
 

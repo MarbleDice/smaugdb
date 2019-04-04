@@ -3,7 +3,7 @@ package com.bromleyoil.smaugdb.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thymeleaf.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;

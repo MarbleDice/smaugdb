@@ -22,6 +22,10 @@ public class Utils {
 		return ListUtils.partition(list, partitionSize);
 	}
 
+	public static int constrain(int min, int max, int value) {
+		return Integer.max(min, Integer.min(max, value));
+	}
+
 	/**
 	 * Given a linear function defined by two points (0, y1) and (32, y2), returns the value f(x). Gets a little fuzzy
 	 * due to integer rounding.

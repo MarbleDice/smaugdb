@@ -1,6 +1,7 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
+import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
+import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
+import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 
 /**
  * Represents a mobile.
@@ -20,19 +24,25 @@ public class Mob {
 	private String name;
 	private String keywords;
 	private String description;
-	private List<String> longDescription;
-	private List<ActFlag> actFlags;
-	private List<AffectFlag> affectFlags;
+	private List<String> longDescription = new ArrayList<>();;
+	private List<ActFlag> actFlags = new ArrayList<>();;
+	private List<AffectFlag> affectFlags = new ArrayList<>();;
 	private int alignment;
 	private int level;
-	private int thac0;
-	private int hitroll;
-	private int armor;
-	private Range hp;
-	private Range damage;
 	private int gold;
 	private int experience;
-
+	private Range hp;
+	private int armor;
+	private int thac0;
+	private int hitroll;
+	private Range damage;
+	private int damroll;
+	private List<ExtraFlag> extraFlags = new ArrayList<>();
+	private List<ResistFlag> resistFlags = new ArrayList<>();
+	private List<ResistFlag> immuneFlags = new ArrayList<>();
+	private List<ResistFlag> vulnerableFlags = new ArrayList<>();
+	private List<AttackFlag> attackFlags = new ArrayList<>();
+	private List<DefenseFlag> defenseFlags = new ArrayList<>();
 	private List<Spawn> spawns = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
@@ -171,11 +181,9 @@ public class Mob {
 	}
 
 	public String getAccuracy() {
-		int opponentArmor = -100;
-
-		int acc = Utils.interpolate(level, 0, thac0, 32, 0);
-
-		return String.valueOf(acc);
+		int accuracy = hitroll - Utils.interpolate(level, 0, thac0, 32, 0);
+		accuracy = Utils.constrain(1, 19, accuracy);
+		return String.valueOf(accuracy);
 	}
 
 	public int getArmor() {
@@ -219,6 +227,62 @@ public class Mob {
 
 	public void setExperience(int experience) {
 		this.experience = experience;
+	}
+
+	public int getDamroll() {
+		return damroll;
+	}
+
+	public void setDamroll(int damroll) {
+		this.damroll = damroll;
+	}
+
+	public List<ExtraFlag> getExtraFlags() {
+		return Collections.unmodifiableList(extraFlags);
+	}
+
+	public void setExtraFlags(List<ExtraFlag> extraFlags) {
+		this.extraFlags = extraFlags;
+	}
+
+	public List<ResistFlag> getResistFlags() {
+		return Collections.unmodifiableList(resistFlags);
+	}
+
+	public void setResistFlags(List<ResistFlag> resistFlags) {
+		this.resistFlags = resistFlags;
+	}
+
+	public List<ResistFlag> getImmuneFlags() {
+		return Collections.unmodifiableList(immuneFlags);
+	}
+
+	public void setImmuneFlags(List<ResistFlag> immuneFlags) {
+		this.immuneFlags = immuneFlags;
+	}
+
+	public List<ResistFlag> getVulnerableFlags() {
+		return Collections.unmodifiableList(vulnerableFlags);
+	}
+
+	public void setVulnerableFlags(List<ResistFlag> vulnerableFlags) {
+		this.vulnerableFlags = vulnerableFlags;
+	}
+
+	public List<AttackFlag> getAttackFlags() {
+		return Collections.unmodifiableList(attackFlags);
+	}
+
+	public void setAttackFlags(List<AttackFlag> attackFlags) {
+		this.attackFlags = attackFlags;
+	}
+
+	public List<DefenseFlag> getDefenseFlags() {
+		return Collections.unmodifiableList(defenseFlags);
+	}
+
+	public void setDefenseFlags(List<DefenseFlag> defenseFlags) {
+		this.defenseFlags = defenseFlags;
 	}
 
 	public List<Spawn> getSpawns() {

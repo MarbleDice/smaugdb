@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bromleyoil.smaugdb.model.Area;
+import com.bromleyoil.smaugdb.model.AttackFlag;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Pop;
@@ -29,9 +30,11 @@ import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
+import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class SmaugParser {
@@ -235,6 +238,14 @@ public class SmaugParser {
 
 			// hitroll damroll xflags resist immune suscept attacks defenses
 			values = nextValues(reader);
+			mob.setHitroll(values.get(0));
+			mob.setDamroll(values.get(1));
+			// values[2] is xflags, which are body parts
+			mob.setResistFlags(convertBitVector(ResistFlag.class, values.get(3)));
+			mob.setImmuneFlags(convertBitVector(ResistFlag.class, values.get(4)));
+			mob.setVulnerableFlags(convertBitVector(ResistFlag.class, values.get(5)));
+			mob.setAttackFlags(convertBitVector(AttackFlag.class, values.get(6)));
+			mob.setDefenseFlags(convertBitVector(DefenseFlag.class, values.get(7)));
 		}
 
 		world.addMob(mob, area);

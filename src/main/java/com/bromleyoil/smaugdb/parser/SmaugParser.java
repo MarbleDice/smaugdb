@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bromleyoil.smaugdb.ValueList;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.AttackFlag;
 import com.bromleyoil.smaugdb.model.Item;
@@ -220,7 +221,9 @@ public class SmaugParser {
 		// gold exp
 		values = nextValues(reader);
 		mob.setGold(values.get(0));
-		mob.setExperience(values.get(1));
+		if (values.size() > 1) {
+			mob.setExperience(values.get(1));
+		}
 
 		// position defposition gender
 		nextValues(reader);
@@ -236,7 +239,7 @@ public class SmaugParser {
 			// race class height weight speaks speaking numattacks
 			values = nextValues(reader);
 
-			// hitroll damroll xflags resist immune suscept attacks defenses
+			// hitroll damroll xflags resist immune susceptible attacks defenses
 			values = nextValues(reader);
 			mob.setHitroll(values.get(0));
 			mob.setDamroll(values.get(1));
@@ -444,7 +447,7 @@ public class SmaugParser {
 	 */
 	private List<Integer> nextValues(BufferedReader reader) {
 		nextLine(reader);
-		return Stream.of(line.split("\\s+")).map(Integer::valueOf).collect(Collectors.toList());
+		return new ValueList(Stream.of(line.split("\\s+")).map(Integer::valueOf).collect(Collectors.toList()));
 	}
 
 	private List<String> nextStringValues(BufferedReader reader) {

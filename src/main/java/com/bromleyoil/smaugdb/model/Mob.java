@@ -50,6 +50,12 @@ public class Mob {
 		return hasActFlag(ActFlag.AGGRESSIVE) ? "mob aggressive" : "mob non-aggressive";
 	}
 
+	public String getAccuracy() {
+		int accuracy = hitroll - Utils.interpolate(level, 0, thac0, 32, 0);
+		accuracy = Utils.constrain(1, 19, accuracy);
+		return String.valueOf(accuracy);
+	}
+
 	@Override
 	public String toString() {
 		return getName();
@@ -178,12 +184,6 @@ public class Mob {
 
 	public void setHitroll(int hitroll) {
 		this.hitroll = hitroll;
-	}
-
-	public String getAccuracy() {
-		int accuracy = hitroll - Utils.interpolate(level, 0, thac0, 32, 0);
-		accuracy = Utils.constrain(1, 19, accuracy);
-		return String.valueOf(accuracy);
 	}
 
 	public int getArmor() {

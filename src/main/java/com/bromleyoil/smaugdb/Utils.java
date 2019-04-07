@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -57,5 +58,9 @@ public class Utils {
 		BigDecimal b = BigDecimal.valueOf(y1).subtract(m.multiply(BigDecimal.valueOf(x1)));
 		// y3 = m * x3 + b
 		return m.multiply(BigDecimal.valueOf(x3)).intValue() + b.intValue();
+	}
+
+	public static String enumToString(Enum<?> anEnum) {
+		return StringUtils.capitalize(anEnum.name().toLowerCase().replace("_", " "));
 	}
 }

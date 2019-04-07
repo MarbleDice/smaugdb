@@ -23,6 +23,7 @@ public class Item {
 	private List<WearFlag> wearFlags = new ArrayList<>();
 	private int weight;
 	private int cost;
+	private List<Apply> applies = new ArrayList<>();
 
 	private DamageType damageType;
 	private int minDamage;
@@ -154,6 +155,18 @@ public class Item {
 
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+
+	public List<Apply> getApplies() {
+		return applies;
+	}
+
+	public void addApply(Apply apply) {
+		applies.add(apply);
+	}
+
+	public void setApplies(List<Apply> applies) {
+		this.applies = applies;
 	}
 
 	public DamageType getDamageType() {

@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bromleyoil.smaugdb.ValueList;
+import com.bromleyoil.smaugdb.model.Apply;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.AttackFlag;
 import com.bromleyoil.smaugdb.model.Item;
@@ -31,6 +32,7 @@ import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
+import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
@@ -237,7 +239,7 @@ public class SmaugParser {
 			nextValues(reader);
 
 			// race class height weight speaks speaking numattacks
-			values = nextValues(reader);
+			nextValues(reader);
 
 			// hitroll damroll xflags resist immune susceptible attacks defenses
 			values = nextValues(reader);
@@ -289,6 +291,19 @@ public class SmaugParser {
 		values = nextValues(reader);
 		item.setWeight(values.get(0));
 
+		// Extra/Apply sections
+		nextLine(reader);
+		while ("E".equals(line) || "A".equals(line)) {
+			if ("A".equals(line)) {
+				values = nextValues(reader);
+				item.addApply(new Apply(ApplyType.values()[values.get(0)], values.get(1)));
+			} else if ("E".equals(line)) {
+				nextString(reader);
+				nextString(reader);
+			}
+			nextLine(reader);
+		}
+
 		world.addItem(item, area);
 	}
 
@@ -299,6 +314,7 @@ public class SmaugParser {
 	 * @param values
 	 */
 	private void interpretValues(Item item, List<Integer> values) {
+		// TODO
 		if (values.size() > 4) {
 			log.info("Got an item with more than 4 values: {} has \"{}\"", item, values);
 		}

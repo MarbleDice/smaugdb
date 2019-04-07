@@ -24,9 +24,9 @@ public class Mob {
 	private String name;
 	private String keywords;
 	private String description;
-	private List<String> longDescription = new ArrayList<>();;
-	private List<ActFlag> actFlags = new ArrayList<>();;
-	private List<AffectFlag> affectFlags = new ArrayList<>();;
+	private List<String> longDescription = new ArrayList<>();
+	private List<ActFlag> actFlags = new ArrayList<>();
+	private List<AffectFlag> affectFlags = new ArrayList<>();
 	private int alignment;
 	private int level;
 	private int gold;
@@ -150,7 +150,6 @@ public class Mob {
 	}
 
 	public int getLevel() {
-		// TODO fuzzed
 		return level;
 	}
 
@@ -187,7 +186,6 @@ public class Mob {
 	}
 
 	public int getArmor() {
-		// TODO autogen
 		return armor;
 	}
 
@@ -196,7 +194,6 @@ public class Mob {
 	}
 
 	public Range getHp() {
-		// TODO autogen
 		return hp;
 	}
 
@@ -205,7 +202,6 @@ public class Mob {
 	}
 
 	public Range getDamage() {
-		// TODO autogen
 		return damage;
 	}
 

@@ -14,7 +14,7 @@ public class Apply {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s%d", type, value < 0 ? "-" : "+", value);
+		return String.format("%s %s%d", type, value >= 0 ? "+" : "", value);
 	}
 	public ApplyType getType() {
 		return type;

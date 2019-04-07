@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title='Limbo'">
+<th:block layout:fragment="content">
+
+<p>Some items do not appear in the game. These may be unused or reserved for special occaisons.
+
+<h3>Mobiles</h3>
+
+<table class="three-column">
+	<tr th:each="row : ${@utils.partition(world.mobs.?[exists == false], 3)}">
+		<td th:each="mob : ${row}">
+			<a th:replace="~{link::mob(${mob})}"></a>
+		</td>
+	</tr>
+</table>
+
+<h3>Items</h3>
+
+<table class="three-column">
+	<tr th:each="row : ${@utils.partition(world.items.?[exists == false], 3)}">
+		<td th:each="item : ${row}">
+			<a th:replace="~{link::item(${item})}"></a>
+		</td>
+	</tr>
+</table>
+
+</th:block>
+</html>

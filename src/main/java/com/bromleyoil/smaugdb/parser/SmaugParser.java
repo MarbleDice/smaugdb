@@ -314,7 +314,7 @@ public class SmaugParser {
 	 * @param values
 	 */
 	private void interpretValues(Item item, List<Integer> values) {
-		// TODO
+		// TODO interpret values
 		if (values.size() > 4) {
 			log.info("Got an item with more than 4 values: {} has \"{}\"", item, values);
 		}

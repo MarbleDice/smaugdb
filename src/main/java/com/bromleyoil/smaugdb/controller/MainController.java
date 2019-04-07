@@ -33,6 +33,13 @@ public class MainController {
 		return mav;
 	}
 
+	@RequestMapping("/item-search")
+	public ModelAndView itemSearch() {
+		ModelAndView mav = new ModelAndView("item-search");
+		// TODO add item search
+		return mav;
+	}
+
 	@RequestMapping("/item/{vnum}")
 	public ModelAndView item(@PathVariable Integer vnum) {
 		ModelAndView mav = new ModelAndView("item");
@@ -40,10 +47,24 @@ public class MainController {
 		return mav;
 	}
 
+	@RequestMapping("/mob-search")
+	public ModelAndView mobSearch() {
+		ModelAndView mav = new ModelAndView("mob-search");
+		// TODO add mob search
+		return mav;
+	}
+
 	@RequestMapping("/mob/{vnum}")
 	public ModelAndView mob(@PathVariable Integer vnum) {
 		ModelAndView mav = new ModelAndView("mob");
 		mav.addObject("mob", world.getMob(vnum));
+		return mav;
+	}
+
+	@RequestMapping("/limbo")
+	public ModelAndView limbo() {
+		ModelAndView mav = new ModelAndView("limbo");
+		mav.addObject("world", world);
 		return mav;
 	}
 }

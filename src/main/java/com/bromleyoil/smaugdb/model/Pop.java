@@ -28,6 +28,8 @@ public class Pop {
 	private Item item;
 	private PopType type;
 
+	// TODO mpoload
+
 	private Spawn spawn;
 	private WearFlag wearFlag;
 	private Item container;

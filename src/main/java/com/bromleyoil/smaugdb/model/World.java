@@ -1,6 +1,7 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,8 +70,8 @@ public class World {
 		rooms.put(room.getVnum(), room);
 	}
 
-	public Map<Integer, Mob> getMobs() {
-		return Collections.unmodifiableMap(mobs);
+	public Collection<Mob> getMobs() {
+		return Collections.unmodifiableCollection(mobs.values());
 	}
 
 	public Mob getMob(int vnum) {
@@ -87,8 +88,8 @@ public class World {
 		mobs.put(mob.getVnum(), mob);
 	}
 
-	public Map<Integer, Item> getItems() {
-		return Collections.unmodifiableMap(items);
+	public Collection<Item> getItems() {
+		return Collections.unmodifiableCollection(items.values());
 	}
 
 	public Item getItem(int vnum) {

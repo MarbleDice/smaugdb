@@ -8,6 +8,7 @@
 <table class="data">
 	<tr>
 		<th>Area Name</th>
+		<th>Author</th>
 		<th>Lv Range</th>
 		<th>Lv Range</th>
 		<th>Mobiles</th>
@@ -16,6 +17,7 @@
 	</tr>
 	<tr th:each="area : ${areas}">
 		<td><a th:href="@{${'/area/' + area.urlSafeName}}" th:text="${area.name}">Area name</a></td>
+		<td th:text="${area.author}"></td>
 		<td th:text="${area.lowSoftRange}"></td>
 		<td th:text="${area.HighSoftRange}"></td>
 		<td th:text="${area.mobs.?[exists == true].size()}"></td>

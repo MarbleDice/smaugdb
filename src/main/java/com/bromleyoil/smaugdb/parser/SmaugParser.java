@@ -105,7 +105,9 @@ public class SmaugParser {
 			while (line != null) {
 
 				if (line.startsWith("#AREA")) {
-					parseArea(reader);
+					parseAreaTag(reader);
+				} else if (line.startsWith("#AUTHOR")) {
+					parseAuthorTag(reader);
 				} else if (line.startsWith("#RANGES")) {
 					parseRanges(reader);
 				} else if (line.startsWith("#MOBILES")) {
@@ -130,7 +132,7 @@ public class SmaugParser {
 	 * 
 	 * @param reader
 	 */
-	private void parseArea(BufferedReader reader) {
+	private void parseAreaTag(BufferedReader reader) {
 		Matcher matcher = matches(line, "#AREA\\s+([^~]+)~")
 				.orElseThrow(() -> new ParseException("Invalid #AREA line: " + line));
 
@@ -138,6 +140,18 @@ public class SmaugParser {
 		area.setName(matcher.group(1));
 		world.addArea(area);
 
+		nextLine(reader);
+	}
+
+	/**
+	 * Parses the #AUTHOR tag
+	 * 
+	 * @param reader
+	 */
+	private void parseAuthorTag(BufferedReader reader) {
+		Matcher matcher = matches(line, "#AUTHOR\\s+([^~]+)~")
+				.orElseThrow(() -> new ParseException("Invalid #AUTHOR line: " + line));
+		area.setAuthor(matcher.group(1));
 		nextLine(reader);
 	}
 

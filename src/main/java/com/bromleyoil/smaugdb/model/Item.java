@@ -85,6 +85,10 @@ public class Item {
 		return name;
 	}
 
+	public String getTruncatedName() {
+		return name.length() <= 45 ? name : name.substring(0, 40) + "...";
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

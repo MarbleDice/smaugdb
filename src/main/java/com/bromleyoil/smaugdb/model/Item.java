@@ -1,10 +1,14 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
@@ -24,16 +28,8 @@ public class Item {
 	private int weight;
 	private int cost;
 	private List<Apply> applies = new ArrayList<>();
-
-	private DamageType damageType;
-	private int minDamage;
-	private int maxDamage;
-	private int damRoll;
-
-	// Wands, staves, potions, pills
-	private int spellLevel;
-	private List<Skill> skills = new ArrayList<>();
-
+	private List<Integer> values = new ArrayList<>();
+	private List<ContainerFlag> containerFlags = new ArrayList<>();
 	private List<Pop> pops = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
@@ -173,56 +169,96 @@ public class Item {
 		this.applies = applies;
 	}
 
-	public DamageType getDamageType() {
-		return damageType;
+	public List<Integer> getValues() {
+		return values;
 	}
 
-	public void setDamageType(DamageType damageType) {
-		this.damageType = damageType;
+	public void setValues(List<Integer> values) {
+		this.values = values;
 	}
 
-	public WeaponSkill getWeaponSkill() {
-		return damageType.getWeaponSkill();
-	}
-
-	public int getMinDamage() {
-		return minDamage;
-	}
-
-	public void setMinDamage(int minDamage) {
-		this.minDamage = minDamage;
-	}
-
-	public int getMaxDamage() {
-		return maxDamage;
-	}
-
-	public void setMaxDamage(int maxDamage) {
-		this.maxDamage = maxDamage;
-	}
-
-	public int getDamRoll() {
-		return damRoll;
-	}
-
-	public void setDamRoll(int damRoll) {
-		this.damRoll = damRoll;
+	public int getLightHours() {
+		return type == ItemType.LIGHT ? values.get(2) : 0;
 	}
 
 	public int getSpellLevel() {
-		return spellLevel;
-	}
-
-	public void setSpellLevel(int spellLevel) {
-		this.spellLevel = spellLevel;
+		return ItemType.SPELL_ITEMS.contains(type)
+				? values.get(0)
+				: 0;
 	}
 
 	public List<Skill> getSkills() {
-		return skills;
+		if (type == ItemType.SALVE) {
+			return Stream.of(Skill.of(values.get(4)), Skill.of(values.get(5))).collect(Collectors.toList());
+		} else if (ItemType.MAGICAL_DEVICES.contains(type)) {
+			// Wands and staves
+			return Stream.of(Skill.of(values.get(3))).collect(Collectors.toList());
+		} else if (ItemType.SPELL_ITEMS.contains(type)) {
+			// Potions, scrolls, pills
+			return Stream.of(Skill.of(values.get(1)), Skill.of(values.get(2)), Skill.of(values.get(3)))
+					.collect(Collectors.toList());
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
+	public int getCapacity() {
+		if (ItemType.CONTAINERS.contains(type)) {
+			return values.get(0);
+		} else if (ItemType.MAGICAL_DEVICES.contains(type)) {
+			return values.get(1);
+		} else {
+			return 0;
+		}
+	}
+
+	public int getMinDamage() {
+		return type == ItemType.WEAPON ? values.get(1) : 0;
+	}
+
+	public int getMaxDamage() {
+		return type == ItemType.WEAPON ? values.get(1) * values.get(2) : 0;
+	}
+
+	public DamageType getDamageType() {
+		return type == ItemType.WEAPON ? DamageType.values()[values.get(3)] : DamageType.NONE;
+	}
+
+	public WeaponSkill getWeaponSkill() {
+		return getDamageType().getWeaponSkill();
+	}
+
+	public String getDamage() {
+		return String.format("%d - %d %s (%s)", getMinDamage(), getMaxDamage(), getDamageType(), getWeaponSkill());
+	}
+
+	public int getArmor() {
+		return type == ItemType.ARMOR ? values.get(1) : 0;
+	}
+
+	public Item getKey() {
+		// TODO lookup key by vnum
+		Item key = new Item();
+		key.setName("key vnum " + values.get(2));
+		return key;
+	}
+
+	public List<ContainerFlag> getContainerFlags() {
+		return containerFlags;
+	}
+
+	public void setContainerFlags(List<ContainerFlag> containerFlags) {
+		this.containerFlags = containerFlags;
+	}
+
+	public Range getLevel() {
+		int min = 0;
+		int max = 0;
+		for (Pop pop : getPops()) {
+			min = pop.getMinItemLevel() < min ? pop.getMinItemLevel() : min;
+			max = pop.getMaxItemLevel() < max ? pop.getMaxItemLevel() : max;
+		}
+		return Range.of(min, max);
 	}
 
 	public List<Pop> getPops() {

@@ -33,6 +33,7 @@ import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
+import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
@@ -299,7 +300,10 @@ public class SmaugParser {
 
 		// "the values line" requires interpretation by type
 		values = nextValues(reader);
-		interpretValues(item, values);
+		item.setValues(values);
+		if (item.getType() == ItemType.CONTAINER) {
+			item.setContainerFlags(convertBitVector(ContainerFlag.class, values.get(1)));
+		}
 
 		// weight cost rent
 		values = nextValues(reader);
@@ -319,19 +323,6 @@ public class SmaugParser {
 		}
 
 		world.addItem(item, area);
-	}
-
-	/**
-	 * Interprets the values for an object... this'll be big and nasty.
-	 * 
-	 * @param item
-	 * @param values
-	 */
-	private void interpretValues(Item item, List<Integer> values) {
-		// TODO interpret values
-		if (values.size() > 4) {
-			log.info("Got an item with more than 4 values: {} has \"{}\"", item, values);
-		}
 	}
 
 	/**

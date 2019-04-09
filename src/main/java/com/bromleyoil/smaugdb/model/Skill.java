@@ -5,6 +5,16 @@ public class Skill {
 	private String name;
 	private int slot;
 
+	public Skill(int slot, String name) {
+		this.slot = slot;
+		this.name = name;
+	}
+
+	public static Skill of(int slot) {
+		// TODO need to load these
+		return new Skill(slot, "Spell " + slot);
+	}
+
 	public String getName() {
 		return name;
 	}

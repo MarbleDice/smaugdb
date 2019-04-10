@@ -57,7 +57,7 @@ public class World {
 	}
 
 	public Room getRoom(int vnum) {
-		if (!rooms.containsKey(vnum)) {
+		if (vnum > 0 && !rooms.containsKey(vnum)) {
 			log.warn("Room not found: {}", vnum);
 		}
 		return rooms.get(vnum);
@@ -75,7 +75,7 @@ public class World {
 	}
 
 	public Mob getMob(int vnum) {
-		if (!mobs.containsKey(vnum)) {
+		if (vnum > 0 && !mobs.containsKey(vnum)) {
 			log.warn("Mob not found: {}", vnum);
 		}
 		return mobs.get(vnum);
@@ -93,7 +93,7 @@ public class World {
 	}
 
 	public Item getItem(int vnum) {
-		if (!items.containsKey(vnum)) {
+		if (vnum > 0 && !items.containsKey(vnum)) {
 			log.warn("Item not found: {}", vnum);
 		}
 		return items.get(vnum);

@@ -23,8 +23,7 @@ public class Pop {
 			.comparing((Pop x) -> x.getWearFlag() == null ? WearFlag.values().length : x.getWearFlag().ordinal())
 			.thenComparing(x -> x.getItem().getName());
 
-	private int minItemLevel;
-	private int maxItemLevel;
+	private Range itemLevel;
 	private Item item;
 	private PopType type;
 
@@ -109,22 +108,33 @@ public class Pop {
 		}
 	}
 
-	/** Minimum level the item can appear at this location */
-	public int getMinItemLevel() {
-		return minItemLevel;
-	}
-
-	public void setMinItemLevel(int minItemLevel) {
-		this.minItemLevel = minItemLevel;
-	}
-
-	/** Maximum level the item can appear at this location */
-	public int getMaxItemLevel() {
-		return maxItemLevel;
-	}
-
-	public void setMaxItemLevel(int maxItemLevel) {
-		this.maxItemLevel = maxItemLevel;
+	/** Level range the item can appear at this location */
+	public Range getItemLevel() {
+		// TODO needs set
+		// smin/smax is by area doing the resetting
+		//
+		// Shopkeeper min(gen, mlevel-2)
+		// Equip/Hold fuzzy(mlevel-2)
+		// Room pop fuzzy(gen)
+		// Container pop fuzzy(max(gen, clevel))
+		//
+		// gen
+		// item level if set
+		// case ITEM_SCROLL
+		// spell level, v[0]
+		// case ITEM_PILL
+		// case ITEM_POTION
+		// max(1,smin) to min(smax, smin + 15)
+		// number_range(min, max);
+		// case ITEM_WAND
+		// case ITEM_ARMOR
+		// case ITEM_WEAPON
+		// max(5,smin+4) to min(smax, smin + 15)
+		// number_range(min + 4, max + 1);
+		// case ITEM_STAFF
+		// number_range(min + 9, max + 5);
+		// else 0
+		return itemLevel;
 	}
 
 	/** The item that pops */

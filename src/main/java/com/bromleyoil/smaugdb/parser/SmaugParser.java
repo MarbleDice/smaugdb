@@ -294,6 +294,7 @@ public class SmaugParser {
 		item.setType(ItemType.values()[values.get(0)]);
 		item.setExtraFlags(convertBitVector(ExtraFlag.class, values.get(1)));
 		item.setWearFlags(convertBitVector(WearFlag.class, values.get(2)));
+		item.setSuggestedLevel(values.get(4));
 		if (values.size() > 3) {
 			log.info("Got an object with layers/levels: {} has \"{}\"", item, line);
 		}

@@ -25,6 +25,7 @@ public class Item {
 	private ItemType type;
 	private List<ExtraFlag> extraFlags = new ArrayList<>();
 	private List<WearFlag> wearFlags = new ArrayList<>();
+	private int suggestedLevel;
 	private int weight;
 	private int cost;
 	private List<Apply> applies = new ArrayList<>();
@@ -141,6 +142,19 @@ public class Item {
 		this.wearFlags = wearFlags;
 	}
 
+	/** The item's declared level (only used sometimes) */
+	public int getSuggestedLevel() {
+		return suggestedLevel;
+	}
+
+	public void setSuggestedLevel(int suggestedLevel) {
+		this.suggestedLevel = suggestedLevel;
+	}
+
+	public Range getLevelRange() {
+		return getPops().stream().map(Pop::getItemLevel).collect(Range.collector());
+	}
+
 	public int getWeight() {
 		return weight;
 	}
@@ -229,6 +243,7 @@ public class Item {
 	}
 
 	public String getDamage() {
+		// TODO range
 		return String.format("%d - %d %s (%s)", getMinDamage(), getMaxDamage(), getDamageType(), getWeaponSkill());
 	}
 
@@ -249,16 +264,6 @@ public class Item {
 
 	public void setContainerFlags(List<ContainerFlag> containerFlags) {
 		this.containerFlags = containerFlags;
-	}
-
-	public Range getLevel() {
-		int min = 0;
-		int max = 0;
-		for (Pop pop : getPops()) {
-			min = pop.getMinItemLevel() < min ? pop.getMinItemLevel() : min;
-			max = pop.getMaxItemLevel() < max ? pop.getMaxItemLevel() : max;
-		}
-		return Range.of(min, max);
 	}
 
 	public List<Pop> getPops() {

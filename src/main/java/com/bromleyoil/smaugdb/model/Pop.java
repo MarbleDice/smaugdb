@@ -23,7 +23,7 @@ public class Pop {
 			.comparing((Pop x) -> x.getWearFlag() == null ? WearFlag.values().length : x.getWearFlag().ordinal())
 			.thenComparing(x -> x.getItem().getName());
 
-	private Range itemLevel;
+	private Range itemLevel = Range.of(0, 0);
 	private Item item;
 	private PopType type;
 

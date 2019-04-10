@@ -34,15 +34,28 @@
 		<td>Applies</td>
 		<td th:text="${item.applies}"></td>
 	</tr>
-	
 	<tr>
 		<td>Level</td>
-		<td th:text="${item.level}"></td>
+		<td th:text="${item.levelRange}"></td>
 	</tr>
 	<tr>
 		<td>Damage</td>
 		<td th:text="${item.damage}"></td>
 	</tr>
+
+	<tr>
+		<td>Capacity</td>
+		<td th:text="${item.capacity}"></td>
+	</tr>
+	<tr th:if="${item.key}">
+		<td>Key</td>
+		<td><a th:replace="~{link::item(${item.key})}"></a></td>
+	</tr>
+	<tr>
+		<td>Container Flags</td>
+		<td th:text="${item.containerFlags}"></td>
+	</tr>
+
 </table>
 
 </th:block>

@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bromleyoil.smaugdb.SmaugInterpreter;
+import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.ValueList;
 import com.bromleyoil.smaugdb.model.Apply;
 import com.bromleyoil.smaugdb.model.Area;
@@ -33,7 +35,6 @@ import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.AttackFlag;
-import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
@@ -92,6 +93,9 @@ public class SmaugParser {
 				log.warn("Listed area file does not exist at {}", areaFilePath);
 			}
 		}
+
+		// Interpret loaded data
+		SmaugInterpreter.process(world);
 	}
 
 	/**
@@ -218,8 +222,8 @@ public class SmaugParser {
 
 		// act affected alignment recordType
 		strings = nextStringValues(reader);
-		mob.setActFlags(convertBitVector(ActFlag.class, Integer.parseInt(strings.get(0))));
-		mob.setAffectFlags(convertBitVector(AffectFlag.class, Integer.parseInt(strings.get(1))));
+		mob.setActFlags(Utils.convertBitVector(ActFlag.class, Integer.parseInt(strings.get(0))));
+		mob.setAffectFlags(Utils.convertBitVector(AffectFlag.class, Integer.parseInt(strings.get(1))));
 		mob.setAlignment(Integer.parseInt(strings.get(2)));
 		recordType = strings.get(3).charAt(0);
 
@@ -261,11 +265,11 @@ public class SmaugParser {
 			mob.setHitroll(values.get(0));
 			mob.setDamroll(values.get(1));
 			// values[2] is xflags, which are body parts
-			mob.setResistFlags(convertBitVector(ResistFlag.class, values.get(3)));
-			mob.setImmuneFlags(convertBitVector(ResistFlag.class, values.get(4)));
-			mob.setVulnerableFlags(convertBitVector(ResistFlag.class, values.get(5)));
-			mob.setAttackFlags(convertBitVector(AttackFlag.class, values.get(6)));
-			mob.setDefenseFlags(convertBitVector(DefenseFlag.class, values.get(7)));
+			mob.setResistFlags(Utils.convertBitVector(ResistFlag.class, values.get(3)));
+			mob.setImmuneFlags(Utils.convertBitVector(ResistFlag.class, values.get(4)));
+			mob.setVulnerableFlags(Utils.convertBitVector(ResistFlag.class, values.get(5)));
+			mob.setAttackFlags(Utils.convertBitVector(AttackFlag.class, values.get(6)));
+			mob.setDefenseFlags(Utils.convertBitVector(DefenseFlag.class, values.get(7)));
 		}
 
 		world.addMob(mob, area);
@@ -292,8 +296,8 @@ public class SmaugParser {
 		// type extra wear [layers [level]]
 		values = nextValues(reader);
 		item.setType(ItemType.values()[values.get(0)]);
-		item.setExtraFlags(convertBitVector(ExtraFlag.class, values.get(1)));
-		item.setWearFlags(convertBitVector(WearFlag.class, values.get(2)));
+		item.setExtraFlags(Utils.convertBitVector(ExtraFlag.class, values.get(1)));
+		item.setWearFlags(Utils.convertBitVector(WearFlag.class, values.get(2)));
 		item.setSuggestedLevel(values.get(4));
 		if (values.size() > 3) {
 			log.info("Got an object with layers/levels: {} has \"{}\"", item, line);
@@ -302,9 +306,6 @@ public class SmaugParser {
 		// "the values line" requires interpretation by type
 		values = nextValues(reader);
 		item.setValues(values);
-		if (item.getType() == ItemType.CONTAINER) {
-			item.setContainerFlags(convertBitVector(ContainerFlag.class, values.get(1)));
-		}
 
 		// weight cost rent
 		values = nextValues(reader);
@@ -490,26 +491,5 @@ public class SmaugParser {
 	 */
 	public String convertKeywords(String keywords) {
 		return String.join(", ", keywords.split("\\s+"));
-	}
-
-	/**
-	 * Produces a list of flags from a bit vector, where each bit of the number corresponds to one flag in this list.
-	 * 
-	 * @param bitVector
-	 *        A bit vector of 9 would be 1001 in binary, which results in a list of the first and fourth enums.
-	 * @return
-	 */
-	public <T extends Enum<?>> List<T> convertBitVector(Class<T> enumType, int bitVector) {
-		List<T> flags = new ArrayList<>();
-
-		for (int i = enumType.getEnumConstants().length - 1; i >= 0; i--) {
-			double bitFlag = Math.pow(2, i);
-			if (bitVector >= bitFlag) {
-				bitVector -= bitFlag;
-				flags.add(enumType.getEnumConstants()[i]);
-			}
-		}
-
-		return flags;
 	}
 }

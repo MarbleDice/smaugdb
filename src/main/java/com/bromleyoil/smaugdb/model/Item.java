@@ -30,7 +30,9 @@ public class Item {
 	private int cost;
 	private List<Apply> applies = new ArrayList<>();
 	private List<Integer> values = new ArrayList<>();
+	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
+	private Item key;
 	private List<Pop> pops = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
@@ -51,6 +53,10 @@ public class Item {
 			}
 		}
 		return false;
+	}
+
+	public Range getLevelRange() {
+		return getPops().stream().map(Pop::getItemLevel).collect(Range.unionCollector());
 	}
 
 	@Override
@@ -151,10 +157,6 @@ public class Item {
 		this.suggestedLevel = suggestedLevel;
 	}
 
-	public Range getLevelRange() {
-		return getPops().stream().map(Pop::getItemLevel).collect(Range.collector());
-	}
-
 	public int getWeight() {
 		return weight;
 	}
@@ -187,6 +189,10 @@ public class Item {
 		return values;
 	}
 
+	public Integer getValue(int index) {
+		return values.get(index);
+	}
+
 	public void setValues(List<Integer> values) {
 		this.values = values;
 	}
@@ -216,16 +222,6 @@ public class Item {
 		}
 	}
 
-	public int getCapacity() {
-		if (ItemType.CONTAINERS.contains(type)) {
-			return values.get(0);
-		} else if (ItemType.MAGICAL_DEVICES.contains(type)) {
-			return values.get(1);
-		} else {
-			return 0;
-		}
-	}
-
 	public int getMinDamage() {
 		return type == ItemType.WEAPON ? values.get(1) : 0;
 	}
@@ -251,19 +247,28 @@ public class Item {
 		return type == ItemType.ARMOR ? values.get(1) : 0;
 	}
 
-	public Item getKey() {
-		// TODO lookup key by vnum
-		Item key = new Item();
-		key.setName("key vnum " + values.get(2));
-		return key;
-	}
-
 	public List<ContainerFlag> getContainerFlags() {
 		return containerFlags;
 	}
 
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
 	public void setContainerFlags(List<ContainerFlag> containerFlags) {
 		this.containerFlags = containerFlags;
+	}
+
+	public Item getKey() {
+		return key;
+	}
+
+	public void setKey(Item key) {
+		this.key = key;
 	}
 
 	public List<Pop> getPops() {

@@ -1,6 +1,7 @@
 package com.bromleyoil.smaugdb;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.ListUtils;
@@ -58,6 +59,27 @@ public class Utils {
 		BigDecimal b = BigDecimal.valueOf(y1).subtract(m.multiply(BigDecimal.valueOf(x1)));
 		// y3 = m * x3 + b
 		return m.multiply(BigDecimal.valueOf(x3)).intValue() + b.intValue();
+	}
+
+	/**
+	 * Produces a list of flags from a bit vector, where each bit of the number corresponds to one flag in this list.
+	 * 
+	 * @param bitVector
+	 *     A bit vector of 9 would be 1001 in binary, which results in a list of the first and fourth enums.
+	 * @return
+	 */
+	public static <T extends Enum<?>> List<T> convertBitVector(Class<T> enumType, int bitVector) {
+		List<T> flags = new ArrayList<>();
+
+		for (int i = enumType.getEnumConstants().length - 1; i >= 0; i--) {
+			double bitFlag = Math.pow(2, i);
+			if (bitVector >= bitFlag) {
+				bitVector -= bitFlag;
+				flags.add(enumType.getEnumConstants()[i]);
+			}
+		}
+
+		return flags;
 	}
 
 	public static String enumToString(Enum<?> anEnum) {

@@ -42,17 +42,22 @@ public class Range {
 		}
 	}
 
-	public static RangeCollector collector() {
-		return new RangeCollector();
+	public static RangeCollector unionCollector() {
+		return new RangeCollector(Range::union);
 	}
 
 	private static class RangeCollector implements Collector<Range, RangeCollector, Range> {
 
 		private Range range;
+		private BiConsumer<Range, Range> accumulatingFunctor;
+
+		public RangeCollector(BiConsumer<Range, Range> accumulatingFunctor) {
+			this.accumulatingFunctor = accumulatingFunctor;
+		}
 
 		@Override
 		public Supplier<RangeCollector> supplier() {
-			return RangeCollector::new;
+			return () -> new RangeCollector(accumulatingFunctor);
 		}
 
 		@Override
@@ -61,7 +66,7 @@ public class Range {
 				if (range == null) {
 					range = new Range(r.getMin(), r.getMax());
 				} else {
-					range.extend(r);
+					accumulatingFunctor.accept(range, r);
 				}
 			};
 		}
@@ -69,7 +74,7 @@ public class Range {
 		@Override
 		public BinaryOperator<RangeCollector> combiner() {
 			return (c1, c2) -> {
-				c1.range.extend(c2.range);
+				c1.accumulatingFunctor.accept(c1.range, c2.range);
 				return c1;
 			};
 		}
@@ -85,8 +90,23 @@ public class Range {
 		}
 	}
 
-	public void extend(Range range) {
+	public void union(Range range) {
+		setMin(range.getMin() > getMin() ? range.getMin() : getMin());
+		setMax(range.getMax() < getMax() ? range.getMax() : getMax());
+	}
+
+	public void intersect(Range range) {
 		setMin(range.getMin() < getMin() ? range.getMin() : getMin());
+		setMax(range.getMax() > getMax() ? range.getMax() : getMax());
+	}
+
+	public void min(Range range) {
+		setMin(range.getMin() < getMin() ? range.getMin() : getMin());
+		setMax(range.getMax() < getMax() ? range.getMax() : getMax());
+	}
+
+	public void max(Range range) {
+		setMin(range.getMin() > getMin() ? range.getMin() : getMin());
 		setMax(range.getMax() > getMax() ? range.getMax() : getMax());
 	}
 

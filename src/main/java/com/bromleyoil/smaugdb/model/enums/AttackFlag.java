@@ -1,4 +1,4 @@
-package com.bromleyoil.smaugdb.model;
+package com.bromleyoil.smaugdb.model.enums;
 
 public enum AttackFlag {
 	BITE, CLAWS, TAIL, STING, PUNCH, KICK, TRIP, BASH, STUN, GOUGE, BACKSTAB, FEED, DRAIN, FIREBREATH, FROSTBREATH,

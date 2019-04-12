@@ -33,6 +33,7 @@ public class Item {
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
 	private Item key;
+	private List<Item> keyTo = new ArrayList<>();
 	private List<Pop> pops = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
@@ -46,6 +47,10 @@ public class Item {
 		}
 	}
 
+	public boolean isItem() {
+		return hasWearFlag(WearFlag.TAKE);
+	}
+
 	public boolean isEquipment() {
 		for (WearFlag wearFlag : wearFlags) {
 			if (WearFlag.EQUIP_FLAGS.contains(wearFlag)) {
@@ -53,6 +58,18 @@ public class Item {
 			}
 		}
 		return false;
+	}
+
+	public boolean isWeapon() {
+		return type == ItemType.WEAPON;
+	}
+
+	public boolean isArmor() {
+		return type == ItemType.ARMOR;
+	}
+
+	public boolean isContainer() {
+		return type == ItemType.CONTAINER;
 	}
 
 	public Range getLevelRange() {
@@ -118,6 +135,11 @@ public class Item {
 
 	public ItemType getType() {
 		return type;
+	}
+
+	public String getSubType() {
+		String subType = isWeapon() ? String.format(", %s (%s)", getWeaponSkill(), getDamageType()) : "";
+		return String.format("%s%s", type, subType);
 	}
 
 	public void setType(ItemType type) {
@@ -240,7 +262,7 @@ public class Item {
 
 	public String getDamage() {
 		// TODO range
-		return String.format("%d - %d %s (%s)", getMinDamage(), getMaxDamage(), getDamageType(), getWeaponSkill());
+		return String.format("%d - %d", getMinDamage(), getMaxDamage());
 	}
 
 	public int getArmor() {
@@ -269,6 +291,13 @@ public class Item {
 
 	public void setKey(Item key) {
 		this.key = key;
+		if (key != null) {
+			key.keyTo.add(this);
+		}
+	}
+
+	public List<Item> getKeyTo() {
+		return keyTo;
 	}
 
 	public List<Pop> getPops() {

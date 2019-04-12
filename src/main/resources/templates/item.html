@@ -15,34 +15,58 @@
 		<td th:text="${item.keywords}"></td>
 	</tr>
 	<tr>
-		<td>Type</td>
-		<td th:text="${item.type}"></td>
-	</tr>
-	<tr>
-		<td>Wearable</td>
-		<td th:text="${item.wearFlags}"></td>
-	</tr>
-	<tr>
-		<td>Extra</td>
+		<td>Properties</td>
 		<td th:text="${item.extraFlags}"></td>
+	</tr>
+
+	<th:block th:if="${item.isItem()}">
+	<tr>
+		<td>Level</td>
+		<td th:text="${item.levelRange}"></td>
 	</tr>
 	<tr>
 		<td>Weight</td>
 		<td th:text="${item.weight}"></td>
 	</tr>
 	<tr>
-		<td>Applies</td>
-		<td th:text="${item.applies}"></td>
+		<td>Cost</td>
+		<td th:text="${item.cost}"></td>
 	</tr>
+	</th:block>
+
 	<tr>
-		<td>Level</td>
-		<td th:text="${item.levelRange}"></td>
+		<td>Type</td>
+		<td th:text="${item.subType}"></td>
 	</tr>
+
+	<th:block th:if="${item.isEquipment()}">
 	<tr>
+		<td>Wearable</td>
+		<td th:text="${item.wearFlags}"></td>
+	</tr>
+	<tr th:if="${item.isWeapon()}">
 		<td>Damage</td>
 		<td th:text="${item.damage}"></td>
 	</tr>
+	<tr th:if="${item.isArmor()}">
+		<td>Armor</td>
+		<td th:text="${item.armor}"></td>
+	</tr>
+	<tr>
+		<td>Applies</td>
+		<td th:text="${item.applies}"></td>
+	</tr>
+	</th:block>
 
+
+	<tr th:if="${!item.keyTo.isEmpty()}">
+		<td>Unlocks</td>
+		<td>
+			<th:block th:each="unlocked : ${item.keyTo}"><a th:replace="~{link::item(${unlocked})}"></a></th:block>
+		</td>
+	</tr>
+
+	<th:block th:if="${item.isContainer()}">
 	<tr>
 		<td>Capacity</td>
 		<td th:text="${item.capacity}"></td>
@@ -55,6 +79,7 @@
 		<td>Container Flags</td>
 		<td th:text="${item.containerFlags}"></td>
 	</tr>
+	</th:block>
 
 </table>
 

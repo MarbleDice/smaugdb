@@ -5,7 +5,7 @@
 	layout:decorate="~{template}" th:with="title=${mob.title}">
 <th:block layout:fragment="content">
 
-<table>
+<table class="data">
 	<tr>
 		<td>Description</td>
 		<td th:text="${mob.description}"></td>
@@ -38,33 +38,33 @@
 		<td>Experience</td>
 		<td th:text="${mob.experience}"></td>
 	</tr>
-	<tr>
-		<td>Act Flags</td>
-		<td th:text="${mob.actFlags}"></td>
+	<tr th:if="${!mob.actFlags.isEmpty()}">
+		<td>Behavior</td>
+		<td th:text="${#strings.listJoin(mob.actFlags, ', ')}"></td>
 	</tr>
-	<tr>
-		<td>Affect Flags</td>
-		<td th:text="${mob.affectFlags}"></td>
+	<tr th:if="${!mob.affectFlags.isEmpty()}">
+		<td>Special Effects</td>
+		<td th:text="${#strings.listJoin(mob.affectFlags, ', ')}"></td>
 	</tr>
-	<tr>
-		<td>Resist Flags</td>
-		<td th:text="${mob.resistFlags}"></td>
+	<tr th:if="${!mob.resistFlags.isEmpty()}">
+		<td>Resistances</td>
+		<td th:text="${#strings.listJoin(mob.resistFlags, ', ')}"></td>
 	</tr>
-	<tr>
-		<td>Immune Flags</td>
-		<td th:text="${mob.immuneFlags}"></td>
+	<tr th:if="${!mob.immuneFlags.isEmpty()}">
+		<td>Immunities</td>
+		<td th:text="${#strings.listJoin(mob.immuneFlags, ', ')}"></td>
 	</tr>
-	<tr>
-		<td>Susceptible Flags</td>
-		<td th:text="${mob.vulnerableFlags}"></td>
+	<tr th:if="${!mob.vulnerableFlags.isEmpty()}">
+		<td>Vulnerabilities</td>
+		<td th:text="${#strings.listJoin(mob.vulnerableFlags, ', ')}"></td>
 	</tr>
-	<tr>
-		<td>Attack Flags</td>
-		<td th:text="${mob.attackFlags}"></td>
+	<tr th:if="${!mob.attackFlags.isEmpty()}">
+		<td>Attacks</td>
+		<td th:text="${#strings.listJoin(mob.attackFlags, ', ')}"></td>
 	</tr>
-	<tr>
-		<td>Defense Flags</td>
-		<td th:text="${mob.defenseFlags}"></td>
+	<tr th:if="${!mob.defenseFlags.isEmpty()}">
+		<td>Defenses</td>
+		<td th:text="${#strings.listJoin(mob.defenseFlags, ', ')}"></td>
 	</tr>
 	<tr>
 		<td>THAC0</td>

@@ -5,7 +5,7 @@
 	layout:decorate="~{template}" th:with="title=${area.name}">
 <th:block layout:fragment="content">
 
-<table>
+<table class="data">
 	<tr>
 		<td>Level Range</td>
 		<td th:text="${area.lowSoftRange + ' - ' + area.highSoftRange}">Level range</td>

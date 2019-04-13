@@ -33,6 +33,7 @@ public class Item {
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
 	private Item key;
+	// TODO also track doors unlocked
 	private List<Item> keyTo = new ArrayList<>();
 	private List<Pop> pops = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
@@ -138,7 +139,7 @@ public class Item {
 	}
 
 	public String getSubType() {
-		String subType = isWeapon() ? String.format(", %s (%s)", getWeaponSkill(), getDamageType()) : "";
+		String subType = isWeapon() ? String.format(" / %s / %s", getWeaponSkill(), getDamageType()) : "";
 		return String.format("%s%s", type, subType);
 	}
 

@@ -108,6 +108,20 @@ public class Pop {
 		}
 	}
 
+	public String getItemDescription() {
+		if (type == PopType.WORN) {
+			return "Equipped by ";
+		} else if (type == PopType.HELD) {
+			return "Carried by ";
+		} else if (type == PopType.CONTAINED) {
+			return "Contained in ";
+		} else if (type == PopType.FOUND) {
+			return "Found in ";
+		} else {
+			return "Unrelated to ";
+		}
+	}
+
 	/** Level range the item can appear at this location */
 	public Range getItemLevel() {
 		// TODO needs set

@@ -5,7 +5,7 @@
 	layout:decorate="~{template}" th:with="title=${item.title}">
 <th:block layout:fragment="content">
 
-<table>
+<table class="data">
 	<tr>
 		<td>Description</td>
 		<td th:text="${item.description}"></td>
@@ -16,8 +16,8 @@
 	</tr>
 	<tr>
 		<td>Properties</td>
-		<td th:text="${item.extraFlags}"></td>
-	</tr>
+		<td th:text="${#strings.listJoin(item.extraFlags, ', ')}"></td>
+ 	</tr>
 
 	<th:block th:if="${item.isItem()}">
 	<tr>
@@ -42,7 +42,7 @@
 	<th:block th:if="${item.isEquipment()}">
 	<tr>
 		<td>Wearable</td>
-		<td th:text="${item.wearFlags}"></td>
+		<td th:text="${#strings.listJoin(item.wearFlags, ', ')}"></td>
 	</tr>
 	<tr th:if="${item.isWeapon()}">
 		<td>Damage</td>
@@ -54,7 +54,7 @@
 	</tr>
 	<tr>
 		<td>Applies</td>
-		<td th:text="${item.applies}"></td>
+		<td th:text="${#strings.listJoin(item.applies, ', ')}"></td>
 	</tr>
 	</th:block>
 
@@ -77,11 +77,35 @@
 	</tr>
 	<tr>
 		<td>Container Flags</td>
-		<td th:text="${item.containerFlags}"></td>
+		<td th:text="${#strings.listJoin(item.containerFlags, ', ')}"></td>
 	</tr>
 	</th:block>
-
 </table>
+
+<h3>Location</h3>
+
+<ul>
+	<li th:each="pop : ${item.pops}">
+		<span th:text="${pop.itemDescription}"></span>
+		<th:block th:if="${pop.spawn != null}">
+		<a th:replace="~{link::mob(${pop.spawn.mob})}" th:if="${pop.spawn != null}"></a>
+		</th:block>
+		<th:block th:if="${pop.container != null}">
+		<a th:replace="~{link::item(${pop.container})}"></a>
+		</th:block>
+		<span th:text="${pop.room}" th:if="${pop.room != null}"></span>
+	</li>
+</ul>
+
+<th:block th:if="${item.isContainer()}">
+<h3>Contents</h3>
+<ul>
+	<li th:each="pop : ${item.containedPops}">
+		<a th:replace="~{link::item(${pop.item})}"></a>
+	</li>
+</ul>
+</th:block>
+
 
 </th:block>
 </html>

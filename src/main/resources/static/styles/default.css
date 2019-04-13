@@ -1,57 +1,4 @@
 /**
- * Main elements
- */
-h1, h2, h3, p {
-	margin: 10px 0;
-}
-
-ul.unstyled {
-	list-style-type: none;
-	padding: 0;
-}
-
-ul.multi-level > li {
-	margin-bottom:10px;
-}
-
-button {
-	cursor: pointer;
-}
-
-/**
- * Links
- */
-a, a:visited {
-	color: #b0530e;
-	text-decoration: none;
-}
-
-a:hover {
-	color: #ea7c10;
-}
-
-a.mob.non-aggressive {
-	color: #cc7a00;
-}
-
-a.mob.aggressive {
-	color: #ff4000;
-}
-
-a.item.decoration {
-	color: #ccbb00;
-}
-
-a.item.equipment {
-	color: #009933;
-}
-
-a.item.object {
-	color: #0052cc;
-}
-
-
-/**
  * Main layout
  */
 html {
@@ -111,6 +58,59 @@ nav li a:hover {
 }
 
 /**
+ * Main elements
+ */
+h1, h2, h3, p {
+	margin: 10px 0;
+}
+
+ul.unstyled {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul.multi-level>li {
+	margin-bottom: 10px;
+}
+
+button {
+	cursor: pointer;
+}
+
+/**
+ * Links
+ */
+a, a:visited {
+	color: #b0530e;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #ea7c10;
+}
+
+a.mob.non-aggressive {
+	color: #cc7a00;
+}
+
+a.mob.aggressive {
+	color: #ff4000;
+}
+
+a.item.decoration {
+	color: #ccbb00;
+}
+
+a.item.equipment {
+	color: #009933;
+}
+
+a.item.object {
+	color: #0052cc;
+}
+
+/**
  * General table
  */
 tr.odd {
@@ -137,36 +137,21 @@ table.equipment td {
  * Data tables
  */
 table.data {
+	border: 1px solid #ccc;
 	border-collapse: collapse;
 	margin: 10px 0;
 }
 
+table.data tr:nth-child(even) {
+	background-color: #eee;
+}
+
 table.data th, table.data td {
-	border: 1px solid black;
 	padding: 4px 8px;
 }
 
-table.set.data th:first-child {
-	width: 160px;
-}
-
-/**
- * Multi-column layout tables
- */
-
-table.three-column {
-	margin: 0 auto;
-	width: 100%;
-}
-
-table.three-column td {
-	width: 33%;
-}
-
-/* First-row column headers */
-table.data tr:first-child th {
-	background-color: #b1b1b1;
-	vertical-align: center;
+table.data tr td:first-child {
+	padding-right: 20px;
 }
 
 /* Row-headers */
@@ -176,6 +161,18 @@ table.data th {
 
 table.data td {
 	vertical-align: top;
+}
+
+/**
+ * Multi-column layout tables
+ */
+table.three-column {
+	margin: 0 auto;
+	width: 100%;
+}
+
+table.three-column td {
+	width: 33%;
 }
 
 /**

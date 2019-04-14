@@ -9,14 +9,14 @@
 	<tr>
 		<th>Area Name</th>
 		<th>Author</th>
-		<th>Lv Range</th>
-		<th>Lv Range</th>
+		<th>Min Lv</th>
+		<th>Max Lv</th>
 		<th>Mobiles</th>
 		<th>Items</th>
 		<th>Rooms</th>
 	</tr>
 	<tr th:each="area : ${areas}">
-		<td><a th:href="@{${'/area/' + area.urlSafeName}}" th:text="${area.name}">Area name</a></td>
+		<td><a th:replace="~{link::area(${area})}"></a></td>
 		<td th:text="${area.author}"></td>
 		<td th:text="${area.lowSoftRange}"></td>
 		<td th:text="${area.HighSoftRange}"></td>

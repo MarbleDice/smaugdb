@@ -5,6 +5,8 @@
 	layout:decorate="~{template}" th:with="title=${item.title}">
 <th:block layout:fragment="content">
 
+<a th:replace="~{link::area(${item.area})}"></a>
+
 <table class="data">
 	<tr>
 		<td>Description</td>
@@ -14,7 +16,7 @@
 		<td>Keywords</td>
 		<td th:text="${item.keywords}"></td>
 	</tr>
-	<tr>
+	<tr th:if="${!item.extraFlags.isEmpty()}">
 		<td>Properties</td>
 		<td th:text="${#strings.listJoin(item.extraFlags, ', ')}"></td>
  	</tr>

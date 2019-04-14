@@ -1,6 +1,7 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +17,17 @@ public class Pop {
 
 	private static final Logger log = LoggerFactory.getLogger(Pop.class);
 
-	public static final Comparator<Pop> EQUIPMENT_FIRST = Comparator.comparing((Pop x) -> x.getType() != PopType.WORN)
-			.thenComparing(x -> x.getItem().getName());
+	private static final AtomicInteger idGenerator = new AtomicInteger();
 
 	public static final Comparator<Pop> EQUIP_ORDER = Comparator
-			.comparing((Pop x) -> x.getWearFlag() == null ? WearFlag.values().length : x.getWearFlag().ordinal())
-			.thenComparing(x -> x.getItem().getName());
+			// Equip location ordinal, with inventory at the end 
+			.comparing((Pop x) -> x.getWearFlag() != null ? x.getWearFlag().ordinal() : WearFlag.values().length)
+			// Items sorted by name
+			.thenComparing(x -> x.getItem().getName())
+			// Finally break ties with the id
+			.thenComparing(Pop::getId);
 
+	private int id;
 	private Range itemLevel = Range.of(0, 0);
 	private Item item;
 	private PopType type;
@@ -36,6 +41,7 @@ public class Pop {
 
 	private Pop() {
 		// Private constructor
+		this.id = idGenerator.getAndIncrement();
 	}
 
 	public static Pop found(Item item, Room room) {
@@ -149,6 +155,11 @@ public class Pop {
 		// number_range(min + 9, max + 5);
 		// else 0
 		return itemLevel;
+	}
+
+	/** The unique ID of this pop record for consistency with equals */
+	public int getId() {
+		return id;
 	}
 
 	/** The item that pops */

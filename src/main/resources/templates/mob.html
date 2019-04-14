@@ -5,6 +5,8 @@
 	layout:decorate="~{template}" th:with="title=${mob.title}">
 <th:block layout:fragment="content">
 
+<a th:replace="~{link::area(${mob.area})}"></a>
+
 <table class="data">
 	<tr>
 		<td>Description</td>

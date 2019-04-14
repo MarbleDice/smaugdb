@@ -4,6 +4,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{template}" th:with="title='Link Fragments'">
 <th:block layout:fragment="content">
+	<a th:fragment="area (area)" th:href="@{${'/area/' + area.urlSafeName}}" th:class="area" th:text="${area.name}"></a>
 	<a th:fragment="item (item)" th:href="@{${'/item/' + item.vnum}}" th:class="${item.cssClass}" th:text="${item.truncatedName}"></a>
 	<a th:fragment="mob (mob)" th:href="@{${'/mob/' + mob.vnum}}" th:class="${mob.cssClass}" th:text="${mob.truncatedName}"></a>
 </th:block>

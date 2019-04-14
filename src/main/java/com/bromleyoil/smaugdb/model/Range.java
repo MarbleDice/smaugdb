@@ -115,7 +115,6 @@ public class Range {
 		return min == max ? String.valueOf(min) : String.format("%d - %d", min, max);
 	}
 
-	// TODO lol nope
 	public double getAverage() {
 		return (min + max) / 2d;
 	}

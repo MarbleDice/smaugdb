@@ -11,9 +11,12 @@ public class Area {
 	private String author;
 	private int lowSoftRange;
 	private int highSoftRange;
-	private Collection<Room> rooms = new TreeSet<>(Comparator.comparing(Room::getName));
-	private Collection<Mob> mobs = new TreeSet<>(Comparator.comparing(Mob::getName));
-	private Collection<Item> items = new TreeSet<>(Comparator.comparing(Item::getName));
+	private Collection<Room> rooms = new TreeSet<>(Comparator.comparing(Room::getName)
+			.thenComparing(Comparator.comparing(Room::getVnum)));
+	private Collection<Mob> mobs = new TreeSet<>(Comparator.comparing(Mob::getName)
+			.thenComparing(Comparator.comparing(Mob::getVnum)));
+	private Collection<Item> items = new TreeSet<>(Comparator.comparing(Item::getName)
+			.thenComparing(Comparator.comparing(Item::getVnum)));
 
 	@Override
 	public String toString() {

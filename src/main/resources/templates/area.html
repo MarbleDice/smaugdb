@@ -7,12 +7,16 @@
 
 <table class="data">
 	<tr>
-		<td>Level Range</td>
-		<td th:text="${area.lowSoftRange + ' - ' + area.highSoftRange}">Level range</td>
-	</tr>
-	<tr>
 		<td>Author</td>
 		<td th:text="${area.author}">Author</td>
+	</tr>
+	<tr>
+		<td>Suggested Level</td>
+		<td th:text="${area.softRange.min + ' - ' + area.softRange.max}">Suggested level</td>
+	</tr>
+	<tr>
+		<td>Level Limit</td>
+		<td th:text="${area.hardRange.min + ' - ' + area.hardRange.max}">Level limit</td>
 	</tr>
 </table>
 

@@ -1,5 +1,6 @@
 package com.bromleyoil.smaugdb;
 
+import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Range;
@@ -28,6 +29,10 @@ public class SmaugInterpreter {
 	public static void process(World world) {
 		SmaugInterpreter interpreter = new SmaugInterpreter(world);
 
+		for (Area area : world.getAreas().values()) {
+			interpreter.processArea(area);
+		}
+
 		for (Item item : world.getItems()) {
 			interpreter.processItem(item);
 		}
@@ -35,6 +40,14 @@ public class SmaugInterpreter {
 		for (Mob mob : world.getMobs()) {
 			interpreter.processMob(mob);
 		}
+	}
+
+	private void processArea(Area area) {
+		Range range = Range.of(
+				area.getSoftRange().getMin() == 0 ? 1 : area.getSoftRange().getMin(),
+				area.getSoftRange().getMax());
+		range.setMax(Integer.min(range.getMin() + 15, range.getMax()));
+		area.setGeneratedRange(range);
 	}
 
 	private void processItem(Item item) {

@@ -17,13 +17,29 @@ public class Range {
 	private int min;
 	private int max;
 
+	/**
+	 * Ranges are restricted such that the max cannot have less magnitude than the min.
+	 * 
+	 * @param min
+	 * @param max
+	 */
 	private Range(int min, int max) {
 		this.min = min;
-		this.max = max;
+		if (min > 0) {
+			this.max = Integer.max(min, max);
+		} else if (min < 0) {
+			this.max = Integer.min(min, max);
+		} else {
+			this.max = max;
+		}
 	}
 
 	public static Range of(int min, int max) {
 		return new Range(min, max);
+	}
+
+	public static Range of(Range other) {
+		return new Range(other.min, other.max);
 	}
 
 	public static Range of(int anchor, int below, int above) {

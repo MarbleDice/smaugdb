@@ -171,8 +171,10 @@ public class SmaugParser {
 		Matcher matcher = matches(line, "(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")
 				.orElseThrow(() -> new ParseException("Invalid #RANGES line: " + line));
 
-		area.setLowSoftRange(Integer.valueOf(matcher.group(1)));
-		area.setHighSoftRange(Integer.valueOf(matcher.group(2)));
+		area.setSoftRange(Range.of(Integer.valueOf(matcher.group(1)),
+				Integer.valueOf(matcher.group(2))));
+		area.setHardRange(Range.of(Integer.valueOf(matcher.group(3)),
+				Integer.valueOf(matcher.group(4))));
 	}
 
 	/**

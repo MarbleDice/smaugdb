@@ -9,8 +9,10 @@ public class Area {
 
 	private String name;
 	private String author;
-	private int lowSoftRange;
-	private int highSoftRange;
+	private Range softRange;
+	private Range hardRange;
+	private Range generatedRange;
+
 	private Collection<Room> rooms = new TreeSet<>(Comparator.comparing(Room::getName)
 			.thenComparing(Comparator.comparing(Room::getVnum)));
 	private Collection<Mob> mobs = new TreeSet<>(Comparator.comparing(Mob::getName)
@@ -43,20 +45,28 @@ public class Area {
 		this.author = author;
 	}
 
-	public int getLowSoftRange() {
-		return lowSoftRange;
+	public Range getSoftRange() {
+		return softRange;
 	}
 
-	public void setLowSoftRange(int lowSoftRange) {
-		this.lowSoftRange = lowSoftRange;
+	public void setSoftRange(Range softRange) {
+		this.softRange = softRange;
 	}
 
-	public int getHighSoftRange() {
-		return highSoftRange;
+	public Range getHardRange() {
+		return hardRange;
 	}
 
-	public void setHighSoftRange(int highSoftRange) {
-		this.highSoftRange = highSoftRange;
+	public void setHardRange(Range hardRange) {
+		this.hardRange = hardRange;
+	}
+
+	public Range getGeneratedRange() {
+		return generatedRange;
+	}
+
+	public void setGeneratedRange(Range generatedRange) {
+		this.generatedRange = generatedRange;
 	}
 
 	public Collection<Room> getRooms() {

@@ -54,7 +54,7 @@
 		<td>Armor</td>
 		<td th:text="${item.armor}"></td>
 	</tr>
-	<tr>
+	<tr th:if="${!item.applies.isEmpty()}">
 		<td>Applies</td>
 		<td th:text="${#strings.listJoin(item.applies, ', ')}"></td>
 	</tr>
@@ -102,6 +102,7 @@
 <th:block th:if="${item.isContainer()}">
 <h3>Contents</h3>
 <ul>
+	<li th:if="${item.containedPops.isEmpty()}">empty</li>
 	<li th:each="pop : ${item.containedPops}">
 		<a th:replace="~{link::item(${pop.item})}"></a>
 	</li>

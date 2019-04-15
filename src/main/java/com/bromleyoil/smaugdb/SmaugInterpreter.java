@@ -2,6 +2,7 @@ package com.bromleyoil.smaugdb;
 
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
+import com.bromleyoil.smaugdb.model.Range;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
@@ -41,6 +42,8 @@ public class SmaugInterpreter {
 			item.setCapacity(item.getValue(0));
 			item.setContainerFlags(Utils.convertBitVector(ContainerFlag.class, item.getValue(1)));
 			item.setKey(world.getItem(item.getValue(2)));
+		} else if (item.getType() == ItemType.WEAPON) {
+			item.setDamage(Range.of(item.getValue(1), item.getValue(1) * item.getValue(2)));
 		}
 	}
 

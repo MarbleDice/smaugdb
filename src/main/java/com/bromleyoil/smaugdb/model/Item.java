@@ -29,12 +29,15 @@ public class Item {
 	private int weight;
 	private int cost;
 	private List<Apply> applies = new ArrayList<>();
+
 	private List<Integer> values = new ArrayList<>();
+	private Range damage;
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
 	private Item key;
 	// TODO also track doors unlocked
 	private List<Item> keyTo = new ArrayList<>();
+
 	private List<Pop> pops = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
 
@@ -245,12 +248,12 @@ public class Item {
 		}
 	}
 
-	public int getMinDamage() {
-		return type == ItemType.WEAPON ? values.get(1) : 0;
+	public Range getDamage() {
+		return damage;
 	}
 
-	public int getMaxDamage() {
-		return type == ItemType.WEAPON ? values.get(1) * values.get(2) : 0;
+	public void setDamage(Range damage) {
+		this.damage = damage;
 	}
 
 	public DamageType getDamageType() {
@@ -259,11 +262,6 @@ public class Item {
 
 	public WeaponSkill getWeaponSkill() {
 		return getDamageType().getWeaponSkill();
-	}
-
-	public String getDamage() {
-		// TODO range
-		return String.format("%d - %d", getMinDamage(), getMaxDamage());
 	}
 
 	public int getArmor() {

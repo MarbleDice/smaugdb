@@ -17,21 +17,14 @@ public class Range {
 	private int min;
 	private int max;
 
-	/**
-	 * Ranges are restricted such that the max cannot have less magnitude than the min.
-	 * 
-	 * @param min
-	 * @param max
-	 */
 	private Range(int min, int max) {
 		this.min = min;
-		if (min > 0) {
-			this.max = Integer.max(min, max);
-		} else if (min < 0) {
-			this.max = Integer.min(min, max);
-		} else {
-			this.max = max;
-		}
+		this.max = max;
+		conform();
+	}
+
+	public static Range of(int value) {
+		return new Range(value, value);
 	}
 
 	public static Range of(int min, int max) {
@@ -40,10 +33,6 @@ public class Range {
 
 	public static Range of(Range other) {
 		return new Range(other.min, other.max);
-	}
-
-	public static Range of(int anchor, int below, int above) {
-		return new Range(anchor - below, anchor + above);
 	}
 
 	public static Range of(String dice) {
@@ -79,10 +68,10 @@ public class Range {
 		@Override
 		public BiConsumer<RangeCollector, Range> accumulator() {
 			return (c, r) -> {
-				if (range == null) {
-					range = new Range(r.getMin(), r.getMax());
+				if (c.range == null) {
+					c.range = new Range(r.getMin(), r.getMax());
 				} else {
-					accumulatingFunctor.accept(range, r);
+					c.accumulatingFunctor.accept(c.range, r);
 				}
 			};
 		}
@@ -97,7 +86,7 @@ public class Range {
 
 		@Override
 		public Function<RangeCollector, Range> finisher() {
-			return c -> c.range;
+			return c -> c.range == null ? Range.of(0) : c.range;
 		}
 
 		@Override
@@ -106,48 +95,98 @@ public class Range {
 		}
 	}
 
-	public void union(Range range) {
-		setMin(range.getMin() > getMin() ? range.getMin() : getMin());
-		setMax(range.getMax() < getMax() ? range.getMax() : getMax());
+	public Range union(Range range) {
+		min = range.getMin() > getMin() ? range.getMin() : getMin();
+		max = range.getMax() < getMax() ? range.getMax() : getMax();
+		conform();
+		return this;
 	}
 
-	public void intersect(Range range) {
-		setMin(range.getMin() < getMin() ? range.getMin() : getMin());
-		setMax(range.getMax() > getMax() ? range.getMax() : getMax());
+	public Range intersect(Range range) {
+		min = range.getMin() < getMin() ? range.getMin() : getMin();
+		max = range.getMax() > getMax() ? range.getMax() : getMax();
+		conform();
+		return this;
 	}
 
-	public void min(Range range) {
-		setMin(range.getMin() < getMin() ? range.getMin() : getMin());
-		setMax(range.getMax() < getMax() ? range.getMax() : getMax());
+	public Range min(Range range) {
+		min = range.getMin() < getMin() ? range.getMin() : getMin();
+		max = range.getMax() < getMax() ? range.getMax() : getMax();
+		conform();
+		return this;
 	}
 
-	public void max(Range range) {
-		setMin(range.getMin() > getMin() ? range.getMin() : getMin());
-		setMax(range.getMax() > getMax() ? range.getMax() : getMax());
+	public Range max(Range range) {
+		min = range.getMin() > getMin() ? range.getMin() : getMin();
+		max = range.getMax() > getMax() ? range.getMax() : getMax();
+		conform();
+		return this;
+	}
+
+	public Range add(int amount) {
+		min = getMin() + amount;
+		max = getMax() + amount;
+		conform();
+		return this;
+	}
+
+	public Range subtract(int amount) {
+		min = getMin() - amount;
+		max = getMax() - amount;
+		conform();
+		return this;
+	}
+
+	public Range extend(int amount) {
+		min = getMin() - amount;
+		max = getMax() + amount;
+		conform();
+		return this;
+	}
+
+	public Range adjust(int minAdjustBy, int maxAdjustBy) {
+		min = getMin() + minAdjustBy;
+		max = getMax() + maxAdjustBy;
+		conform();
+		return this;
+	}
+
+	public Range constrainMin(int range) {
+		if (min < max - range) {
+			min = max - range;
+		}
+		conform();
+		return this;
+	}
+
+	public Range constrainMax(int range) {
+		if (max > min + range) {
+			max = min + range;
+		}
+		conform();
+		return this;
+	}
+
+	private void conform() {
+		if (min > max) {
+			max = min;
+		}
 	}
 
 	@Override
 	public String toString() {
-		return min == max ? String.valueOf(min) : String.format("%d - %d", min, max);
+		return getMin() == getMax() ? String.valueOf(getMin()) : String.format("%d - %d", getMin(), getMax());
 	}
 
 	public double getAverage() {
-		return (min + max) / 2d;
+		return (getMin() + getMax()) / 2d;
 	}
 
 	public int getMin() {
 		return min;
 	}
 
-	public void setMin(int min) {
-		this.min = min;
-	}
-
 	public int getMax() {
 		return max;
-	}
-
-	public void setMax(int max) {
-		this.max = max;
 	}
 }

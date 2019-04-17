@@ -29,7 +29,8 @@ public class Mob {
 	private List<ActFlag> actFlags = new ArrayList<>();
 	private List<AffectFlag> affectFlags = new ArrayList<>();
 	private int alignment;
-	private int level;
+	private int suggestedLevel;
+	private Range level;
 	private int gold;
 	private int experience;
 	private Range hp;
@@ -52,7 +53,7 @@ public class Mob {
 	}
 
 	public String getAccuracy() {
-		int accuracy = hitroll - Utils.interpolate(level, 0, thac0, 32, 0);
+		int accuracy = hitroll - Utils.interpolate(suggestedLevel, 0, thac0, 32, 0);
 		accuracy = Utils.constrain(1, 19, accuracy);
 		return String.valueOf(accuracy);
 	}
@@ -154,11 +155,19 @@ public class Mob {
 		this.alignment = alignment;
 	}
 
-	public int getLevel() {
+	public int getSuggestedLevel() {
+		return suggestedLevel;
+	}
+
+	public void setSuggestedLevel(int suggestedLevel) {
+		this.suggestedLevel = suggestedLevel;
+	}
+
+	public Range getLevel() {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public void setLevel(Range level) {
 		this.level = level;
 	}
 

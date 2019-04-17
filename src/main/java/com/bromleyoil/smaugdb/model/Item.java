@@ -26,6 +26,7 @@ public class Item {
 	private List<ExtraFlag> extraFlags = new ArrayList<>();
 	private List<WearFlag> wearFlags = new ArrayList<>();
 	private int suggestedLevel;
+	private Range level;
 	private int weight;
 	private int cost;
 	private List<Apply> applies = new ArrayList<>();
@@ -74,10 +75,6 @@ public class Item {
 
 	public boolean isContainer() {
 		return type == ItemType.CONTAINER;
-	}
-
-	public Range getLevelRange() {
-		return getPops().stream().map(Pop::getItemLevel).collect(Range.unionCollector());
 	}
 
 	@Override
@@ -181,6 +178,14 @@ public class Item {
 
 	public void setSuggestedLevel(int suggestedLevel) {
 		this.suggestedLevel = suggestedLevel;
+	}
+
+	public Range getLevel() {
+		return level;
+	}
+
+	public void setLevel(Range level) {
+		this.level = level;
 	}
 
 	public int getWeight() {

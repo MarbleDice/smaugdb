@@ -128,38 +128,18 @@ public class Pop {
 		}
 	}
 
-	/** Level range the item can appear at this location */
-	public Range getItemLevel() {
-		// TODO needs set
-		// smin/smax is by area doing the resetting
-		//
-		// Shopkeeper min(gen, mlevel-2)
-		// Equip/Hold fuzzy(mlevel-2)
-		// Room pop fuzzy(gen)
-		// Container pop fuzzy(max(gen, clevel))
-		//
-		// gen
-		// item level if set
-		// case ITEM_SCROLL
-		// spell level, v[0]
-		// case ITEM_PILL
-		// case ITEM_POTION
-		// max(1,smin) to min(smax, smin + 15)
-		// number_range(min, max);
-		// case ITEM_WAND
-		// case ITEM_ARMOR
-		// case ITEM_WEAPON
-		// max(5,smin+4) to min(smax, smin + 15)
-		// number_range(min + 4, max + 1);
-		// case ITEM_STAFF
-		// number_range(min + 9, max + 5);
-		// else 0
-		return itemLevel;
-	}
-
 	/** The unique ID of this pop record for consistency with equals */
 	public int getId() {
 		return id;
+	}
+
+	/** Level range the item can appear at this location */
+	public Range getItemLevel() {
+		return itemLevel;
+	}
+
+	public void setItemLevel(Range itemLevel) {
+		this.itemLevel = itemLevel;
 	}
 
 	/** The item that pops */
@@ -219,5 +199,4 @@ public class Pop {
 	public void setRoom(Room room) {
 		this.room = room;
 	}
-
 }

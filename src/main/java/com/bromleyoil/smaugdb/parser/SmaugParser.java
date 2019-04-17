@@ -235,7 +235,7 @@ public class SmaugParser {
 
 		// level thac0 armor hpdice damdice
 		strings = nextStringValues(reader);
-		mob.setLevel(Integer.parseInt(strings.get(0)));
+		mob.setSuggestedLevel(Integer.parseInt(strings.get(0)));
 		mob.setThac0(Integer.parseInt(strings.get(1)));
 		mob.setArmor(Integer.parseInt(strings.get(2)));
 		mob.setHp(Range.of(strings.get(3)));

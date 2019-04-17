@@ -9,4 +9,6 @@ public enum PopType {
 	HELD,
 	/** Worn by a mob */
 	WORN;
+
+	// TODO: mpoload shop
 }

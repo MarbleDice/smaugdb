@@ -151,26 +151,32 @@ public class Range {
 		return this;
 	}
 
-	public Range constrainMin(int range) {
-		if (min < max - range) {
-			min = max - range;
-		}
+	public Range constrainMin(int limit) {
+		min = min < limit ? limit : min;
 		conform();
 		return this;
 	}
 
-	public Range constrainMax(int range) {
-		if (max > min + range) {
-			max = min + range;
-		}
+	public Range constrainMax(int limit) {
+		max = max > limit ? limit : max;
+		conform();
+		return this;
+	}
+
+	public Range constrainMinRange(int range) {
+		min = min < max - range ? max - range : min;
+		conform();
+		return this;
+	}
+
+	public Range constrainMaxRange(int range) {
+		max = max > min + range ? min + range : max;
 		conform();
 		return this;
 	}
 
 	private void conform() {
-		if (min > max) {
-			max = min;
-		}
+		max = min > max ? min : max;
 	}
 
 	@Override

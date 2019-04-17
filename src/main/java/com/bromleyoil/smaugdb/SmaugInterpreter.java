@@ -49,7 +49,7 @@ public class SmaugInterpreter {
 		// Calculate the range for generated item levels
 		area.setGeneratedRange(Range.of(area.getSoftRange())
 				.max(Range.of(1, area.getSoftRange().getMax()))
-				.constrainMax(15));
+				.constrainMaxRange(15));
 	}
 
 	private void processItem(Item item) {
@@ -68,17 +68,20 @@ public class SmaugInterpreter {
 		for (Pop pop : item.getPops()) {
 			if (pop.getType() == PopType.FOUND) {
 				pop.setItemLevel(calculateGeneratedItemLevel(item)
-						.extend(1));
+						.extend(1)
+						.constrainMin(1));
 			} else if (pop.getType() == PopType.CONTAINED) {
 				calculateItemLevel(pop.getContainer());
 				pop.setItemLevel(calculateGeneratedItemLevel(item)
 						.max(pop.getContainer().getLevel())
-						.extend(1));
+						.extend(1)
+						.constrainMin(1));
 			} else if (pop.getType() == PopType.HELD || pop.getType() == PopType.WORN) {
 				calculateMobLevel(pop.getMob());
 				pop.setItemLevel(Range.of(pop.getMob().getLevel())
 						.subtract(2)
-						.extend(1));
+						.extend(1)
+						.constrainMin(1));
 			} else {
 				throw new UnsupportedOperationException("Don't know how to set the level range for: " + pop.getType());
 			}
@@ -130,6 +133,6 @@ public class SmaugInterpreter {
 			return;
 		}
 
-		mob.setLevel(Range.of(mob.getSuggestedLevel()).extend(1));
+		mob.setLevel(Range.of(mob.getSuggestedLevel()).extend(1).constrainMin(1));
 	}
 }

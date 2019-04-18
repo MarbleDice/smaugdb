@@ -28,9 +28,10 @@ public class Pop {
 			.thenComparing(Pop::getId);
 
 	private int id;
-	private Range itemLevel = Range.of(0, 0);
+	private Area area;
 	private Item item;
 	private PopType type;
+	private Range itemLevel = Range.of(0, 0);
 
 	// TODO mpoload
 
@@ -44,9 +45,10 @@ public class Pop {
 		this.id = idGenerator.getAndIncrement();
 	}
 
-	public static Pop found(Item item, Room room) {
+	public static Pop found(Area area, Item item, Room room) {
 		log.debug("Dropping {} in {}", item, room);
 		Pop pop = new Pop();
+		pop.setArea(area);
 		pop.setType(PopType.FOUND);
 		pop.setItem(item);
 		pop.setRoom(room);
@@ -55,9 +57,10 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop contained(Item item, Item container) {
+	public static Pop contained(Area area, Item item, Item container) {
 		log.debug("Putting {} inside {}", item, container);
 		Pop pop = new Pop();
+		pop.setArea(area);
 		pop.setType(PopType.CONTAINED);
 		pop.setItem(item);
 		pop.setContainer(container);
@@ -66,9 +69,10 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop held(Item item, Spawn spawn) {
+	public static Pop held(Area area, Item item, Spawn spawn) {
 		log.debug("Giving {} to {}", item, spawn.getMob());
 		Pop pop = new Pop();
+		pop.setArea(area);
 		pop.setType(PopType.HELD);
 		pop.setItem(item);
 		pop.setSpawn(spawn);
@@ -77,9 +81,10 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop worn(Item item, Spawn spawn, WearFlag wearFlag) {
+	public static Pop worn(Area area, Item item, Spawn spawn, WearFlag wearFlag) {
 		log.debug("Equipping {} to {}", item, spawn.getMob());
 		Pop pop = new Pop();
+		pop.setArea(area);
 		pop.setType(PopType.WORN);
 		pop.setItem(item);
 		pop.setSpawn(spawn);
@@ -133,13 +138,12 @@ public class Pop {
 		return id;
 	}
 
-	/** Level range the item can appear at this location */
-	public Range getItemLevel() {
-		return itemLevel;
+	public Area getArea() {
+		return area;
 	}
 
-	public void setItemLevel(Range itemLevel) {
-		this.itemLevel = itemLevel;
+	public void setArea(Area area) {
+		this.area = area;
 	}
 
 	/** The item that pops */
@@ -151,12 +155,22 @@ public class Pop {
 		this.item = item;
 	}
 
+	/** The pop type */
 	public PopType getType() {
 		return type;
 	}
 
 	public void setType(PopType type) {
 		this.type = type;
+	}
+
+	/** Level range the item can appear at this location */
+	public Range getItemLevel() {
+		return itemLevel;
+	}
+
+	public void setItemLevel(Range itemLevel) {
+		this.itemLevel = itemLevel;
 	}
 
 	/** The specific spawn to which the item is assigned */

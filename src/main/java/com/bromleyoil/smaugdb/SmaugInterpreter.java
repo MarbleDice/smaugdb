@@ -67,12 +67,12 @@ public class SmaugInterpreter {
 		// Calculate the item level from each pop
 		for (Pop pop : item.getPops()) {
 			if (pop.getType() == PopType.FOUND) {
-				pop.setItemLevel(calculateGeneratedItemLevel(item)
+				pop.setItemLevel(calculateGeneratedItemLevel(pop.getArea(), item)
 						.extend(1)
 						.constrainMin(1));
 			} else if (pop.getType() == PopType.CONTAINED) {
 				calculateItemLevel(pop.getContainer());
-				pop.setItemLevel(calculateGeneratedItemLevel(item)
+				pop.setItemLevel(calculateGeneratedItemLevel(pop.getArea(), item)
 						.max(pop.getContainer().getLevel())
 						.extend(1)
 						.constrainMin(1));
@@ -97,18 +97,17 @@ public class SmaugInterpreter {
 	 * @param item
 	 * @return
 	 */
-	private Range calculateGeneratedItemLevel(Item item) {
-		// TODO Area should come from the Pop (based on reset definition not item definition)
+	private Range calculateGeneratedItemLevel(Area area, Item item) {
 		if (item.getSuggestedLevel() > 0) {
 			return Range.of(item.getSuggestedLevel());
 		} else if (item.getType() == SCROLL) {
 			return Range.of(item.getValue(0));
 		} else if (item.getType() == PILL || item.getType() == POTION) {
-			return Range.of(item.getArea().getGeneratedRange());
+			return Range.of(area.getGeneratedRange());
 		} else if (item.getType() == ARMOR || item.getType() == WAND || item.getType() == WEAPON) {
-			return Range.of(item.getArea().getGeneratedRange()).adjust(4, 1);
+			return Range.of(area.getGeneratedRange()).adjust(4, 1);
 		} else if (item.getType() == STAFF) {
-			return Range.of(item.getArea().getGeneratedRange()).adjust(9, 5);
+			return Range.of(area.getGeneratedRange()).adjust(9, 5);
 		}
 
 		return Range.of(0);

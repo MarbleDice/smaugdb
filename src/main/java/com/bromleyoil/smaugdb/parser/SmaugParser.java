@@ -388,15 +388,15 @@ public class SmaugParser {
 	 */
 	private void parseReset(char code, int vnum1, int limit, int arg) {
 		if (code == 'O') {
-			Pop.found(world.getItem(vnum1), world.getRoom(arg));
+			Pop.found(area, world.getItem(vnum1), world.getRoom(arg));
 		} else if (code == 'P') {
-			Pop.contained(world.getItem(vnum1), world.getItem(arg));
+			Pop.contained(area, world.getItem(vnum1), world.getItem(arg));
 		} else if (code == 'M') {
 			lastSpawn = Spawn.in(world.getMob(vnum1), world.getRoom(arg), limit);
 		} else if (code == 'E') {
-			Pop.worn(world.getItem(vnum1), lastSpawn, EquipSlot.values()[arg].getWearFlag());
+			Pop.worn(area, world.getItem(vnum1), lastSpawn, EquipSlot.values()[arg].getWearFlag());
 		} else if (code == 'G') {
-			Pop.held(world.getItem(vnum1), lastSpawn);
+			Pop.held(area, world.getItem(vnum1), lastSpawn);
 		} else {
 			throw new ParseException("Unknown reset code: " + code);
 		}

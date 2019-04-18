@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -48,6 +49,8 @@ public class SmaugParser {
 
 	private static final Pattern vnumPattern = Pattern.compile("^\\s*#\\s*([1-9]\\d*)\\s*$");
 	private static final Pattern resetPattern = Pattern.compile("^\\s*([OPMEG])\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*(\\d+)?");
+	private static final Pattern shopPattern = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)"
+			+ "\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 
 	private World world;
 	private Area area;
@@ -123,6 +126,8 @@ public class SmaugParser {
 					parseVnumBlock(reader, this::parseRoom);
 				} else if (line.startsWith("#RESETS")) {
 					parseResets(reader);
+				} else if (line.startsWith("#SHOPS")) {
+					parseShops(reader);
 				} else {
 					nextLine(reader);
 				}
@@ -356,8 +361,6 @@ public class SmaugParser {
 		while (line != null) {
 			Matcher matcher = resetPattern.matcher(line);
 			if (matcher.matches()) {
-				log.trace("Got \"{}\": v2={} v3={} v4={} n={}", line, matcher.group(3), matcher.group(4),
-						matcher.group(5), matcher.groupCount());
 				// Found a reset. Groups are 1=code, 2=ignored, 3=vnum, 4=limit/ignored, 5=vnum/absent
 				parseReset(matcher.group(1).charAt(0),
 						Integer.valueOf(matcher.group(3)),
@@ -400,6 +403,58 @@ public class SmaugParser {
 		} else {
 			throw new ParseException("Unknown reset code: " + code);
 		}
+	}
+
+	/**
+	 * Parses the #SHOPS tag.
+	 * 
+	 * @param reader
+	 */
+	private void parseShops(BufferedReader reader) {
+		nextLine(reader);
+
+		while (line != null) {
+			Matcher matcher = shopPattern.matcher(line);
+			if (matcher.find()) {
+				// Found a shop. Values are 0=vnum, 1-5=purchased types, 6=sell pct, 7=buy pct, 8=open hr, 9=close hr
+				List<Integer> values = IntStream.range(1, 11)
+						.mapToObj(matcher::group)
+						.map(Integer::valueOf)
+						.collect(Collectors.toList());
+				parseShop(values.get(0), values.subList(1, 6), values.get(6), values.get(7), values.get(8),
+						values.get(9));
+				nextLine(reader);
+			} else if (line.startsWith("#")) {
+				// We hit the end of the section
+				return;
+			} else {
+				// Keep moving down to look for the next reset
+				nextLine(reader);
+			}
+		}
+	}
+
+	/**
+	 * Parses a single shop definition.
+	 * 
+	 * @param shopkeeperVnum
+	 * @param purchasedItemTypes
+	 * @param sellPercent
+	 * @param buyPercent
+	 * @param openHour
+	 * @param closeHour
+	 */
+	private void parseShop(int shopkeeperVnum, List<Integer> purchasedItemTypes, int sellPercent, int buyPercent,
+			int openHour, int closeHour) {
+		log.trace("Got a shopkeeper {}", shopkeeperVnum);
+		Mob mob = world.getMob(shopkeeperVnum);
+		mob.setShopkeeper(true);
+		mob.setPurchasedTypes(purchasedItemTypes.stream().filter(i -> i > 0).map(i -> ItemType.values()[i])
+				.collect(Collectors.toList()));
+		mob.setSellPercent(sellPercent);
+		mob.setBuyPercent(buyPercent);
+		mob.setOpenHour(openHour);
+		mob.setCloseHour(closeHour);
 	}
 
 	/**

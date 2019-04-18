@@ -84,6 +84,24 @@
 		<td>Armor</td>
 		<td th:text="${mob.armor}"></td>
 	</tr>
+	<tbody th:if="${mob.isShopkeeper()}">
+		<tr>
+			<td>Hours</td>
+			<td th:text="${mob.openHour + ' - ' + mob.closeHour}"></td>
+		</tr>
+		<tr>
+			<td>Sale Rate</td>
+			<td th:text="${mob.sellPercent}"></td>
+		</tr>
+		<tr th:if="${!mob.purchasedTypes.isEmpty()}">
+			<td>Purchases</td>
+			<td th:text="${#strings.listJoin(mob.purchasedTypes, ', ')}"></td>
+		</tr>
+		<tr th:if="${!mob.purchasedTypes.isEmpty()}">
+			<td>Purchase Rate</td>
+			<td th:text="${mob.buyPercent}"></td>
+		</tr>
+	</tbody>
 </table>
 
 <h3>Location and Possessions</h3>

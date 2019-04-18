@@ -30,6 +30,7 @@ public class Pop {
 	private int id;
 	private Area area;
 	private Item item;
+	/** PopType.SOLD is handled in the getter */
 	private PopType type;
 	private Range itemLevel = Range.of(0, 0);
 
@@ -96,38 +97,44 @@ public class Pop {
 
 	@Override
 	public String toString() {
-		if (type == PopType.FOUND) {
+		if (getType() == PopType.FOUND) {
 			return String.format("%s found in %s", item, room);
-		} else if (type == PopType.CONTAINED) {
+		} else if (getType() == PopType.CONTAINED) {
 			return String.format("%s contained in %s", item, container);
-		} else if (type == PopType.WORN) {
+		} else if (getType() == PopType.WORN) {
 			return String.format("%s worn by %s", item, spawn.getMob());
-		} else if (type == PopType.HELD) {
+		} else if (getType() == PopType.HELD) {
 			return String.format("%s held by %s", item, spawn.getMob());
+		} else if (getType() == PopType.SOLD) {
+			return String.format("%s sold by %s", item, spawn.getMob());
 		} else {
 			return String.format("%s appears in an unknown location", item);
 		}
 	}
 
 	public String getMobDescription() {
-		if (type == PopType.WORN) {
+		if (getType() == PopType.WORN) {
 			return "Equipped with ";
-		} else if (type == PopType.HELD) {
+		} else if (getType() == PopType.HELD) {
 			return "Carrying ";
+		} else if (getType() == PopType.SOLD) {
+			return "Selling ";
 		} else {
 			return "Unrelated to ";
 		}
 	}
 
 	public String getItemDescription() {
-		if (type == PopType.WORN) {
+		if (getType() == PopType.WORN) {
 			return "Equipped by ";
-		} else if (type == PopType.HELD) {
+		} else if (getType() == PopType.HELD) {
 			return "Carried by ";
-		} else if (type == PopType.CONTAINED) {
+		} else if (getType() == PopType.CONTAINED) {
 			return "Contained in ";
-		} else if (type == PopType.FOUND) {
+		} else if (getType() == PopType.FOUND) {
 			return "Found in ";
+		} else if (getType() == PopType.SOLD) {
+			return "Sold by ";
 		} else {
 			return "Unrelated to ";
 		}
@@ -157,7 +164,7 @@ public class Pop {
 
 	/** The pop type */
 	public PopType getType() {
-		return type;
+		return spawn != null && type == PopType.HELD && spawn.getMob().isShopkeeper() ? PopType.SOLD : type;
 	}
 
 	public void setType(PopType type) {

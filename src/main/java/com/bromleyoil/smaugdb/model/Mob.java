@@ -12,6 +12,7 @@ import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.AttackFlag;
 import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 
 /**
@@ -47,6 +48,13 @@ public class Mob {
 	private List<DefenseFlag> defenseFlags = new ArrayList<>();
 	private List<Spawn> spawns = new ArrayList<>();
 	private List<Pop> containedPops = new ArrayList<>();
+
+	private boolean isShopkeeper;
+	private List<ItemType> purchasedTypes = new ArrayList<>();
+	private int sellPercent;
+	private int buyPercent;
+	private int openHour;
+	private int closeHour;
 
 	public String getCssClass() {
 		return hasActFlag(ActFlag.AGGRESSIVE) ? "mob aggressive" : "mob non-aggressive";
@@ -309,5 +317,53 @@ public class Mob {
 
 	public void addContainedPop(Pop pop) {
 		containedPops.add(pop);
+	}
+
+	public boolean isShopkeeper() {
+		return isShopkeeper;
+	}
+
+	public void setShopkeeper(boolean isShopkeeper) {
+		this.isShopkeeper = isShopkeeper;
+	}
+
+	public List<ItemType> getPurchasedTypes() {
+		return purchasedTypes;
+	}
+
+	public void setPurchasedTypes(List<ItemType> purchasedTypes) {
+		this.purchasedTypes = purchasedTypes;
+	}
+
+	public int getSellPercent() {
+		return sellPercent;
+	}
+
+	public void setSellPercent(int sellPercent) {
+		this.sellPercent = sellPercent;
+	}
+
+	public int getBuyPercent() {
+		return buyPercent;
+	}
+
+	public void setBuyPercent(int buyPercent) {
+		this.buyPercent = buyPercent;
+	}
+
+	public int getOpenHour() {
+		return openHour;
+	}
+
+	public void setOpenHour(int openHour) {
+		this.openHour = openHour;
+	}
+
+	public int getCloseHour() {
+		return closeHour;
+	}
+
+	public void setCloseHour(int closeHour) {
+		this.closeHour = closeHour;
 	}
 }

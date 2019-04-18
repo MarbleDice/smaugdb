@@ -64,8 +64,6 @@ public class SmaugInterpreter {
 			return;
 		}
 
-		// TODO Shopkeeper min(gen, mlevel-2)
-
 		// Calculate the item level from each pop
 		for (Pop pop : item.getPops()) {
 			if (pop.getType() == PopType.FOUND) {
@@ -82,9 +80,15 @@ public class SmaugInterpreter {
 				calculateMobLevel(pop.getMob());
 				pop.setItemLevel(Range.of(pop.getMob().getLevel())
 						.subtract(2)
-						.constrainMax(LEVEL_AVATAR)
+						.constrain(0, LEVEL_AVATAR)
 						.extend(1)
 						.constrainMin(1));
+			} else if (pop.getType() == PopType.SOLD) {
+				calculateMobLevel(pop.getMob());
+				pop.setItemLevel(Range.of(pop.getMob().getLevel())
+						.subtract(2)
+						.constrain(0, LEVEL_AVATAR)
+						.min(calculateGeneratedItemLevel(pop.getArea(), item)));
 			} else {
 				throw new UnsupportedOperationException("Don't know how to set the level range for: " + pop.getType());
 			}

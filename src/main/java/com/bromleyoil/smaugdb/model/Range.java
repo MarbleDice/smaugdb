@@ -158,6 +158,13 @@ public class Range {
 		return this;
 	}
 
+	public Range constrain(int minLimit, int maxLimit) {
+		min = min < minLimit ? minLimit : min;
+		max = max > maxLimit ? maxLimit : max;
+		conform();
+		return this;
+	}
+
 	public Range constrainMin(int limit) {
 		min = min < limit ? limit : min;
 		conform();

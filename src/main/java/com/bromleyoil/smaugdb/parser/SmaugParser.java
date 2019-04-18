@@ -317,6 +317,7 @@ public class SmaugParser {
 		// weight cost rent
 		values = nextValues(reader);
 		item.setWeight(values.get(0));
+		item.setCost(values.get(1));
 
 		// Extra/Apply sections
 		nextLine(reader);

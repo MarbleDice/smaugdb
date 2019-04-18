@@ -22,7 +22,7 @@ public class MainController {
 	@RequestMapping("/area-list")
 	public ModelAndView areaList() {
 		ModelAndView mav = new ModelAndView("area-list");
-		mav.addObject("areas", world.getAreas().values());
+		mav.addObject("areas", world.getAreas());
 		return mav;
 	}
 

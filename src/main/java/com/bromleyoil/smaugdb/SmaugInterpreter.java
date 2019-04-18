@@ -34,7 +34,7 @@ public class SmaugInterpreter {
 	public static void process(World world) {
 		SmaugInterpreter interpreter = new SmaugInterpreter(world);
 
-		for (Area area : world.getAreas().values()) {
+		for (Area area : world.getAreas()) {
 			interpreter.processArea(area);
 		}
 

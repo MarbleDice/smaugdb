@@ -118,7 +118,7 @@ public class Pop {
 		} else if (getType() == PopType.HELD) {
 			return "Carrying ";
 		} else if (getType() == PopType.SOLD) {
-			return "Selling ";
+			return "Sells ";
 		} else {
 			return "Unrelated to ";
 		}

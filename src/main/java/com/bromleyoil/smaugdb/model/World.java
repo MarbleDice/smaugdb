@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
@@ -24,7 +25,7 @@ public class World {
 	@Value("${mud.path:}")
 	private String mudPath;
 
-	private Map<String, Area> areas = new HashMap<>();
+	private Map<String, Area> areas = new TreeMap<>();
 	private Map<Integer, Room> rooms = new HashMap<>();
 	private Map<Integer, Mob> mobs = new HashMap<>();
 	private Map<Integer, Item> items = new HashMap<>();
@@ -40,8 +41,8 @@ public class World {
 		SmaugParser.loadWorld(this, mudPath);
 	}
 
-	public Map<String, Area> getAreas() {
-		return Collections.unmodifiableMap(areas);
+	public Collection<Area> getAreas() {
+		return Collections.unmodifiableCollection(areas.values());
 	}
 
 	public Area getArea(String urlSafeName) {

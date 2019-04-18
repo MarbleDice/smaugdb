@@ -114,6 +114,8 @@
 			<li th:each="pop : ${spawn.containedPops}">
 				<span th:text="${pop.mobDescription}">Equipped with</span>
 				<a th:replace="~{link::item(${pop.item})}"></a>
+				<span th:text="${': level ' + pop.itemLevel}"></span>
+				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}"></span>
 			</li>
 		</ul>
 	</li>

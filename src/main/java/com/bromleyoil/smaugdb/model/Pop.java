@@ -167,6 +167,10 @@ public class Pop {
 		return spawn != null && type == PopType.HELD && spawn.getMob().isShopkeeper() ? PopType.SOLD : type;
 	}
 
+	public boolean isSold() {
+		return getType() == PopType.SOLD;
+	}
+
 	public void setType(PopType type) {
 		this.type = type;
 	}
@@ -201,6 +205,10 @@ public class Pop {
 
 	public void setWearFlag(WearFlag wearFlag) {
 		this.wearFlag = wearFlag;
+	}
+
+	public int getCost() {
+		return getType() == PopType.SOLD ? getItem().getCost() * getSpawn().getMob().getSellPercent() / 100 : 0;
 	}
 
 	/** The contain the item pops in */

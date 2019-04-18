@@ -96,15 +96,22 @@ public class Range {
 	}
 
 	public Range union(Range range) {
-		min = range.getMin() > getMin() ? range.getMin() : getMin();
-		max = range.getMax() < getMax() ? range.getMax() : getMax();
+		min = range.getMin() < getMin() ? range.getMin() : getMin();
+		max = range.getMax() > getMax() ? range.getMax() : getMax();
 		conform();
 		return this;
 	}
 
+	/**
+	 * Sets this range to the range intersecting with the given range. If there is no intersection, the resulting range
+	 * will be a point range equivalent to the lowest point of the higher range. (Bug or feature? You dec-it's a bug.)
+	 * 
+	 * @param range
+	 * @return This range after modification
+	 */
 	public Range intersect(Range range) {
-		min = range.getMin() < getMin() ? range.getMin() : getMin();
-		max = range.getMax() > getMax() ? range.getMax() : getMax();
+		min = range.getMin() > getMin() ? range.getMin() : getMin();
+		max = range.getMax() < getMax() ? range.getMax() : getMax();
 		conform();
 		return this;
 	}

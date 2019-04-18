@@ -20,7 +20,7 @@ public class Range {
 	private Range(int min, int max) {
 		this.min = min;
 		this.max = max;
-		conform();
+		conformMax();
 	}
 
 	public static Range of(int value) {
@@ -98,7 +98,7 @@ public class Range {
 	public Range union(Range range) {
 		min = range.getMin() < getMin() ? range.getMin() : getMin();
 		max = range.getMax() > getMax() ? range.getMax() : getMax();
-		conform();
+		conformMax();
 		return this;
 	}
 
@@ -112,84 +112,88 @@ public class Range {
 	public Range intersect(Range range) {
 		min = range.getMin() > getMin() ? range.getMin() : getMin();
 		max = range.getMax() < getMax() ? range.getMax() : getMax();
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range min(Range range) {
 		min = range.getMin() < getMin() ? range.getMin() : getMin();
 		max = range.getMax() < getMax() ? range.getMax() : getMax();
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range max(Range range) {
 		min = range.getMin() > getMin() ? range.getMin() : getMin();
 		max = range.getMax() > getMax() ? range.getMax() : getMax();
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range add(int amount) {
 		min = getMin() + amount;
 		max = getMax() + amount;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range subtract(int amount) {
 		min = getMin() - amount;
 		max = getMax() - amount;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range extend(int amount) {
 		min = getMin() - amount;
 		max = getMax() + amount;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range adjust(int minAdjustBy, int maxAdjustBy) {
 		min = getMin() + minAdjustBy;
 		max = getMax() + maxAdjustBy;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range constrain(int minLimit, int maxLimit) {
 		min = min < minLimit ? minLimit : min;
 		max = max > maxLimit ? maxLimit : max;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range constrainMin(int limit) {
 		min = min < limit ? limit : min;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range constrainMax(int limit) {
 		max = max > limit ? limit : max;
-		conform();
+		conformMin();
 		return this;
 	}
 
 	public Range constrainMinRange(int range) {
 		min = min < max - range ? max - range : min;
-		conform();
+		conformMax();
 		return this;
 	}
 
 	public Range constrainMaxRange(int range) {
 		max = max > min + range ? min + range : max;
-		conform();
+		conformMin();
 		return this;
 	}
 
-	private void conform() {
+	private void conformMin() {
+		min = min > max ? max : min;
+	}
+
+	private void conformMax() {
 		max = min > max ? min : max;
 	}
 

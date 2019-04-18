@@ -23,6 +23,8 @@ import com.bromleyoil.smaugdb.model.enums.PopType;
  */
 public class SmaugInterpreter {
 
+	private static final int LEVEL_AVATAR = 50;
+
 	private World world;
 
 	private SmaugInterpreter(World world) {
@@ -80,6 +82,7 @@ public class SmaugInterpreter {
 				calculateMobLevel(pop.getMob());
 				pop.setItemLevel(Range.of(pop.getMob().getLevel())
 						.subtract(2)
+						.constrainMax(LEVEL_AVATAR)
 						.extend(1)
 						.constrainMin(1));
 			} else {

@@ -96,6 +96,7 @@
 		<a th:replace="~{link::item(${pop.container})}"></a>
 		</th:block>
 		<span th:text="${pop.room}" th:if="${pop.room != null}"></span>
+		<span th:text="${'(at level ' + pop.itemLevel + ')'}"></span>
 	</li>
 </ul>
 

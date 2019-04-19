@@ -5,113 +5,121 @@
 	layout:decorate="~{template}" th:with="title=${item.title}">
 <th:block layout:fragment="content">
 
-<a th:replace="~{link::area(${item.area})}"></a>
+<div class="two-col">
+	<div class="two-col-header">
+		<h2 th:text="${item.title}" th:class="${item.cssClass + ' inline'}"></h2>
+		<a th:replace="~{link::area(${item.area})}"></a>
+	</div>
 
-<table class="data">
-	<tr>
-		<td>Description</td>
-		<td th:text="${item.description}"></td>
-	</tr>
-	<tr>
-		<td>Keywords</td>
-		<td th:text="${item.keywords}"></td>
-	</tr>
-	<tr th:if="${!item.extraFlags.isEmpty()}">
-		<td>Properties</td>
-		<td th:text="${#strings.listJoin(item.extraFlags, ', ')}"></td>
- 	</tr>
+	<div class="two-col-left">
+		<table class="data">
+			<tr>
+				<td>Description</td>
+				<td th:text="${item.description}"></td>
+			</tr>
+			<tr>
+				<td>Keywords</td>
+				<td th:text="${item.keywords}"></td>
+			</tr>
+			<tr th:if="${!item.extraFlags.isEmpty()}">
+				<td>Properties</td>
+				<td th:text="${#strings.listJoin(item.extraFlags, ', ')}"></td>
+		 	</tr>
+		
+			<th:block th:if="${item.isItem()}">
+			<tr>
+				<td>Level</td>
+				<td th:text="${item.level}"></td>
+			</tr>
+			<tr>
+				<td>Weight</td>
+				<td th:text="${item.weight}"></td>
+			</tr>
+			<tr>
+				<td>Cost</td>
+				<td th:text="${item.cost}"></td>
+			</tr>
+			</th:block>
+		
+			<tr>
+				<td>Type</td>
+				<td th:text="${item.subType}"></td>
+			</tr>
+		
+			<th:block th:if="${item.isEquipment()}">
+			<tr>
+				<td>Wearable</td>
+				<td th:text="${#strings.listJoin(item.wearFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${item.isWeapon()}">
+				<td>Damage</td>
+				<td th:text="${item.damage}"></td>
+			</tr>
+			<tr th:if="${item.isArmor()}">
+				<td>Armor</td>
+				<td th:text="${item.armor}"></td>
+			</tr>
+			<tr th:if="${!item.applies.isEmpty()}">
+				<td>Applies</td>
+				<td th:text="${#strings.listJoin(item.applies, ', ')}"></td>
+			</tr>
+			</th:block>
+		
+		
+			<tr th:if="${!item.keyTo.isEmpty()}">
+				<td>Unlocks</td>
+				<td>
+					<th:block th:each="unlocked : ${item.keyTo}"><a th:replace="~{link::item(${unlocked})}"></a></th:block>
+				</td>
+			</tr>
+		
+			<th:block th:if="${item.isContainer()}">
+			<tr>
+				<td>Capacity</td>
+				<td th:text="${item.capacity}"></td>
+			</tr>
+			<tr th:if="${item.key}">
+				<td>Key</td>
+				<td><a th:replace="~{link::item(${item.key})}"></a></td>
+			</tr>
+			<tr>
+				<td>Container Flags</td>
+				<td th:text="${#strings.listJoin(item.containerFlags, ', ')}"></td>
+			</tr>
+			</th:block>
+		</table>
+	</div>
 
-	<th:block th:if="${item.isItem()}">
-	<tr>
-		<td>Level</td>
-		<td th:text="${item.level}"></td>
-	</tr>
-	<tr>
-		<td>Weight</td>
-		<td th:text="${item.weight}"></td>
-	</tr>
-	<tr>
-		<td>Cost</td>
-		<td th:text="${item.cost}"></td>
-	</tr>
-	</th:block>
-
-	<tr>
-		<td>Type</td>
-		<td th:text="${item.subType}"></td>
-	</tr>
-
-	<th:block th:if="${item.isEquipment()}">
-	<tr>
-		<td>Wearable</td>
-		<td th:text="${#strings.listJoin(item.wearFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${item.isWeapon()}">
-		<td>Damage</td>
-		<td th:text="${item.damage}"></td>
-	</tr>
-	<tr th:if="${item.isArmor()}">
-		<td>Armor</td>
-		<td th:text="${item.armor}"></td>
-	</tr>
-	<tr th:if="${!item.applies.isEmpty()}">
-		<td>Applies</td>
-		<td th:text="${#strings.listJoin(item.applies, ', ')}"></td>
-	</tr>
-	</th:block>
-
-
-	<tr th:if="${!item.keyTo.isEmpty()}">
-		<td>Unlocks</td>
-		<td>
-			<th:block th:each="unlocked : ${item.keyTo}"><a th:replace="~{link::item(${unlocked})}"></a></th:block>
-		</td>
-	</tr>
-
-	<th:block th:if="${item.isContainer()}">
-	<tr>
-		<td>Capacity</td>
-		<td th:text="${item.capacity}"></td>
-	</tr>
-	<tr th:if="${item.key}">
-		<td>Key</td>
-		<td><a th:replace="~{link::item(${item.key})}"></a></td>
-	</tr>
-	<tr>
-		<td>Container Flags</td>
-		<td th:text="${#strings.listJoin(item.containerFlags, ', ')}"></td>
-	</tr>
-	</th:block>
-</table>
-
-<h3>Location</h3>
-
-<ul>
-	<li th:each="pop : ${item.pops}">
-		<span th:text="${pop.itemDescription}">Found in</span>
-		<th:block th:if="${pop.spawn != null}">
-		<a th:replace="~{link::mob(${pop.spawn.mob})}" th:if="${pop.spawn != null}">mob</a>
+	<div class="two-col-right">
+		<h3>Location</h3>
+		
+		<ul>
+			<li th:each="pop : ${item.pops}">
+				<span th:text="${pop.itemDescription}">Found in</span>
+				<th:block th:if="${pop.spawn != null}">
+				<a th:replace="~{link::mob(${pop.spawn.mob})}" th:if="${pop.spawn != null}">mob</a>
+				</th:block>
+				<th:block th:if="${pop.container != null}">
+				<a th:replace="~{link::item(${pop.container})}">item</a>
+				</th:block>
+				<span th:text="${pop.room}" th:if="${pop.room != null}">room</span>
+				<span th:text="${': level ' + pop.itemLevel}">level 0</span>
+				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">1000 coins</span>
+			</li>
+		</ul>
+		
+		<th:block th:if="${item.isContainer()}">
+		<h3>Contents</h3>
+		<ul>
+			<li th:if="${item.containedPops.isEmpty()}">empty</li>
+			<li th:each="pop : ${item.containedPops}">
+				<a th:replace="~{link::item(${pop.item})}"></a>
+				<span th:text="${': level ' + pop.itemLevel}">level 0</span>
+			</li>
+		</ul>
 		</th:block>
-		<th:block th:if="${pop.container != null}">
-		<a th:replace="~{link::item(${pop.container})}">item</a>
-		</th:block>
-		<span th:text="${pop.room}" th:if="${pop.room != null}">room</span>
-		<span th:text="${': level ' + pop.itemLevel}">level 0</span>
-		<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'comma') + ' coins'}">1000 coins</span>
-	</li>
-</ul>
-
-<th:block th:if="${item.isContainer()}">
-<h3>Contents</h3>
-<ul>
-	<li th:if="${item.containedPops.isEmpty()}">empty</li>
-	<li th:each="pop : ${item.containedPops}">
-		<a th:replace="~{link::item(${pop.item})}"></a>
-		<span th:text="${': level ' + pop.itemLevel}">level 0</span>
-	</li>
-</ul>
-</th:block>
-
+	</div>
+</div>
 
 </th:block>
 </html>

@@ -1,3 +1,7 @@
+:root {
+	--gap: 20px;
+}
+
 /**
  * Main layout
  */
@@ -17,7 +21,7 @@ header, nav, main, footer {
 }
 
 header {
-	padding: 20px 0;
+	padding: var(--gap) 0;
 }
 
 header, nav, footer {
@@ -27,7 +31,7 @@ header, nav, footer {
 main {
 	width: 1060px;
 	min-height: 800px;
-	padding: 10px 20px;
+	padding: 10px var(--gap);
 	background-color: white;
 }
 
@@ -57,11 +61,37 @@ nav li a:hover {
 	background-color: #333;
 }
 
+.two-col {
+	display: grid;
+	grid-column-gap: var(--gap);
+	grid-template-columns: calc(50% - var(--gap) / 2) calc(50% - var(--gap) / 2);
+	grid-template-areas:
+		"header header"
+		"left right";
+}
+
+.two-col-header {
+	grid-area: header;
+}
+
+.two-col-left {
+	grid-area: left;
+}
+
+.two-col-right {
+	grid-area: right;
+}
+
 /**
  * Main elements
  */
 h1, h2, h3, p {
 	margin: 10px 0;
+}
+
+.inline {
+	display: inline;
+	margin-right: var(--gap);
 }
 
 ul.unstyled {
@@ -86,27 +116,24 @@ a, a:visited {
 	text-decoration: none;
 }
 
-a:hover {
+.mob.non-aggressive {
 	color: #ea7c10;
+	/*color: #cc7a00;*/
 }
 
-a.mob.non-aggressive {
-	color: #cc7a00;
-}
-
-a.mob.aggressive {
+.mob.aggressive {
 	color: #ff4000;
 }
 
-a.item.decoration {
+.item.decoration {
 	color: #ccbb00;
 }
 
-a.item.equipment {
+.item.equipment {
 	color: #009933;
 }
 
-a.item.object {
+.item.object {
 	color: #0052cc;
 }
 
@@ -151,7 +178,7 @@ table.data th, table.data td {
 }
 
 table.data tr td:first-child {
-	padding-right: 20px;
+	padding-right: var(--gap);
 }
 
 /* Row-headers */
@@ -199,7 +226,7 @@ table.form th.subheader {
 }
 
 input.numberBox {
-	width: 20px;
+	width: var(--gap);
 }
 
 .actions {

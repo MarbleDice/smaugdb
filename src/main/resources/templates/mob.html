@@ -5,121 +5,129 @@
 	layout:decorate="~{template}" th:with="title=${mob.title}">
 <th:block layout:fragment="content">
 
-<a th:replace="~{link::area(${mob.area})}"></a>
+<div class="two-col">
+	<div class="two-col-header">
+		<h2 th:text="${mob.title}" th:class="${mob.cssClass + ' inline'}"></h2>
+		<a th:replace="~{link::area(${mob.area})}"></a>
+	</div>
 
-<table class="data">
-	<tr>
-		<td>Description</td>
-		<td th:text="${mob.description}"></td>
-	</tr>
-	<tr>
-		<td>Long Description</td>
-		<td>
-			<ul class="unstyled">
-				<li th:text="${line}" th:each="line : ${mob.longDescription}">Lorem ipsum dolor sit amet</li>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<td>Keywords</td>
-		<td th:text="${mob.keywords}"></td>
-	</tr>
-	<tr>
-		<td>Level</td>
-		<td th:text="${mob.level}"></td>
-	</tr>
-	<tr>
-		<td>Alignment</td>
-		<td th:text="${mob.alignment}"></td>
-	</tr>
-	<tr>
-		<td>Gold</td>
-		<td th:text="${mob.gold}"></td>
-	</tr>
-	<tr>
-		<td>Experience</td>
-		<td th:text="${mob.experience}"></td>
-	</tr>
-	<tr th:if="${!mob.actFlags.isEmpty()}">
-		<td>Behavior</td>
-		<td th:text="${#strings.listJoin(mob.actFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${!mob.affectFlags.isEmpty()}">
-		<td>Special Effects</td>
-		<td th:text="${#strings.listJoin(mob.affectFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${!mob.resistFlags.isEmpty()}">
-		<td>Resistances</td>
-		<td th:text="${#strings.listJoin(mob.resistFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${!mob.immuneFlags.isEmpty()}">
-		<td>Immunities</td>
-		<td th:text="${#strings.listJoin(mob.immuneFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${!mob.vulnerableFlags.isEmpty()}">
-		<td>Vulnerabilities</td>
-		<td th:text="${#strings.listJoin(mob.vulnerableFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${!mob.attackFlags.isEmpty()}">
-		<td>Attacks</td>
-		<td th:text="${#strings.listJoin(mob.attackFlags, ', ')}"></td>
-	</tr>
-	<tr th:if="${!mob.defenseFlags.isEmpty()}">
-		<td>Defenses</td>
-		<td th:text="${#strings.listJoin(mob.defenseFlags, ', ')}"></td>
-	</tr>
-	<tr>
-		<td>THAC0</td>
-		<td th:text="${mob.thac0 + ' (' + mob.accuracy + ')'}"></td>
-	</tr>
-	<tr>
-		<td>Damage</td>
-		<td th:text="${mob.damage}"></td>
-	</tr>
-	<tr>
-		<td>Hit Points</td>
-		<td th:text="${mob.hp}"></td>
-	</tr>
-	<tr>
-		<td>Armor</td>
-		<td th:text="${mob.armor}"></td>
-	</tr>
-	<tbody th:if="${mob.isShopkeeper()}">
-		<tr>
-			<td>Hours</td>
-			<td th:text="${mob.openHour + ' - ' + mob.closeHour}"></td>
-		</tr>
-		<tr>
-			<td>Sale Rate</td>
-			<td th:text="${mob.sellPercent}"></td>
-		</tr>
-		<tr th:if="${!mob.purchasedTypes.isEmpty()}">
-			<td>Purchases</td>
-			<td th:text="${#strings.listJoin(mob.purchasedTypes, ', ')}"></td>
-		</tr>
-		<tr th:if="${!mob.purchasedTypes.isEmpty()}">
-			<td>Purchase Rate</td>
-			<td th:text="${mob.buyPercent}"></td>
-		</tr>
-	</tbody>
-</table>
+	<div class="two-col-left">
+		<table class="data">
+			<tr>
+				<td>Description</td>
+				<td th:text="${mob.description}"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<ul class="unstyled">
+						<li th:text="${line}" th:each="line : ${mob.longDescription}">Lorem ipsum dolor sit amet</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>Keywords</td>
+				<td th:text="${mob.keywords}"></td>
+			</tr>
+			<tr>
+				<td>Level</td>
+				<td th:text="${mob.level}"></td>
+			</tr>
+			<tr>
+				<td>Alignment</td>
+				<td th:text="${mob.alignment}"></td>
+			</tr>
+			<tr>
+				<td>Gold</td>
+				<td th:text="${mob.gold}"></td>
+			</tr>
+			<tr>
+				<td>Experience</td>
+				<td th:text="${mob.experience}"></td>
+			</tr>
+			<tr th:if="${!mob.actFlags.isEmpty()}">
+				<td>Behavior</td>
+				<td th:text="${#strings.listJoin(mob.actFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${!mob.affectFlags.isEmpty()}">
+				<td>Special Effects</td>
+				<td th:text="${#strings.listJoin(mob.affectFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${!mob.resistFlags.isEmpty()}">
+				<td>Resistances</td>
+				<td th:text="${#strings.listJoin(mob.resistFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${!mob.immuneFlags.isEmpty()}">
+				<td>Immunities</td>
+				<td th:text="${#strings.listJoin(mob.immuneFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${!mob.vulnerableFlags.isEmpty()}">
+				<td>Vulnerabilities</td>
+				<td th:text="${#strings.listJoin(mob.vulnerableFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${!mob.attackFlags.isEmpty()}">
+				<td>Attacks</td>
+				<td th:text="${#strings.listJoin(mob.attackFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${!mob.defenseFlags.isEmpty()}">
+				<td>Defenses</td>
+				<td th:text="${#strings.listJoin(mob.defenseFlags, ', ')}"></td>
+			</tr>
+			<tr>
+				<td>THAC0</td>
+				<td th:text="${mob.thac0 + ' (' + mob.accuracy + ')'}"></td>
+			</tr>
+			<tr>
+				<td>Damage</td>
+				<td th:text="${mob.damage}"></td>
+			</tr>
+			<tr>
+				<td>Hit Points</td>
+				<td th:text="${mob.hp}"></td>
+			</tr>
+			<tr>
+				<td>Armor</td>
+				<td th:text="${mob.armor}"></td>
+			</tr>
+			<tbody th:if="${mob.isShopkeeper()}">
+				<tr>
+					<td>Hours</td>
+					<td th:text="${mob.openHour + ' - ' + mob.closeHour}"></td>
+				</tr>
+				<tr>
+					<td>Sale Rate</td>
+					<td th:text="${mob.sellPercent}"></td>
+				</tr>
+				<tr th:if="${!mob.purchasedTypes.isEmpty()}">
+					<td>Purchases</td>
+					<td th:text="${#strings.listJoin(mob.purchasedTypes, ', ')}"></td>
+				</tr>
+				<tr th:if="${!mob.purchasedTypes.isEmpty()}">
+					<td>Purchase Rate</td>
+					<td th:text="${mob.buyPercent}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-<h3>Location and Possessions</h3>
-
-<ul class="multi-level">
-	<li th:each="spawn : ${mob.spawns}">
-		<span th:text="${spawn.mobDescription + ' ' + spawn.room}">Appears in a room</span>
-		<span th:text="${'(maximum ' + spawn.limit + ')'}" th:if="${spawn.limit != mob.spawns.size()}">(maximum 1)</span>
-		<ul th:if="${not #lists.isEmpty(spawn.containedPops)}">
-			<li th:each="pop : ${spawn.containedPops}">
-				<span th:text="${pop.mobDescription}">Equipped with</span>
-				<a th:replace="~{link::item(${pop.item})}"></a>
-				<span th:text="${': level ' + pop.itemLevel}"></span>
-				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}"></span>
+	<div class="two-col-right">
+		<h3>Location and Possessions</h3>
+		
+		<ul class="multi-level">
+			<li th:each="spawn : ${mob.spawns}">
+				<span th:text="${spawn.mobDescription + ' ' + spawn.room}">Appears in a room</span>
+				<span th:text="${'(maximum ' + spawn.limit + ')'}" th:if="${spawn.limit != mob.spawns.size()}">(maximum 1)</span>
+				<ul th:if="${not #lists.isEmpty(spawn.containedPops)}">
+					<li th:each="pop : ${spawn.containedPops}">
+						<span th:text="${pop.mobDescription}">Equipped with</span>
+						<a th:replace="~{link::item(${pop.item})}"></a>
+						<span th:text="${': level ' + pop.itemLevel}"></span>
+						<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}"></span>
+					</li>
+				</ul>
 			</li>
 		</ul>
-	</li>
-</ul>
+	</div>
+</div>
 
 </th:block>
 </html>

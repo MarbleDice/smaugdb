@@ -20,6 +20,13 @@ public class Utils {
 	/** A publicly accessible static log for debugging and being lazy */
 	public static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
+	/**
+	 * Partitions a list in multiple smaller lists.
+	 * 
+	 * @param list
+	 * @param partitionSize
+	 * @return
+	 */
 	public <T> List<List<T>> partition(List<T> list, int partitionSize) {
 		return ListUtils.partition(list, partitionSize);
 	}

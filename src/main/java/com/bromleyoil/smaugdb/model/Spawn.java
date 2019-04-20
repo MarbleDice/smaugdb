@@ -17,6 +17,8 @@ public class Spawn {
 	private Mob mob;
 	private Room room;
 	private int limit;
+
+	/** Equipment and inventory are assigned to the Spawn */
 	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIP_ORDER);
 
 	private Spawn(Mob mob, Room room, int limit) {

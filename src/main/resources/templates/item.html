@@ -93,8 +93,8 @@
 	<div class="two-col-right">
 		<h3>Location</h3>
 		
-		<ul>
-			<li th:each="pop : ${item.pops}">
+		<ul class="unstyled">
+			<li th:each="pop : ${item.sortedPops}">
 				<span th:text="${pop.itemDescription}">Found in</span>
 				<th:block th:if="${pop.spawn != null}">
 				<a th:replace="~{link::mob(${pop.spawn.mob})}" th:if="${pop.spawn != null}">mob</a>
@@ -105,19 +105,16 @@
 				<span th:text="${pop.room}" th:if="${pop.room != null}">room</span>
 				<span th:text="${': level ' + pop.itemLevel}">level 0</span>
 				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">1000 coins</span>
+				<!-- Container contents -->
+				<ul th:if="${item.isContainer()}">
+					<li th:each="containedPop : ${pop.containedPops}">
+						<span th:text="${containedPop.popDescription}">Containing</span>
+						<a th:replace="~{link::item(${containedPop.item})}">item</a>
+					</li>
+				</ul>
 			</li>
 		</ul>
-		
-		<th:block th:if="${item.isContainer()}">
-		<h3>Contents</h3>
-		<ul>
-			<li th:if="${item.containedPops.isEmpty()}">empty</li>
-			<li th:each="pop : ${item.containedPops}">
-				<a th:replace="~{link::item(${pop.item})}"></a>
-				<span th:text="${': level ' + pop.itemLevel}">level 0</span>
-			</li>
-		</ul>
-		</th:block>
+
 	</div>
 </div>
 

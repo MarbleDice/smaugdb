@@ -12,17 +12,14 @@
 	</div>
 
 	<div class="two-col-left">
+		<ul class="unstyled">
+			<li th:text="${line}" th:each="line : ${mob.longDescription}">Lorem ipsum dolor sit amet</li>
+		</ul>
+
 		<table class="data">
 			<tr>
 				<td>Description</td>
 				<td th:text="${mob.description}"></td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<ul class="unstyled">
-						<li th:text="${line}" th:each="line : ${mob.longDescription}">Lorem ipsum dolor sit amet</li>
-					</ul>
-				</td>
 			</tr>
 			<tr>
 				<td>Keywords</td>
@@ -112,9 +109,9 @@
 	<div class="two-col-right">
 		<h3>Location and Possessions</h3>
 		
-		<ul class="multi-level">
+		<ul class="unstyled">
 			<li th:each="spawn : ${mob.spawns}">
-				<span th:text="${spawn.mobDescription + ' ' + spawn.room}">Appears in a room</span>
+				<span th:text="${spawn.mobDescription + ' [' + spawn.room + ']'}">Found in [A room]</span>
 				<span th:text="${'(maximum ' + spawn.limit + ')'}" th:if="${spawn.limit != mob.spawns.size()}">(maximum 1)</span>
 				<ul th:if="${not #lists.isEmpty(spawn.containedPops)}">
 					<li th:each="pop : ${spawn.containedPops}">

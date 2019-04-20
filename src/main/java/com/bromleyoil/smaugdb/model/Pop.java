@@ -1,6 +1,9 @@
 package com.bromleyoil.smaugdb.model;
 
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -19,10 +22,16 @@ public class Pop {
 
 	private static final AtomicInteger idGenerator = new AtomicInteger();
 
-	public static final Comparator<Pop> EQUIP_ORDER = Comparator
-			// Equip location ordinal, with inventory at the end 
-			.comparing((Pop x) -> x.getWearFlag() != null ? x.getWearFlag().ordinal() : WearFlag.values().length)
-			// Items sorted by name
+	public static final Comparator<Pop> TYPE_ORDER = Comparator.comparing(Pop::getType)
+			// Then by mob name
+			.thenComparing(p -> p.getMob() == null ? "" : p.getMob().getName())
+			// Finally break ties with the id
+			.thenComparing(Pop::getId);
+
+	public static final Comparator<Pop> EQUIP_ORDER = Comparator.comparing(Pop::getType)
+			// Then by equip location ordinal
+			.thenComparing(p -> p.getWearFlag() == null ? 0 : p.getWearFlag().ordinal())
+			// Then by item name
 			.thenComparing(x -> x.getItem().getName())
 			// Finally break ties with the id
 			.thenComparing(Pop::getId);
@@ -40,6 +49,9 @@ public class Pop {
 	private WearFlag wearFlag;
 	private Item container;
 	private Room room;
+
+	/** Items inside containers are assigned to the Pop */
+	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIP_ORDER);
 
 	private Pop() {
 		// Private constructor
@@ -66,7 +78,7 @@ public class Pop {
 		pop.setItem(item);
 		pop.setContainer(container);
 		item.addPop(pop);
-		container.addContainedPop(pop);
+		container.getPops().get(container.getPops().size() - 1).addContainedPop(pop);
 		return pop;
 	}
 
@@ -135,6 +147,14 @@ public class Pop {
 			return "Found in ";
 		} else if (getType() == PopType.SOLD) {
 			return "Sold by ";
+		} else {
+			return "Unrelated to ";
+		}
+	}
+
+	public String getPopDescription() {
+		if (getType() == PopType.CONTAINED) {
+			return "Containing ";
 		} else {
 			return "Unrelated to ";
 		}
@@ -227,5 +247,13 @@ public class Pop {
 
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+
+	public Collection<Pop> getContainedPops() {
+		return containedPops;
+	}
+
+	public void addContainedPop(Pop pop) {
+		containedPops.add(pop);
 	}
 }

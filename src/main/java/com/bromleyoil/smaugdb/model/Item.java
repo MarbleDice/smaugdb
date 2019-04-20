@@ -1,8 +1,11 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +43,8 @@ public class Item {
 	private List<Item> keyTo = new ArrayList<>();
 
 	private List<Pop> pops = new ArrayList<>();
+
+	/* Items produced procedurally are assigned to the Item */
 	private List<Pop> containedPops = new ArrayList<>();
 
 	public String getCssClass() {
@@ -306,6 +311,12 @@ public class Item {
 
 	public List<Pop> getPops() {
 		return pops;
+	}
+
+	public Collection<Pop> getSortedPops() {
+		Set<Pop> rv = new TreeSet<>(Pop.TYPE_ORDER);
+		rv.addAll(pops);
+		return rv;
 	}
 
 	public void addPop(Pop pop) {

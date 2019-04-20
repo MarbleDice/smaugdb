@@ -28,16 +28,11 @@ header, nav, footer {
 	background-color: black;
 }
 
-main {
-	width: 1060px;
-	min-height: 800px;
-	padding: 10px var(--gap);
-	background-color: white;
-}
-
 header h1 {
 	color: white;
 	text-align: center;
+	padding: 0;
+	margin: 0;
 }
 
 nav ul {
@@ -61,9 +56,17 @@ nav li a:hover {
 	background-color: #333;
 }
 
+main {
+	width: 1060px;
+	min-height: 800px;
+	padding: 10px var(--gap);
+	background-color: white;
+}
+
 .two-col {
 	display: grid;
 	grid-column-gap: var(--gap);
+	grid-row-gap: var(--gap);
 	grid-template-columns: calc(50% - var(--gap) / 2) calc(50% - var(--gap) / 2);
 	grid-template-areas:
 		"header header"
@@ -85,8 +88,8 @@ nav li a:hover {
 /**
  * Main elements
  */
-h1, h2, h3, p {
-	margin: 10px 0;
+h2, h3, p {
+	margin: 0 0 var(--gap) 0;
 }
 
 .inline {
@@ -97,11 +100,13 @@ h1, h2, h3, p {
 ul.unstyled {
 	list-style-type: none;
 	padding: 0;
-	margin: 0;
+	margin: 0 0 var(--gap) 0;
 }
 
-ul.multi-level>li {
-	margin-bottom: 10px;
+ul.unstyled ul {
+	list-style-type: none;
+	margin-bottom: var(--gap);
+	padding-left: var(--gap);
 }
 
 button {

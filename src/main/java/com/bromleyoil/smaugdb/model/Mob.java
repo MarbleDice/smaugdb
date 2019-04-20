@@ -47,6 +47,8 @@ public class Mob {
 	private List<AttackFlag> attackFlags = new ArrayList<>();
 	private List<DefenseFlag> defenseFlags = new ArrayList<>();
 	private List<Spawn> spawns = new ArrayList<>();
+
+	/* Items produced procedurally are assigned to the Mob */
 	private List<Pop> containedPops = new ArrayList<>();
 
 	private boolean isShopkeeper;

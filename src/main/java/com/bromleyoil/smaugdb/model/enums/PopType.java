@@ -5,12 +5,12 @@ public enum PopType {
 	FOUND,
 	/** Contained in another item */
 	CONTAINED,
-	/** Held by a mob */
-	HELD,
+	/** Sold by a mob */
+	SOLD,
 	/** Worn by a mob */
 	WORN,
-	/** Sold by a mob */
-	SOLD;
+	/** Held by a mob */
+	HELD;
 
 	// TODO: mpoload
 }

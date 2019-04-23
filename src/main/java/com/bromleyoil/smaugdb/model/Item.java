@@ -38,9 +38,10 @@ public class Item {
 	private Range damage;
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
+	// TODO naming consistency for keys and unlocks
 	private Item key;
-	// TODO also track doors unlocked
 	private List<Item> keyTo = new ArrayList<>();
+	private List<Room> unlockedDoors = new ArrayList<>();
 
 	private List<Pop> pops = new ArrayList<>();
 
@@ -307,6 +308,14 @@ public class Item {
 
 	public List<Item> getKeyTo() {
 		return keyTo;
+	}
+
+	public Collection<Room> getUnlockedDoors() {
+		return Collections.unmodifiableCollection(unlockedDoors);
+	}
+
+	public void addUnlockedDoor(Room unlockedDoor) {
+		unlockedDoors.add(unlockedDoor);
 	}
 
 	public List<Pop> getPops() {

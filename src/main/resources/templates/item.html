@@ -69,7 +69,10 @@
 			<tr th:if="${!item.keyTo.isEmpty()}">
 				<td>Unlocks</td>
 				<td>
-					<th:block th:each="unlocked : ${item.keyTo}"><a th:replace="~{link::item(${unlocked})}"></a></th:block>
+					<ul class="unstyled">
+						<li th:each="unlocked : ${item.keyTo}"><a th:replace="~{link::item(${unlocked})}"></a></li>
+						<li th:each="room : ${item.unlockedDoors}" th:text="${'An exit in ' + room.name}"></li>
+					</ul>
 				</td>
 			</tr>
 		

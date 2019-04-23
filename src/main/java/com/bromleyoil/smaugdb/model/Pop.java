@@ -215,7 +215,11 @@ public class Pop {
 
 	/** The spawned mob the item pops on or in */
 	public Mob getMob() {
-		return spawn.getMob();
+		if (spawn.getMob() != null) {
+			return spawn.getMob();
+		} else {
+			return null;
+		}
 	}
 
 	/** The location the item is equipped */

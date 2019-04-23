@@ -38,10 +38,10 @@ public class Item {
 	private Range damage;
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
-	// TODO naming consistency for keys and unlocks
+
 	private Item key;
-	private List<Item> keyTo = new ArrayList<>();
-	private List<Room> unlockedDoors = new ArrayList<>();
+	private List<Item> keyItems = new ArrayList<>();
+	private List<Room> keyDoors = new ArrayList<>();
 
 	private List<Pop> pops = new ArrayList<>();
 
@@ -295,6 +295,10 @@ public class Item {
 		this.containerFlags = containerFlags;
 	}
 
+	public boolean isUsableKey() {
+		return !keyItems.isEmpty() || !keyDoors.isEmpty();
+	}
+
 	public Item getKey() {
 		return key;
 	}
@@ -302,20 +306,20 @@ public class Item {
 	public void setKey(Item key) {
 		this.key = key;
 		if (key != null) {
-			key.keyTo.add(this);
+			key.keyItems.add(this);
 		}
 	}
 
-	public List<Item> getKeyTo() {
-		return keyTo;
+	public Collection<Item> getKeyItems() {
+		return Collections.unmodifiableCollection(keyItems);
 	}
 
-	public Collection<Room> getUnlockedDoors() {
-		return Collections.unmodifiableCollection(unlockedDoors);
+	public Collection<Room> getKeyDoors() {
+		return Collections.unmodifiableCollection(keyDoors);
 	}
 
-	public void addUnlockedDoor(Room unlockedDoor) {
-		unlockedDoors.add(unlockedDoor);
+	public void addKeyDoor(Room keyDoor) {
+		keyDoors.add(keyDoor);
 	}
 
 	public List<Pop> getPops() {

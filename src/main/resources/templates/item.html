@@ -66,12 +66,15 @@
 			</th:block>
 		
 		
-			<tr th:if="${!item.keyTo.isEmpty()}">
+			<tr th:if="${item.isUsableKey()}">
 				<td>Unlocks</td>
 				<td>
 					<ul class="unstyled">
-						<li th:each="unlocked : ${item.keyTo}"><a th:replace="~{link::item(${unlocked})}"></a></li>
-						<li th:each="room : ${item.unlockedDoors}" th:text="${'An exit in ' + room.name}"></li>
+						<li th:each="keyItem : ${item.keyItems}"><a th:replace="~{link::item(${keyItem})}"></a></li>
+						<li th:each="keyDoor : ${item.keyDoors}">
+							<span>An exit in</span>
+							<span th:replace="~{link::room(${keyDoor})}">A room</span>
+						</li>
 					</ul>
 				</td>
 			</tr>
@@ -81,13 +84,13 @@
 				<td>Capacity</td>
 				<td th:text="${item.capacity}"></td>
 			</tr>
-			<tr th:if="${item.key}">
-				<td>Key</td>
-				<td><a th:replace="~{link::item(${item.key})}"></a></td>
-			</tr>
 			<tr>
 				<td>Container Flags</td>
 				<td th:text="${#strings.listJoin(item.containerFlags, ', ')}"></td>
+			</tr>
+			<tr th:if="${item.key}">
+				<td>Unlocked by</td>
+				<td><a th:replace="~{link::item(${item.key})}"></a></td>
 			</tr>
 			</th:block>
 		</table>
@@ -105,7 +108,9 @@
 				<th:block th:if="${pop.container != null}">
 				<a th:replace="~{link::item(${pop.container})}">item</a>
 				</th:block>
-				<span th:text="${pop.room}" th:if="${pop.room != null}">room</span>
+				<th:block th:if="${pop.room != null}">
+				<span th:replace="~{link::room(${pop.room})}">A room</span>
+				</th:block>
 				<span th:text="${': level ' + pop.itemLevel}">level 0</span>
 				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">1000 coins</span>
 				<!-- Container contents -->

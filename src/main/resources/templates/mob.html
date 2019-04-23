@@ -12,7 +12,7 @@
 	</div>
 
 	<div class="two-col-left">
-		<ul class="unstyled">
+		<ul class="unstyled gap">
 			<li th:text="${line}" th:each="line : ${mob.longDescription}">Lorem ipsum dolor sit amet</li>
 		</ul>
 
@@ -111,7 +111,8 @@
 		
 		<ul class="unstyled">
 			<li th:each="spawn : ${mob.spawns}">
-				<span th:text="${spawn.mobDescription + ' [' + spawn.room + ']'}">Found in [A room]</span>
+				<span th:text="${spawn.mobDescription}">Found in</span>
+				<span th:replace="~{link::room(${spawn.room})}">A room</span>
 				<span th:text="${'(maximum ' + spawn.limit + ')'}" th:if="${spawn.limit != mob.spawns.size()}">(maximum 1)</span>
 				<ul th:if="${not #lists.isEmpty(spawn.containedPops)}">
 					<li th:each="pop : ${spawn.containedPops}">

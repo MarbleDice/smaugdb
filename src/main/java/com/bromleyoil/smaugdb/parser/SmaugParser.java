@@ -359,7 +359,6 @@ public class SmaugParser {
 		nextValues(reader);
 
 		// Extra/door sections
-		if (false) {
 		nextLine(reader);
 		matcher = doorPattern.matcher(line);
 		while ("E".equals(line) || matcher.matches()) {
@@ -370,7 +369,7 @@ public class SmaugParser {
 				values = nextValues(reader);
 				Item key = world.getItem(values.get(1));
 				if (key != null) {
-					key.addUnlockedDoor(room);
+					key.addKeyDoor(room);
 				}
 			} else if ("E".equals(line)) {
 				// Extra line: E
@@ -378,8 +377,9 @@ public class SmaugParser {
 				nextString(reader);
 			}
 			nextLine(reader);
+			matcher = doorPattern.matcher(line);
 		}
-		}
+
 		world.addRoom(room, area);
 	}
 

@@ -2,11 +2,23 @@ package com.bromleyoil.smaugdb;
 
 import static com.bromleyoil.smaugdb.model.enums.ItemType.*;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Pop;
+import com.bromleyoil.smaugdb.model.Prog;
 import com.bromleyoil.smaugdb.model.Range;
+import com.bromleyoil.smaugdb.model.Room;
+import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.PopType;
@@ -23,7 +35,11 @@ import com.bromleyoil.smaugdb.model.enums.PopType;
  */
 public class SmaugInterpreter {
 
+	private static final Logger log = LoggerFactory.getLogger(SmaugInterpreter.class);
+
 	private static final int LEVEL_AVATAR = 50;
+
+	private static final Pattern mploadPattern = Pattern.compile("mp(o|m)load\\s+(\\d+)");
 
 	private World world;
 
@@ -33,6 +49,8 @@ public class SmaugInterpreter {
 
 	public static void process(World world) {
 		SmaugInterpreter interpreter = new SmaugInterpreter(world);
+
+		interpreter.processProgs();
 
 		for (Area area : world.getAreas()) {
 			interpreter.processArea(area);
@@ -44,6 +62,44 @@ public class SmaugInterpreter {
 
 		for (Mob mob : world.getMobs()) {
 			interpreter.processMob(mob);
+		}
+	}
+
+	private void processProgs() {
+		for (Mob producer : world.getMobs()) {
+			processProgs(producer.getProgs(),
+					(p, m) -> Spawn.produced(m, p, producer),
+					(p, i) -> Pop.produced(p, i, producer));
+		}
+
+		for (Item producer : world.getItems()) {
+			processProgs(producer.getProgs(),
+					(p, m) -> Spawn.produced(m, p, producer),
+					(p, i) -> Pop.produced(p, i, producer));
+		}
+
+		for (Room producer : world.getRooms()) {
+			processProgs(producer.getProgs(),
+					(p, m) -> Spawn.produced(m, p, producer),
+					(p, i) -> Pop.produced(p, i, producer));
+		}
+	}
+
+	private void processProgs(Collection<Prog> progs, BiConsumer<Prog, Mob> mpmLoader,
+			BiConsumer<Prog, Item> mpoLoader) {
+		for (Prog prog : progs) {
+			for (String line : prog.getDefinition()) {
+				Matcher matcher = mploadPattern.matcher(line);
+				while (matcher.find()) {
+					if (matcher.group(1).equals("o")) {
+						Optional.ofNullable(world.getItem(Integer.parseInt(matcher.group(2))))
+								.ifPresent(i -> mpoLoader.accept(prog, i));
+					} else if (matcher.group(1).equals("m")) {
+						Optional.ofNullable(world.getMob(Integer.parseInt(matcher.group(2))))
+								.ifPresent(m -> mpmLoader.accept(prog, m));
+					}
+				}
+			}
 		}
 	}
 
@@ -90,7 +146,7 @@ public class SmaugInterpreter {
 						.constrain(0, LEVEL_AVATAR)
 						.min(calculateGeneratedItemLevel(pop.getArea(), item)));
 			} else {
-				throw new UnsupportedOperationException("Don't know how to set the level range for: " + pop.getType());
+				log.error("Don't know how to set the level range for: {}", pop.getType());
 			}
 		}
 

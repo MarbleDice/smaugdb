@@ -4,45 +4,106 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.SpawnType;
 
 public class Spawn {
 
 	private static final Logger log = LoggerFactory.getLogger(Spawn.class);
 
+	private static final AtomicInteger idGenerator = new AtomicInteger();
+
+	private int id;
+	private SpawnType type;
 	private Mob mob;
-	private Room room;
+
+	private Room containingRoom;
 	private int limit;
+	private Prog prog;
+	private Mob containingMob;
+	private Item containingItem;
 
 	/** Equipment and inventory are assigned to the Spawn */
 	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIP_ORDER);
 
-	private Spawn(Mob mob, Room room, int limit) {
-		this.mob = mob;
-		this.room = room;
-		this.limit = limit;
+	private Spawn() {
+		// Private constructor
+		this.id = idGenerator.getAndIncrement();
 	}
 
 	public static Spawn in(Mob mob, Room room, int limit) {
 		log.debug("Spawning {} in {} with limit {}", mob, room, limit);
-		Spawn spawn = new Spawn(mob, room, limit);
+		Spawn spawn = new Spawn();
+		spawn.setMob(mob);
+		spawn.setType(SpawnType.APPEARS);
+		spawn.setRoom(room);
+		spawn.setLimit(limit);
 		mob.addSpawn(spawn);
 		room.addSpawn(spawn);
 		return spawn;
 	}
 
+	public static Spawn produced(Mob mob, Prog prog, Mob producer) {
+		log.debug("Producing {} from {}", mob, producer);
+		Spawn spawn = new Spawn();
+		spawn.setMob(mob);
+		spawn.setType(SpawnType.PRODUCED_MOB);
+		spawn.setProg(prog);
+		spawn.setContainingMob(producer);
+		mob.addSpawn(spawn);
+		producer.addContainedSpawn(spawn);
+		return spawn;
+	}
+
+	public static Spawn produced(Mob mob, Prog prog, Item producer) {
+		log.debug("Producing {} from {}", mob, producer);
+		Spawn spawn = new Spawn();
+		spawn.setMob(mob);
+		spawn.setType(SpawnType.PRODUCED_MOB);
+		spawn.setProg(prog);
+		spawn.setContainingItem(producer);
+		mob.addSpawn(spawn);
+		producer.addContainedSpawn(spawn);
+		return spawn;
+	}
+
+	public static Spawn produced(Mob mob, Prog prog, Room producer) {
+		log.debug("Producing {} from {}", mob, producer);
+		Spawn spawn = new Spawn();
+		spawn.setMob(mob);
+		spawn.setType(SpawnType.PRODUCED_MOB);
+		spawn.setProg(prog);
+		spawn.setRoom(producer);
+		mob.addSpawn(spawn);
+		producer.addSpawn(spawn);
+		return spawn;
+	}
+
 	@Override
 	public String toString() {
-		return String.format("%s in %s%s", mob, room, limit == 1 ? "" : (" (max " + limit + ")"));
+		return String.format("%s in %s%s", mob, containingRoom, limit == 1 ? "" : (" (max " + limit + ")"));
 	}
 
 	/** Gets a description of this spawn from the mob's perspective. */
 	public String getMobDescription() {
 		return "May be found " + (mob.hasActFlag(ActFlag.SENTINEL) ? "in " : "around ");
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public SpawnType getType() {
+		return type;
+	}
+
+	public void setType(SpawnType type) {
+		this.type = type;
 	}
 
 	/** The mob the item pops on or in */
@@ -56,11 +117,27 @@ public class Spawn {
 
 	/** The room the item pops in, or the room containing the mob or container the item pops */
 	public Room getRoom() {
-		return room;
+		return containingRoom;
 	}
 
 	public void setRoom(Room room) {
-		this.room = room;
+		this.containingRoom = room;
+	}
+
+	public Mob getContainingMob() {
+		return containingMob;
+	}
+
+	public void setContainingMob(Mob containingMob) {
+		this.containingMob = containingMob;
+	}
+
+	public Item getContainingItem() {
+		return containingItem;
+	}
+
+	public void setContainingItem(Item containingItem) {
+		this.containingItem = containingItem;
 	}
 
 	/** The maximum number of this mob that can spawn in the area */
@@ -70,6 +147,14 @@ public class Spawn {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public Prog getProg() {
+		return prog;
+	}
+
+	public void setProg(Prog prog) {
+		this.prog = prog;
 	}
 
 	public Collection<Pop> getContainedPops() {

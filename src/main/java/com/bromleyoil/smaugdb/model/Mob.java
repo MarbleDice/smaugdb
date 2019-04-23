@@ -1,6 +1,7 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class Mob {
 
 	/* Items produced procedurally are assigned to the Mob */
 	private List<Pop> containedPops = new ArrayList<>();
+	private List<Spawn> containedSpawns = new ArrayList<>();
 
 	private boolean isShopkeeper;
 	private List<ItemType> purchasedTypes = new ArrayList<>();
@@ -57,6 +59,8 @@ public class Mob {
 	private int buyPercent;
 	private int openHour;
 	private int closeHour;
+
+	private List<Prog> progs = new ArrayList<>();
 
 	public String getCssClass() {
 		return hasActFlag(ActFlag.AGGRESSIVE) ? "mob aggressive" : "mob non-aggressive";
@@ -321,6 +325,14 @@ public class Mob {
 		containedPops.add(pop);
 	}
 
+	public Collection<Spawn> getContainedSpawns() {
+		return containedSpawns;
+	}
+
+	public void addContainedSpawn(Spawn containedSpawn) {
+		containedSpawns.add(containedSpawn);
+	}
+
 	public boolean isShopkeeper() {
 		return isShopkeeper;
 	}
@@ -367,5 +379,13 @@ public class Mob {
 
 	public void setCloseHour(int closeHour) {
 		this.closeHour = closeHour;
+	}
+
+	public Collection<Prog> getProgs() {
+		return Collections.unmodifiableCollection(progs);
+	}
+
+	public void setProgs(List<Prog> progs) {
+		this.progs = progs;
 	}
 }

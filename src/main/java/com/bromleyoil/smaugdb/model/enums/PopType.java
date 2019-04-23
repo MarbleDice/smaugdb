@@ -10,7 +10,11 @@ public enum PopType {
 	/** Worn by a mob */
 	WORN,
 	/** Held by a mob */
-	HELD;
-
-	// TODO: mpoload
+	HELD,
+	/** Produced by a mob */
+	PRODUCED_MOB,
+	/** Produced by a room */
+	PRODUCED_ROOM,
+	/** Produced by an item */
+	PRODUCED_ITEM;
 }

@@ -1,6 +1,8 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.bromleyoil.smaugdb.model.enums.RoomFlag;
@@ -17,8 +19,11 @@ public class Room {
 	private List<String> extras = new ArrayList<>();
 	// teleports
 	// exits
+	// TODO rename containedPops, containedSpawns for consistency
 	private List<Pop> pops = new ArrayList<>();
 	private List<Spawn> spawns = new ArrayList<>();
+
+	private List<Prog> progs = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -97,4 +102,11 @@ public class Room {
 		spawns.add(spawn);
 	}
 
+	public Collection<Prog> getProgs() {
+		return Collections.unmodifiableCollection(progs);
+	}
+
+	public void setProgs(List<Prog> progs) {
+		this.progs = progs;
+	}
 }

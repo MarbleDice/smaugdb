@@ -28,6 +28,7 @@ import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Pop;
+import com.bromleyoil.smaugdb.model.Prog;
 import com.bromleyoil.smaugdb.model.Range;
 import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
@@ -40,6 +41,7 @@ import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.ProgType;
 import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
@@ -52,6 +54,7 @@ public class SmaugParser {
 	private static final Pattern shopPattern = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)"
 			+ "\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 	private static final Pattern doorPattern = Pattern.compile("^\\s*D(\\d+)\\s*$");
+	private static final Pattern progPattern = Pattern.compile("^>\\s+(\\w+)\\s+(.+)~$");
 
 	private World world;
 	private Area area;
@@ -279,6 +282,9 @@ public class SmaugParser {
 			mob.setAttackFlags(Utils.convertBitVector(AttackFlag.class, values.get(6)));
 			mob.setDefenseFlags(Utils.convertBitVector(DefenseFlag.class, values.get(7)));
 		}
+
+		// Progs
+		mob.setProgs(nextProgs(reader));
 
 		world.addMob(mob, area);
 	}
@@ -566,6 +572,28 @@ public class SmaugParser {
 	private List<String> nextStringValues(BufferedReader reader) {
 		nextLine(reader);
 		return Stream.of(line.split("\\s+")).collect(Collectors.toList());
+	}
+
+	private List<Prog> nextProgs(BufferedReader reader) {
+		List<Prog> progs = new ArrayList<>();
+
+		nextLine(reader);
+		Matcher matcher = progPattern.matcher(line);
+		while (matcher.matches()) {
+			Prog prog = new Prog();
+			prog.setType(ProgType.of(matcher.group(1)));
+			prog.setTrigger(matcher.group(1) + " " + matcher.group(2));
+			prog.setDefinition(nextBlock(reader));
+
+			log.trace("Got prog {}: {}", prog.getTrigger(), prog.getType());
+
+			progs.add(prog);
+
+			nextLine(reader);
+			matcher = progPattern.matcher(line);
+		}
+
+		return progs;
 	}
 
 	private Optional<Matcher> matches(String input, String regex) {

@@ -53,8 +53,8 @@ public class World {
 		areas.put(area.getUrlSafeName(), area);
 	}
 
-	public Map<Integer, Room> getRooms() {
-		return Collections.unmodifiableMap(rooms);
+	public Collection<Room> getRooms() {
+		return Collections.unmodifiableCollection(rooms.values());
 	}
 
 	public Room getRoom(int vnum) {

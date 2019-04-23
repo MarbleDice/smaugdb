@@ -47,6 +47,9 @@ public class Item {
 
 	/* Items produced procedurally are assigned to the Item */
 	private List<Pop> containedPops = new ArrayList<>();
+	private List<Spawn> containedSpawns = new ArrayList<>();
+
+	private List<Prog> progs = new ArrayList<>();
 
 	public String getCssClass() {
 		if (!hasWearFlag(WearFlag.TAKE)) {
@@ -342,5 +345,21 @@ public class Item {
 
 	public void addContainedPop(Pop pop) {
 		containedPops.add(pop);
+	}
+
+	public List<Spawn> getContainedSpawns() {
+		return containedSpawns;
+	}
+
+	public void addContainedSpawn(Spawn containedSpawn) {
+		containedSpawns.add(containedSpawn);
+	}
+
+	public Collection<Prog> getProgs() {
+		return Collections.unmodifiableCollection(progs);
+	}
+
+	public void setProgs(List<Prog> progs) {
+		this.progs = progs;
 	}
 }

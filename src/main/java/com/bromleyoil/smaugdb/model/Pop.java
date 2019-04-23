@@ -43,12 +43,12 @@ public class Pop {
 	private PopType type;
 	private Range itemLevel = Range.of(0, 0);
 
-	// TODO mpoload
-
 	private Spawn spawn;
 	private WearFlag wearFlag;
 	private Item container;
 	private Room room;
+	private Mob mob;
+	private Prog prog;
 
 	/** Items inside containers are assigned to the Pop */
 	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIP_ORDER);
@@ -104,6 +104,42 @@ public class Pop {
 		pop.setWearFlag(wearFlag);
 		item.addPop(pop);
 		spawn.addContainedPop(pop);
+		return pop;
+	}
+
+	public static Pop produced(Prog prog, Item item, Mob producer) {
+		log.debug("Producing {} from {}", item, producer);
+		Pop pop = new Pop();
+		pop.setType(PopType.PRODUCED_MOB);
+		pop.setProg(prog);
+		pop.setItem(item);
+		pop.setMob(producer);
+		item.addPop(pop);
+		producer.addContainedPop(pop);
+		return pop;
+	}
+
+	public static Pop produced(Prog prog, Item item, Item producer) {
+		log.debug("Producing {} from {}", item, producer);
+		Pop pop = new Pop();
+		pop.setType(PopType.PRODUCED_ITEM);
+		pop.setProg(prog);
+		pop.setItem(item);
+		pop.setContainer(producer);
+		item.addPop(pop);
+		producer.addContainedPop(pop);
+		return pop;
+	}
+
+	public static Pop produced(Prog prog, Item item, Room producer) {
+		log.debug("Producing {} from {}", item, producer);
+		Pop pop = new Pop();
+		pop.setType(PopType.PRODUCED_ROOM);
+		pop.setProg(prog);
+		pop.setItem(item);
+		pop.setRoom(producer);
+		item.addPop(pop);
+		producer.addPop(pop);
 		return pop;
 	}
 
@@ -215,11 +251,11 @@ public class Pop {
 
 	/** The spawned mob the item pops on or in */
 	public Mob getMob() {
-		if (spawn != null) {
-			return spawn.getMob();
-		} else {
-			return null;
-		}
+		return spawn != null ? spawn.getMob() : mob;
+	}
+
+	public void setMob(Mob mob) {
+		this.mob = mob;
 	}
 
 	/** The location the item is equipped */
@@ -251,6 +287,14 @@ public class Pop {
 
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+
+	public Prog getProg() {
+		return prog;
+	}
+
+	public void setProg(Prog prog) {
+		this.prog = prog;
 	}
 
 	public Collection<Pop> getContainedPops() {

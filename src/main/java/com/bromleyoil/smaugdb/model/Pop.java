@@ -215,7 +215,7 @@ public class Pop {
 
 	/** The spawned mob the item pops on or in */
 	public Mob getMob() {
-		if (spawn.getMob() != null) {
+		if (spawn != null) {
 			return spawn.getMob();
 		} else {
 			return null;

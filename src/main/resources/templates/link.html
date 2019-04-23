@@ -7,5 +7,6 @@
 	<a th:fragment="area (area)" th:href="@{${'/area/' + area.urlSafeName}}" th:class="area" th:text="${area.name}"></a>
 	<a th:fragment="item (item)" th:href="@{${'/item/' + item.vnum}}" th:class="${item.cssClass}" th:text="${item.truncatedName}"></a>
 	<a th:fragment="mob (mob)" th:href="@{${'/mob/' + mob.vnum}}" th:class="${mob.cssClass}" th:text="${mob.truncatedName}"></a>
+	<span th:fragment="room (room)" th:class="room" th:text="${'[' + room.name + ']'}"></span>
 </th:block>
 </html>

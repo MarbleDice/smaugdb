@@ -5,7 +5,9 @@
 	layout:decorate="~{template}" th:with="title=${area.name}">
 <th:block layout:fragment="content">
 
-<table class="data">
+<h2 th:text="${area.name}" class="area"></h2>
+
+<table class="data gap">
 	<tr>
 		<td>Author</td>
 		<td th:text="${area.author}">Author</td>
@@ -22,7 +24,7 @@
 
 <h3>Mobiles</h3>
 
-<table class="three-column">
+<table class="three-column gap">
 	<tr th:each="row : ${@utils.partition(area.mobs.?[exists == true], 3)}">
 		<td th:each="mob : ${row}">
 			<a th:replace="~{link::mob(${mob})}"></a>
@@ -32,7 +34,7 @@
 
 <h3>Items</h3>
 
-<table class="three-column">
+<table class="three-column gap">
 	<tr th:each="row : ${@utils.partition(area.items.?[exists == true], 3)}">
 		<td th:each="item : ${row}">
 			<a th:replace="~{link::item(${item})}"></a>

@@ -51,6 +51,7 @@ public class SmaugParser {
 	private static final Pattern resetPattern = Pattern.compile("^\\s*([OPMEG])\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*(\\d+)?");
 	private static final Pattern shopPattern = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)"
 			+ "\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
+	private static final Pattern doorPattern = Pattern.compile("^\\s*D(\\d+)\\s*$");
 
 	private World world;
 	private Area area;
@@ -343,10 +344,41 @@ public class SmaugParser {
 	 */
 	private void parseRoom(BufferedReader reader, int vnum) {
 		log.trace("Reading room {}", vnum);
+		List<Integer> values;
+		Matcher matcher;
+
 		Room room = new Room();
 		room.setVnum(vnum);
 
 		room.setName(nextString(reader));
+
+		// description
+		nextString(reader);
+
+		// area roomflags sectorflags [teledelay televnum]
+		nextValues(reader);
+
+		// Extra/door sections
+		nextLine(reader);
+		matcher = doorPattern.matcher(line);
+		while ("E".equals(line) || matcher.matches()) {
+			if (matcher.matches()) {
+				// Door line: D[0-10]
+				nextString(reader);
+				nextString(reader);
+				values = nextValues(reader);
+				Item key = world.getItem(values.get(1));
+				if (key != null) {
+					key.addKeyDoor(room);
+				}
+			} else if ("E".equals(line)) {
+				// Extra line: E
+				nextString(reader);
+				nextString(reader);
+			}
+			nextLine(reader);
+			matcher = doorPattern.matcher(line);
+		}
 
 		world.addRoom(room, area);
 	}

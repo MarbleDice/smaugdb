@@ -92,6 +92,10 @@ h2, h3, p {
 	margin: 0 0 var(--gap) 0;
 }
 
+.gap {
+		margin-bottom: var(--gap) !important;
+}
+
 .inline {
 	display: inline;
 	margin-right: var(--gap);
@@ -99,8 +103,8 @@ h2, h3, p {
 
 ul.unstyled {
 	list-style-type: none;
+	margin: 0;
 	padding: 0;
-	margin: 0 0 var(--gap) 0;
 }
 
 ul.unstyled ul {
@@ -119,6 +123,14 @@ button {
 a, a:visited {
 	color: #b0530e;
 	text-decoration: none;
+}
+
+.area {
+	color: #b0530e;
+}
+
+.room {
+	color: #888888;
 }
 
 .mob.non-aggressive {
@@ -171,7 +183,6 @@ table.equipment td {
 table.data {
 	border: 1px solid #ccc;
 	border-collapse: collapse;
-	margin: 10px 0;
 }
 
 table.data tr:nth-child(even) {

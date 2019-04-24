@@ -70,19 +70,19 @@ public class SmaugInterpreter {
 		for (Mob producer : world.getMobs()) {
 			processProgs(producer.getProgs(),
 					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i, l) -> Pop.produced(p, i, producer, l));
+					(p, i, l) -> Pop.produced(i, p, producer, l));
 		}
 
 		for (Item producer : world.getItems()) {
 			processProgs(producer.getProgs(),
 					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i, l) -> Pop.produced(p, i, producer, l));
+					(p, i, l) -> Pop.produced(i, p, producer, l));
 		}
 
 		for (Room producer : world.getRooms()) {
 			processProgs(producer.getProgs(),
 					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i, l) -> Pop.produced(p, i, producer, l));
+					(p, i, l) -> Pop.produced(i, p, producer, l));
 		}
 	}
 

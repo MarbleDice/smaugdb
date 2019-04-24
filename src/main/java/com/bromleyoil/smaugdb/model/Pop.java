@@ -60,7 +60,7 @@ public class Pop {
 		id = idGenerator.getAndIncrement();
 	}
 
-	public static Pop found(Area area, Item item, Room room) {
+	public static Pop found(Item item, Area area, Room room) {
 		log.debug("Dropping {} in {}", item, room);
 		Pop pop = new Pop();
 		pop.setArea(area);
@@ -72,7 +72,7 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop contained(Area area, Item item, Item container) {
+	public static Pop contained(Item item, Area area, Item container) {
 		log.debug("Putting {} inside {}", item, container);
 		Pop pop = new Pop();
 		pop.setArea(area);
@@ -84,7 +84,7 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop held(Area area, Item item, Spawn spawn) {
+	public static Pop held(Item item, Area area, Spawn spawn) {
 		log.debug("Giving {} to {}", item, spawn.getMob());
 		Pop pop = new Pop();
 		pop.setArea(area);
@@ -96,7 +96,7 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop worn(Area area, Item item, Spawn spawn, WearFlag wearFlag) {
+	public static Pop worn(Item item, Area area, Spawn spawn, WearFlag wearFlag) {
 		log.debug("Equipping {} to {}", item, spawn.getMob());
 		Pop pop = new Pop();
 		pop.setArea(area);
@@ -109,7 +109,7 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop produced(Prog prog, Item item, Mob producer, int level) {
+	public static Pop produced(Item item, Prog prog, Mob producer, int level) {
 		log.debug("Producing {} from mob {}", item, producer);
 		Pop pop = new Pop();
 		pop.setType(PopType.PRODUCED_MOB);
@@ -122,7 +122,7 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop produced(Prog prog, Item item, Item producer, int level) {
+	public static Pop produced(Item item, Prog prog, Item producer, int level) {
 		log.debug("Producing {} from item {}", item, producer);
 		Pop pop = new Pop();
 		pop.setType(PopType.PRODUCED_ITEM);
@@ -135,7 +135,7 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop produced(Prog prog, Item item, Room producer, int level) {
+	public static Pop produced(Item item, Prog prog, Room producer, int level) {
 		log.debug("Producing {} from room {}", item, producer);
 		Pop pop = new Pop();
 		pop.setType(PopType.PRODUCED_ROOM);

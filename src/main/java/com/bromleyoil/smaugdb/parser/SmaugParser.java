@@ -284,6 +284,7 @@ public class SmaugParser {
 		}
 
 		// Progs
+		nextLine(reader);
 		mob.setProgs(nextProgs(reader));
 
 		world.addMob(mob, area);
@@ -339,6 +340,9 @@ public class SmaugParser {
 			nextLine(reader);
 		}
 
+		// Progs
+		item.setProgs(nextProgs(reader));
+
 		world.addItem(item, area);
 	}
 
@@ -385,6 +389,9 @@ public class SmaugParser {
 			nextLine(reader);
 			matcher = doorPattern.matcher(line);
 		}
+
+		// Progs
+		room.setProgs(nextProgs(reader));
 
 		world.addRoom(room, area);
 	}
@@ -577,7 +584,6 @@ public class SmaugParser {
 	private List<Prog> nextProgs(BufferedReader reader) {
 		List<Prog> progs = new ArrayList<>();
 
-		nextLine(reader);
 		Matcher matcher = progPattern.matcher(line);
 		while (matcher.matches()) {
 			Prog prog = new Prog();

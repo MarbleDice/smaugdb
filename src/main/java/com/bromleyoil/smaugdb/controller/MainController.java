@@ -36,7 +36,7 @@ public class MainController {
 	@RequestMapping("/item-search")
 	public ModelAndView itemSearch() {
 		ModelAndView mav = new ModelAndView("item-search");
-		// TODO add item search
+
 		return mav;
 	}
 
@@ -50,7 +50,7 @@ public class MainController {
 	@RequestMapping("/mob-search")
 	public ModelAndView mobSearch() {
 		ModelAndView mav = new ModelAndView("mob-search");
-		// TODO add mob search
+
 		return mav;
 	}
 

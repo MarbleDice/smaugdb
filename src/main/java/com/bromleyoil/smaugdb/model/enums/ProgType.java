@@ -8,4 +8,8 @@ public enum ProgType {
 	public static ProgType of(String value) {
 		return valueOf(ProgType.class, value.toUpperCase().replace("_PROG", ""));
 	}
+
+	public String getLabel() {
+		return String.format("on %s", name().toLowerCase());
+	}
 }

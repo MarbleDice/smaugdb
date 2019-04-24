@@ -47,11 +47,6 @@ public class Mob {
 	private List<ResistFlag> vulnerableFlags = new ArrayList<>();
 	private List<AttackFlag> attackFlags = new ArrayList<>();
 	private List<DefenseFlag> defenseFlags = new ArrayList<>();
-	private List<Spawn> spawns = new ArrayList<>();
-
-	/* Items produced procedurally are assigned to the Mob */
-	private List<Pop> containedPops = new ArrayList<>();
-	private List<Spawn> containedSpawns = new ArrayList<>();
 
 	private boolean isShopkeeper;
 	private List<ItemType> purchasedTypes = new ArrayList<>();
@@ -59,6 +54,12 @@ public class Mob {
 	private int buyPercent;
 	private int openHour;
 	private int closeHour;
+
+	private List<Spawn> spawns = new ArrayList<>();
+
+	/* Items and mobs produced procedurally are assigned to the Mob */
+	private List<Pop> containedPops = new ArrayList<>();
+	private List<Spawn> containedSpawns = new ArrayList<>();
 
 	private List<Prog> progs = new ArrayList<>();
 

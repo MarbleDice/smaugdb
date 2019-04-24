@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class SmaugInterpreter {
 
 	private static final int LEVEL_AVATAR = 50;
 
-	private static final Pattern mploadPattern = Pattern.compile("mp(o|m)load\\s+(\\d+)");
+	private static final Pattern mploadPattern = Pattern.compile("mp(o|m)load\\s+(\\d+)(\\s+(\\d+))?");
 
 	private World world;
 
@@ -69,35 +70,34 @@ public class SmaugInterpreter {
 		for (Mob producer : world.getMobs()) {
 			processProgs(producer.getProgs(),
 					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i) -> Pop.produced(p, i, producer));
+					(p, i, l) -> Pop.produced(p, i, producer, l));
 		}
 
 		for (Item producer : world.getItems()) {
 			processProgs(producer.getProgs(),
 					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i) -> Pop.produced(p, i, producer));
+					(p, i, l) -> Pop.produced(p, i, producer, l));
 		}
 
 		for (Room producer : world.getRooms()) {
 			processProgs(producer.getProgs(),
 					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i) -> Pop.produced(p, i, producer));
+					(p, i, l) -> Pop.produced(p, i, producer, l));
 		}
 	}
 
 	private void processProgs(Collection<Prog> progs, BiConsumer<Prog, Mob> mpmLoader,
-			BiConsumer<Prog, Item> mpoLoader) {
+			TriConsumer<Prog, Item, Integer> mpoLoader) {
 		for (Prog prog : progs) {
-			for (String line : prog.getDefinition()) {
-				Matcher matcher = mploadPattern.matcher(line);
-				while (matcher.find()) {
-					if (matcher.group(1).equals("o")) {
-						Optional.ofNullable(world.getItem(Integer.parseInt(matcher.group(2))))
-								.ifPresent(i -> mpoLoader.accept(prog, i));
-					} else if (matcher.group(1).equals("m")) {
-						Optional.ofNullable(world.getMob(Integer.parseInt(matcher.group(2))))
-								.ifPresent(m -> mpmLoader.accept(prog, m));
-					}
+			Matcher matcher = mploadPattern.matcher(String.join(" ", prog.getDefinition()));
+			while (matcher.find()) {
+				if (matcher.group(1).equals("m")) {
+					Optional.ofNullable(world.getMob(Integer.parseInt(matcher.group(2))))
+							.ifPresent(m -> mpmLoader.accept(prog, m));
+				} else if (matcher.group(1).equals("o")) {
+					int level = matcher.groupCount() > 4 ? Integer.parseInt(matcher.group(5)) : 0;
+					Optional.ofNullable(world.getItem(Integer.parseInt(matcher.group(2))))
+							.ifPresent(i -> mpoLoader.accept(prog, i, level));
 				}
 			}
 		}
@@ -145,6 +145,11 @@ public class SmaugInterpreter {
 						.subtract(2)
 						.constrain(0, LEVEL_AVATAR)
 						.min(calculateGeneratedItemLevel(pop.getArea(), item)));
+			} else if (pop.getType() == PopType.PRODUCED_MOB) {
+				calculateMobLevel(pop.getMob());
+				pop.setItemLevel(pop.getProducedLevel() > 0
+						? Range.of(pop.getProducedLevel())
+						: pop.getMob().getLevel());
 			} else {
 				log.error("Don't know how to set the level range for: {}", pop.getType());
 			}

@@ -19,21 +19,20 @@ public class Spawn {
 	private static final AtomicInteger idGenerator = new AtomicInteger();
 
 	private int id;
-	private SpawnType type;
 	private Mob mob;
+	private SpawnType type;
 
+	private Mob containingMob;
+	private Item containingItem;
 	private Room containingRoom;
 	private int limit;
 	private Prog prog;
-	private Mob containingMob;
-	private Item containingItem;
 
 	/** Equipment and inventory are assigned to the Spawn */
 	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIP_ORDER);
 
 	private Spawn() {
-		// Private constructor
-		this.id = idGenerator.getAndIncrement();
+		id = idGenerator.getAndIncrement();
 	}
 
 	public static Spawn in(Mob mob, Room room, int limit) {
@@ -44,12 +43,12 @@ public class Spawn {
 		spawn.setRoom(room);
 		spawn.setLimit(limit);
 		mob.addSpawn(spawn);
-		room.addSpawn(spawn);
+		room.addContainedSpawn(spawn);
 		return spawn;
 	}
 
 	public static Spawn produced(Mob mob, Prog prog, Mob producer) {
-		log.debug("Producing {} from {}", mob, producer);
+		log.debug("Producing {} from mob {}", mob, producer);
 		Spawn spawn = new Spawn();
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.PRODUCED_MOB);
@@ -61,10 +60,10 @@ public class Spawn {
 	}
 
 	public static Spawn produced(Mob mob, Prog prog, Item producer) {
-		log.debug("Producing {} from {}", mob, producer);
+		log.debug("Producing {} from item {}", mob, producer);
 		Spawn spawn = new Spawn();
 		spawn.setMob(mob);
-		spawn.setType(SpawnType.PRODUCED_MOB);
+		spawn.setType(SpawnType.PRODUCED_ITEM);
 		spawn.setProg(prog);
 		spawn.setContainingItem(producer);
 		mob.addSpawn(spawn);
@@ -73,14 +72,14 @@ public class Spawn {
 	}
 
 	public static Spawn produced(Mob mob, Prog prog, Room producer) {
-		log.debug("Producing {} from {}", mob, producer);
+		log.debug("Producing {} from room {}", mob, producer);
 		Spawn spawn = new Spawn();
 		spawn.setMob(mob);
-		spawn.setType(SpawnType.PRODUCED_MOB);
+		spawn.setType(SpawnType.PRODUCED_ROOM);
 		spawn.setProg(prog);
 		spawn.setRoom(producer);
 		mob.addSpawn(spawn);
-		producer.addSpawn(spawn);
+		producer.addContainedSpawn(spawn);
 		return spawn;
 	}
 
@@ -90,8 +89,27 @@ public class Spawn {
 	}
 
 	/** Gets a description of this spawn from the mob's perspective. */
-	public String getMobDescription() {
-		return "May be found " + (mob.hasActFlag(ActFlag.SENTINEL) ? "in " : "around ");
+	public String getDescription() {
+		if (getType() == SpawnType.APPEARS) {
+			return String.format("May be found %s", (mob.hasActFlag(ActFlag.SENTINEL) ? "in " : "around "));
+		} else if (getType() == SpawnType.PRODUCED_MOB
+				|| getType() == SpawnType.PRODUCED_ITEM
+				|| getType() == SpawnType.PRODUCED_ROOM) {
+			return String.format("May be summoned %s by", getProg().getType().getLabel());
+		} else {
+			return "Unrelated to";
+		}
+	}
+
+	/** Gets a description of this spawn from the container's perspective. */
+	public String getContainedDescription() {
+		if (getType() == SpawnType.PRODUCED_MOB
+				|| getType() == SpawnType.PRODUCED_ITEM
+				|| getType() == SpawnType.PRODUCED_ROOM) {
+			return String.format("May summon %s", getProg().getType().getLabel());
+		} else {
+			return "Unrelated to";
+		}
 	}
 
 	public int getId() {

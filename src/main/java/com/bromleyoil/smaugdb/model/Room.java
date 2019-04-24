@@ -19,9 +19,9 @@ public class Room {
 	private List<String> extras = new ArrayList<>();
 	// teleports
 	// exits
-	// TODO rename containedPops, containedSpawns for consistency
-	private List<Pop> pops = new ArrayList<>();
-	private List<Spawn> spawns = new ArrayList<>();
+
+	private List<Pop> containedPops = new ArrayList<>();
+	private List<Spawn> containedSpawns = new ArrayList<>();
 
 	private List<Prog> progs = new ArrayList<>();
 
@@ -86,20 +86,20 @@ public class Room {
 		this.extras = extras;
 	}
 
-	public List<Pop> getPops() {
-		return pops;
+	public Collection<Pop> getContainedPops() {
+		return Collections.unmodifiableCollection(containedPops);
 	}
 
-	public void addPop(Pop pop) {
-		pops.add(pop);
+	public void addContainedPop(Pop containedPop) {
+		containedPops.add(containedPop);
 	}
 
-	public List<Spawn> getSpawns() {
-		return spawns;
+	public Collection<Spawn> getContainedSpawns() {
+		return Collections.unmodifiableCollection(containedSpawns);
 	}
 
-	public void addSpawn(Spawn spawn) {
-		spawns.add(spawn);
+	public void addContainedSpawn(Spawn containedSpawn) {
+		containedSpawns.add(containedSpawn);
 	}
 
 	public Collection<Prog> getProgs() {

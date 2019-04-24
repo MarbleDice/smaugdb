@@ -5,11 +5,13 @@
 	layout:decorate="~{template}" th:with="title='Limbo'">
 <th:block layout:fragment="content">
 
+<h2>Limbo</h2>
+
 <p>Some items do not appear in the game. These may be unused or reserved for special occaisons.
 
 <h3>Mobiles</h3>
 
-<table class="three-column">
+<table class="three-column gap">
 	<tr th:each="row : ${@utils.partition(world.mobs.?[exists == false], 3)}">
 		<td th:each="mob : ${row}">
 			<a th:replace="~{link::mob(${mob})}"></a>

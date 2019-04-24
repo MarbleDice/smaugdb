@@ -37,25 +37,27 @@ public class Pop {
 			.thenComparing(Pop::getId);
 
 	private int id;
-	private Area area;
 	private Item item;
-	/** PopType.SOLD is handled in the getter */
-	private PopType type;
 	private Range itemLevel = Range.of(0, 0);
 
-	private Spawn spawn;
+	/** PopType.SOLD is handled in the getter */
+	private PopType type;
+
+	private Item containingItem;
+	private Mob containingMob;
+	private Room containingRoom;
+	private Spawn containingSpawn;
+
+	private Area area;
 	private WearFlag wearFlag;
-	private Item container;
-	private Room room;
-	private Mob mob;
 	private Prog prog;
+	private int producedLevel;
 
 	/** Items inside containers are assigned to the Pop */
 	private Set<Pop> containedPops = new TreeSet<>(Pop.EQUIP_ORDER);
 
 	private Pop() {
-		// Private constructor
-		this.id = idGenerator.getAndIncrement();
+		id = idGenerator.getAndIncrement();
 	}
 
 	public static Pop found(Area area, Item item, Room room) {
@@ -66,7 +68,7 @@ public class Pop {
 		pop.setItem(item);
 		pop.setRoom(room);
 		item.addPop(pop);
-		room.addPop(pop);
+		room.addContainedPop(pop);
 		return pop;
 	}
 
@@ -107,72 +109,70 @@ public class Pop {
 		return pop;
 	}
 
-	public static Pop produced(Prog prog, Item item, Mob producer) {
-		log.debug("Producing {} from {}", item, producer);
+	public static Pop produced(Prog prog, Item item, Mob producer, int level) {
+		log.debug("Producing {} from mob {}", item, producer);
 		Pop pop = new Pop();
 		pop.setType(PopType.PRODUCED_MOB);
 		pop.setProg(prog);
 		pop.setItem(item);
+		pop.setProducedLevel(level);
 		pop.setMob(producer);
 		item.addPop(pop);
 		producer.addContainedPop(pop);
 		return pop;
 	}
 
-	public static Pop produced(Prog prog, Item item, Item producer) {
-		log.debug("Producing {} from {}", item, producer);
+	public static Pop produced(Prog prog, Item item, Item producer, int level) {
+		log.debug("Producing {} from item {}", item, producer);
 		Pop pop = new Pop();
 		pop.setType(PopType.PRODUCED_ITEM);
 		pop.setProg(prog);
 		pop.setItem(item);
+		pop.setProducedLevel(level);
 		pop.setContainer(producer);
 		item.addPop(pop);
 		producer.addContainedPop(pop);
 		return pop;
 	}
 
-	public static Pop produced(Prog prog, Item item, Room producer) {
-		log.debug("Producing {} from {}", item, producer);
+	public static Pop produced(Prog prog, Item item, Room producer, int level) {
+		log.debug("Producing {} from room {}", item, producer);
 		Pop pop = new Pop();
 		pop.setType(PopType.PRODUCED_ROOM);
 		pop.setProg(prog);
 		pop.setItem(item);
+		pop.setProducedLevel(level);
 		pop.setRoom(producer);
 		item.addPop(pop);
-		producer.addPop(pop);
+		producer.addContainedPop(pop);
 		return pop;
 	}
 
 	@Override
 	public String toString() {
 		if (getType() == PopType.FOUND) {
-			return String.format("%s found in %s", item, room);
+			return String.format("%s found in %s", item, containingRoom);
 		} else if (getType() == PopType.CONTAINED) {
-			return String.format("%s contained in %s", item, container);
+			return String.format("%s contained in %s", item, containingItem);
 		} else if (getType() == PopType.WORN) {
-			return String.format("%s worn by %s", item, spawn.getMob());
+			return String.format("%s worn by %s", item, getMob());
 		} else if (getType() == PopType.HELD) {
-			return String.format("%s held by %s", item, spawn.getMob());
+			return String.format("%s held by %s", item, getMob());
 		} else if (getType() == PopType.SOLD) {
-			return String.format("%s sold by %s", item, spawn.getMob());
+			return String.format("%s sold by %s", item, getMob());
+		} else if (getType() == PopType.PRODUCED_MOB) {
+			return String.format("%s produced %s by mob %s", item, prog.getType().getLabel(), getMob());
+		} else if (getType() == PopType.PRODUCED_ITEM) {
+			return String.format("%s produced %s by item %s", item, prog.getType().getLabel(), containingItem);
+		} else if (getType() == PopType.PRODUCED_ROOM) {
+			return String.format("%s produced %s by room %s", item, prog.getType().getLabel(), containingRoom);
 		} else {
 			return String.format("%s appears in an unknown location", item);
 		}
 	}
 
-	public String getMobDescription() {
-		if (getType() == PopType.WORN) {
-			return "Equipped with ";
-		} else if (getType() == PopType.HELD) {
-			return "Carrying ";
-		} else if (getType() == PopType.SOLD) {
-			return "Sells ";
-		} else {
-			return "Unrelated to ";
-		}
-	}
-
-	public String getItemDescription() {
+	/** Gets a description of this pop from the item's perspective. */
+	public String getDescription() {
 		if (getType() == PopType.WORN) {
 			return "Equipped by ";
 		} else if (getType() == PopType.HELD) {
@@ -183,14 +183,27 @@ public class Pop {
 			return "Found in ";
 		} else if (getType() == PopType.SOLD) {
 			return "Sold by ";
+		} else if (getType() == PopType.PRODUCED_MOB
+				|| getType() == PopType.PRODUCED_ITEM
+				|| getType() == PopType.PRODUCED_ROOM) {
+			return String.format("May be produced %s by", prog.getType().getLabel());
 		} else {
 			return "Unrelated to ";
 		}
 	}
 
-	public String getPopDescription() {
-		if (getType() == PopType.CONTAINED) {
+	/** Gets a description of this pop from the container's perspective. */
+	public String getContainedDescription() {
+		if (getType() == PopType.WORN) {
+			return "Equipped with ";
+		} else if (getType() == PopType.HELD) {
+			return "Carrying ";
+		} else if (getType() == PopType.SOLD) {
+			return "Sells ";
+		} else if (getType() == PopType.CONTAINED) {
 			return "Containing ";
+		} else if (getType() == PopType.PRODUCED_MOB) {
+			return String.format("May produce %s", prog.getType().getLabel());
 		} else {
 			return "Unrelated to ";
 		}
@@ -220,7 +233,7 @@ public class Pop {
 
 	/** The pop type */
 	public PopType getType() {
-		return spawn != null && type == PopType.HELD && spawn.getMob().isShopkeeper() ? PopType.SOLD : type;
+		return containingSpawn != null && type == PopType.HELD && containingSpawn.getMob().isShopkeeper() ? PopType.SOLD : type;
 	}
 
 	public boolean isSold() {
@@ -242,20 +255,20 @@ public class Pop {
 
 	/** The specific spawn to which the item is assigned */
 	public Spawn getSpawn() {
-		return spawn;
+		return containingSpawn;
 	}
 
 	public void setSpawn(Spawn spawn) {
-		this.spawn = spawn;
+		this.containingSpawn = spawn;
 	}
 
 	/** The spawned mob the item pops on or in */
 	public Mob getMob() {
-		return spawn != null ? spawn.getMob() : mob;
+		return containingSpawn != null ? containingSpawn.getMob() : containingMob;
 	}
 
 	public void setMob(Mob mob) {
-		this.mob = mob;
+		this.containingMob = mob;
 	}
 
 	/** The location the item is equipped */
@@ -273,20 +286,20 @@ public class Pop {
 
 	/** The contain the item pops in */
 	public Item getContainer() {
-		return container;
+		return containingItem;
 	}
 
 	public void setContainer(Item container) {
-		this.container = container;
+		this.containingItem = container;
 	}
 
 	/** The room the item pops in, or the room containing the mob or container the item pops */
 	public Room getRoom() {
-		return room;
+		return containingRoom;
 	}
 
 	public void setRoom(Room room) {
-		this.room = room;
+		this.containingRoom = room;
 	}
 
 	public Prog getProg() {
@@ -304,4 +317,13 @@ public class Pop {
 	public void addContainedPop(Pop pop) {
 		containedPops.add(pop);
 	}
+
+	public int getProducedLevel() {
+		return producedLevel;
+	}
+
+	public void setProducedLevel(int producedLevel) {
+		this.producedLevel = producedLevel;
+	}
+
 }

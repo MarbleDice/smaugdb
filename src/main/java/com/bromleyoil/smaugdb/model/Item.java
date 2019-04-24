@@ -45,7 +45,7 @@ public class Item {
 
 	private List<Pop> pops = new ArrayList<>();
 
-	/* Items produced procedurally are assigned to the Item */
+	/* Items and mobs produced procedurally are assigned to the Item */
 	private List<Pop> containedPops = new ArrayList<>();
 	private List<Spawn> containedSpawns = new ArrayList<>();
 

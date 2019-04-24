@@ -101,9 +101,9 @@
 		
 		<ul class="unstyled">
 			<li th:each="pop : ${item.sortedPops}">
-				<span th:text="${pop.itemDescription}">Found in</span>
-				<th:block th:if="${pop.spawn != null}">
-				<a th:replace="~{link::mob(${pop.spawn.mob})}" th:if="${pop.spawn != null}">mob</a>
+				<span th:text="${pop.description}">Found in</span>
+				<th:block th:if="${pop.mob != null}">
+				<a th:replace="~{link::mob(${pop.mob})}">mob</a>
 				</th:block>
 				<th:block th:if="${pop.container != null}">
 				<a th:replace="~{link::item(${pop.container})}">item</a>
@@ -116,7 +116,7 @@
 				<!-- Container contents -->
 				<ul th:if="${item.isContainer()}">
 					<li th:each="containedPop : ${pop.containedPops}">
-						<span th:text="${containedPop.popDescription}">Containing</span>
+						<span th:text="${containedPop.containedDescription}">Containing</span>
 						<a th:replace="~{link::item(${containedPop.item})}">item</a>
 					</li>
 				</ul>

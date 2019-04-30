@@ -17,3 +17,15 @@ Purchase prices modified by
 * -15% for being rich
 * +1% per cha above 13
 * -% for staves and wands missing charges
+
+## Mob progs
+
+Interesting commands include:
+* c[ast] <spell>
+* mpdamage
+* mpforce (remove, drop, sac)
+* mpjunk
+* mpoload / mpmload
+* mppurge
+* mprestore
+* mptrans[fer]

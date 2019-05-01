@@ -8,5 +8,17 @@
 	<a th:fragment="item (item)" th:href="@{${'/item/' + item.vnum}}" th:class="${item.cssClass}" th:text="${item.truncatedName}"></a>
 	<a th:fragment="mob (mob)" th:href="@{${'/mob/' + mob.vnum}}" th:class="${mob.cssClass}" th:text="${mob.truncatedName}"></a>
 	<span th:fragment="room (room)" th:class="room" th:text="${'[' + room.name + ']'}"></span>
+
+	<th:block th:fragment="to (obj)">
+		<a th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Area)}"
+				th:href="@{${'/area/' + obj.urlSafeName}}" th:class="area" th:text="${obj.name}"></a>
+		<a th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Item)}"
+				th:href="@{${'/item/' + obj.vnum}}" th:class="${obj.cssClass}" th:text="${obj.truncatedName}"></a>
+		<a th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Mob)}"
+				th:href="@{${'/mob/' + obj.vnum}}" th:class="${obj.cssClass}" th:text="${obj.truncatedName}"></a>
+		<span th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Room)}"
+				th:class="room" th:text="${'[' + obj.name + ']'}"></span>
+	</th:block>
+
 </th:block>
 </html>

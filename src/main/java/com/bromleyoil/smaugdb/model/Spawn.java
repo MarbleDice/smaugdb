@@ -22,9 +22,8 @@ public class Spawn {
 	private Mob mob;
 	private SpawnType type;
 
-	private Mob containingMob;
-	private Item containingItem;
-	private Room containingRoom;
+	private Object owner;
+
 	private int limit;
 	private Prog prog;
 
@@ -40,7 +39,7 @@ public class Spawn {
 		Spawn spawn = new Spawn();
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.APPEARS);
-		spawn.setRoom(room);
+		spawn.setOwner(room);
 		spawn.setLimit(limit);
 		mob.addSpawn(spawn);
 		room.addContainedSpawn(spawn);
@@ -53,9 +52,9 @@ public class Spawn {
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.PRODUCED_MOB);
 		spawn.setProg(prog);
-		spawn.setContainingMob(producer);
+		spawn.setOwner(prog);
 		mob.addSpawn(spawn);
-		producer.addContainedSpawn(spawn);
+		prog.addContainedSpawn(spawn);
 		return spawn;
 	}
 
@@ -65,9 +64,9 @@ public class Spawn {
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.PRODUCED_ITEM);
 		spawn.setProg(prog);
-		spawn.setContainingItem(producer);
+		spawn.setOwner(prog);
 		mob.addSpawn(spawn);
-		producer.addContainedSpawn(spawn);
+		prog.addContainedSpawn(spawn);
 		return spawn;
 	}
 
@@ -77,15 +76,15 @@ public class Spawn {
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.PRODUCED_ROOM);
 		spawn.setProg(prog);
-		spawn.setRoom(producer);
+		spawn.setOwner(prog);
 		mob.addSpawn(spawn);
-		producer.addContainedSpawn(spawn);
+		prog.addContainedSpawn(spawn);
 		return spawn;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s in %s%s", mob, containingRoom, limit == 1 ? "" : (" (max " + limit + ")"));
+		return String.format("%s in %s%s", mob, owner, limit == 1 ? "" : (" (max " + limit + ")"));
 	}
 
 	/** Gets a description of this spawn from the mob's perspective. */
@@ -124,38 +123,21 @@ public class Spawn {
 		this.type = type;
 	}
 
-	/** The mob the item pops on or in */
+	public Object getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Object owner) {
+		this.owner = owner;
+	}
+
+	/** The mob that spawns */
 	public Mob getMob() {
 		return mob;
 	}
 
 	public void setMob(Mob mob) {
 		this.mob = mob;
-	}
-
-	/** The room the item pops in, or the room containing the mob or container the item pops */
-	public Room getRoom() {
-		return containingRoom;
-	}
-
-	public void setRoom(Room room) {
-		this.containingRoom = room;
-	}
-
-	public Mob getContainingMob() {
-		return containingMob;
-	}
-
-	public void setContainingMob(Mob containingMob) {
-		this.containingMob = containingMob;
-	}
-
-	public Item getContainingItem() {
-		return containingItem;
-	}
-
-	public void setContainingItem(Item containingItem) {
-		this.containingItem = containingItem;
 	}
 
 	/** The maximum number of this mob that can spawn in the area */

@@ -2,6 +2,7 @@ package com.bromleyoil.smaugdb.model;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,10 +44,7 @@ public class Pop {
 	/** PopType.SOLD is handled in the getter */
 	private PopType type;
 
-	private Item containingItem;
-	private Mob containingMob;
-	private Room containingRoom;
-	private Spawn containingSpawn;
+	private Object owner;
 
 	private Area area;
 	private WearFlag wearFlag;
@@ -66,7 +64,7 @@ public class Pop {
 		pop.setArea(area);
 		pop.setType(PopType.FOUND);
 		pop.setItem(item);
-		pop.setRoom(room);
+		pop.setOwner(room);
 		item.addPop(pop);
 		room.addContainedPop(pop);
 		return pop;
@@ -78,7 +76,7 @@ public class Pop {
 		pop.setArea(area);
 		pop.setType(PopType.CONTAINED);
 		pop.setItem(item);
-		pop.setContainer(container);
+		pop.setOwner(container);
 		item.addPop(pop);
 		container.getPops().get(container.getPops().size() - 1).addContainedPop(pop);
 		return pop;
@@ -90,7 +88,7 @@ public class Pop {
 		pop.setArea(area);
 		pop.setType(PopType.HELD);
 		pop.setItem(item);
-		pop.setSpawn(spawn);
+		pop.setOwner(spawn);
 		item.addPop(pop);
 		spawn.addContainedPop(pop);
 		return pop;
@@ -102,7 +100,7 @@ public class Pop {
 		pop.setArea(area);
 		pop.setType(PopType.WORN);
 		pop.setItem(item);
-		pop.setSpawn(spawn);
+		pop.setOwner(spawn);
 		pop.setWearFlag(wearFlag);
 		item.addPop(pop);
 		spawn.addContainedPop(pop);
@@ -116,9 +114,9 @@ public class Pop {
 		pop.setProg(prog);
 		pop.setItem(item);
 		pop.setProducedLevel(level);
-		pop.setMob(producer);
+		pop.setOwner(prog);
 		item.addPop(pop);
-		producer.addContainedPop(pop);
+		prog.addContainedPop(pop);
 		return pop;
 	}
 
@@ -129,9 +127,9 @@ public class Pop {
 		pop.setProg(prog);
 		pop.setItem(item);
 		pop.setProducedLevel(level);
-		pop.setContainer(producer);
+		pop.setOwner(prog);
 		item.addPop(pop);
-		producer.addContainedPop(pop);
+		prog.addContainedPop(pop);
 		return pop;
 	}
 
@@ -142,30 +140,30 @@ public class Pop {
 		pop.setProg(prog);
 		pop.setItem(item);
 		pop.setProducedLevel(level);
-		pop.setRoom(producer);
+		pop.setOwner(prog);
 		item.addPop(pop);
-		producer.addContainedPop(pop);
+		prog.addContainedPop(pop);
 		return pop;
 	}
 
 	@Override
 	public String toString() {
 		if (getType() == PopType.FOUND) {
-			return String.format("%s found in %s", item, containingRoom);
+			return String.format("%s found in %s", item, owner);
 		} else if (getType() == PopType.CONTAINED) {
-			return String.format("%s contained in %s", item, containingItem);
+			return String.format("%s contained in %s", item, owner);
 		} else if (getType() == PopType.WORN) {
-			return String.format("%s worn by %s", item, getMob());
+			return String.format("%s worn by %s", item, owner);
 		} else if (getType() == PopType.HELD) {
-			return String.format("%s held by %s", item, getMob());
+			return String.format("%s held by %s", item, owner);
 		} else if (getType() == PopType.SOLD) {
-			return String.format("%s sold by %s", item, getMob());
+			return String.format("%s sold by %s", item, owner);
 		} else if (getType() == PopType.PRODUCED_MOB) {
-			return String.format("%s produced %s by mob %s", item, prog.getType().getLabel(), getMob());
+			return String.format("%s produced %s by mob %s", item, prog.getType().getLabel(), owner);
 		} else if (getType() == PopType.PRODUCED_ITEM) {
-			return String.format("%s produced %s by item %s", item, prog.getType().getLabel(), containingItem);
+			return String.format("%s produced %s by item %s", item, prog.getType().getLabel(), owner);
 		} else if (getType() == PopType.PRODUCED_ROOM) {
-			return String.format("%s produced %s by room %s", item, prog.getType().getLabel(), containingRoom);
+			return String.format("%s produced %s by room %s", item, prog.getType().getLabel(), owner);
 		} else {
 			return String.format("%s appears in an unknown location", item);
 		}
@@ -233,7 +231,9 @@ public class Pop {
 
 	/** The pop type */
 	public PopType getType() {
-		return containingSpawn != null && type == PopType.HELD && containingSpawn.getMob().isShopkeeper() ? PopType.SOLD : type;
+		return type == PopType.HELD && Optional.ofNullable(getMob()).map(Mob::isShopkeeper).orElse(false)
+				? PopType.SOLD
+				: type;
 	}
 
 	public boolean isSold() {
@@ -242,6 +242,14 @@ public class Pop {
 
 	public void setType(PopType type) {
 		this.type = type;
+	}
+
+	public Object getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Object owner) {
+		this.owner = owner;
 	}
 
 	/** Level range the item can appear at this location */
@@ -255,20 +263,18 @@ public class Pop {
 
 	/** The specific spawn to which the item is assigned */
 	public Spawn getSpawn() {
-		return containingSpawn;
-	}
-
-	public void setSpawn(Spawn spawn) {
-		this.containingSpawn = spawn;
+		return owner instanceof Spawn ? (Spawn) owner : null;
 	}
 
 	/** The spawned mob the item pops on or in */
 	public Mob getMob() {
-		return containingSpawn != null ? containingSpawn.getMob() : containingMob;
-	}
-
-	public void setMob(Mob mob) {
-		this.containingMob = mob;
+		if (owner instanceof Spawn) {
+			return ((Spawn) owner).getMob();
+		} else if (owner instanceof Mob) {
+			return (Mob) owner;
+		} else {
+			return null;
+		}
 	}
 
 	/** The location the item is equipped */
@@ -286,20 +292,12 @@ public class Pop {
 
 	/** The contain the item pops in */
 	public Item getContainer() {
-		return containingItem;
-	}
-
-	public void setContainer(Item container) {
-		this.containingItem = container;
+		return owner instanceof Item ? (Item) owner : null;
 	}
 
 	/** The room the item pops in, or the room containing the mob or container the item pops */
 	public Room getRoom() {
-		return containingRoom;
-	}
-
-	public void setRoom(Room room) {
-		this.containingRoom = room;
+		return owner instanceof Room ? (Room) owner : null;
 	}
 
 	public Prog getProg() {

@@ -146,10 +146,10 @@ public class SmaugInterpreter {
 						.constrain(0, LEVEL_AVATAR)
 						.min(calculateGeneratedItemLevel(pop.getArea(), item)));
 			} else if (pop.getType() == PopType.PRODUCED_MOB) {
-				calculateMobLevel(pop.getMob());
-				pop.setItemLevel(pop.getProducedLevel() > 0
-						? Range.of(pop.getProducedLevel())
-						: pop.getMob().getLevel());
+				// calculateMobLevel(pop.getMob());
+				// pop.setItemLevel(pop.getProducedLevel() > 0
+				// ? Range.of(pop.getProducedLevel())
+				// : pop.getMob().getLevel());
 			} else {
 				log.error("Don't know how to set the level range for: {}", pop.getType());
 			}

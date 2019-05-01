@@ -57,10 +57,6 @@ public class Mob {
 
 	private List<Spawn> spawns = new ArrayList<>();
 
-	/* Items and mobs produced procedurally are assigned to the Mob */
-	private List<Pop> containedPops = new ArrayList<>();
-	private List<Spawn> containedSpawns = new ArrayList<>();
-
 	private List<Prog> progs = new ArrayList<>();
 
 	public String getCssClass() {
@@ -316,22 +312,6 @@ public class Mob {
 
 	public void addSpawn(Spawn spawn) {
 		spawns.add(spawn);
-	}
-
-	public List<Pop> getContainedPops() {
-		return containedPops;
-	}
-
-	public void addContainedPop(Pop pop) {
-		containedPops.add(pop);
-	}
-
-	public Collection<Spawn> getContainedSpawns() {
-		return containedSpawns;
-	}
-
-	public void addContainedSpawn(Spawn containedSpawn) {
-		containedSpawns.add(containedSpawn);
 	}
 
 	public boolean isShopkeeper() {

@@ -45,10 +45,6 @@ public class Item {
 
 	private List<Pop> pops = new ArrayList<>();
 
-	/* Items and mobs produced procedurally are assigned to the Item */
-	private List<Pop> containedPops = new ArrayList<>();
-	private List<Spawn> containedSpawns = new ArrayList<>();
-
 	private List<Prog> progs = new ArrayList<>();
 
 	public String getCssClass() {
@@ -337,22 +333,6 @@ public class Item {
 
 	public void addPop(Pop pop) {
 		pops.add(pop);
-	}
-
-	public List<Pop> getContainedPops() {
-		return containedPops;
-	}
-
-	public void addContainedPop(Pop pop) {
-		containedPops.add(pop);
-	}
-
-	public List<Spawn> getContainedSpawns() {
-		return containedSpawns;
-	}
-
-	public void addContainedSpawn(Spawn containedSpawn) {
-		containedSpawns.add(containedSpawn);
 	}
 
 	public Collection<Prog> getProgs() {

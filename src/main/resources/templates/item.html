@@ -99,7 +99,7 @@
 	<div class="two-col-right">
 		<h3>Location</h3>
 		
-		<ul class="unstyled">
+		<ul class="unstyled gap">
 			<li th:each="pop : ${item.sortedPops}">
 				<span th:text="${pop.description}">Found in</span>
 				<a th:replace="~{link::to(${pop.linkableOwner})}">containing object</a>
@@ -115,6 +115,7 @@
 			</li>
 		</ul>
 
+		<div th:replace="~{include::progs(${item.progs})}"></div>
 	</div>
 </div>
 

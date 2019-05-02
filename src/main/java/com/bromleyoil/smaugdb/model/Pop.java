@@ -202,7 +202,7 @@ public class Pop {
 		} else if (getType() == PopType.CONTAINED) {
 			return "Containing ";
 		} else if (getType() == PopType.PRODUCED_MOB) {
-			return String.format("May produce %s", prog.getType().getLabel());
+			return "May produce";
 		} else {
 			return "Unrelated to ";
 		}

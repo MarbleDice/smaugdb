@@ -136,26 +136,24 @@
 		<!-- Mob progs -->
 		<ul class="unstyled gap">
 			<li th:each="prog : ${mob.progs}">
-				<span th:text="${prog.type.label}">on death</span>
-				<span th:text="${prog.trigger}">trigger threshold</span>
+				<span th:text="${prog.type.triggerLabel}">When slain</span>
+				<span th:text="${'(' + prog.trigger + ')'}">(trigger conditions)</span>
 
 				<!-- Prog's contained pops -->
 				<ul th:if="${not #lists.isEmpty(prog.containedPops)}">
 					<li th:each="pop : ${prog.containedPops}">
-						<span th:text="${pop.containedDescription}">Equipped with</span>
-						<a th:replace="~{link::to(${pop.item})}"></a>
-						<span th:text="${': level ' + pop.itemLevel}"></span>
-						<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}"></span>
+						<span th:text="${pop.containedDescription}">May produce</span>
+						<a th:replace="~{link::to(${pop.item})}">item link</a>
+						<span th:text="${': level ' + pop.itemLevel}">: level 8</span>
+						<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">1,399 coins</span>
 					</li>
 				</ul>
 
 				<!-- Prog's contained spawns -->
 				<ul th:if="${not #lists.isEmpty(prog.containedSpawns)}">
-					<li th:each="pop : ${prog.containedSpawns}">
-						<span th:text="${pop.containedDescription}">Equipped with</span>
-						<a th:replace="~{link::to(${pop.item})}"></a>
-						<span th:text="${': level ' + pop.itemLevel}"></span>
-						<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}"></span>
+					<li th:each="spawn : ${prog.containedSpawns}">
+						<span th:text="${spawn.containedDescription}">May produce</span>
+						<a th:replace="~{link::to(${spawn.mob})}">mob link</a>
 					</li>
 				</ul>
 			</li>

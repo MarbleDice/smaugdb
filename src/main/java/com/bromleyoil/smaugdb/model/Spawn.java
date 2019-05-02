@@ -105,7 +105,7 @@ public class Spawn {
 		if (getType() == SpawnType.PRODUCED_MOB
 				|| getType() == SpawnType.PRODUCED_ITEM
 				|| getType() == SpawnType.PRODUCED_ROOM) {
-			return String.format("May summon %s", getProg().getType().getLabel());
+			return "May summon";
 		} else {
 			return "Unrelated to";
 		}

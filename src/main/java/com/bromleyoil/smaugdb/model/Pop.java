@@ -283,10 +283,11 @@ public class Pop {
 
 	/** The spawned mob the item pops on or in */
 	public Mob getMob() {
-		if (owner instanceof Spawn) {
-			return ((Spawn) owner).getMob();
-		} else if (owner instanceof Mob) {
-			return (Mob) owner;
+		if (getOwner() instanceof Spawn) {
+			return ((Spawn) getOwner()).getMob();
+		} else if (getOwner() instanceof Prog) {
+			Prog owningProg = (Prog) getOwner();
+			return owningProg.getOwner() instanceof Mob ? (Mob) owningProg.getOwner() : null;
 		} else {
 			return null;
 		}

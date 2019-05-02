@@ -340,6 +340,7 @@ public class Item {
 	}
 
 	public void setProgs(List<Prog> progs) {
+		progs.stream().forEach(p -> p.setOwner(this));
 		this.progs = progs;
 	}
 }

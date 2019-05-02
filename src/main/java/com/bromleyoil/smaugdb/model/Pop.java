@@ -71,14 +71,15 @@ public class Pop {
 	}
 
 	public static Pop contained(Item item, Area area, Item container) {
+		Pop containerPop = container.getPops().get(container.getPops().size() - 1);
 		log.debug("Putting {} inside {}", item, container);
 		Pop pop = new Pop();
 		pop.setArea(area);
 		pop.setType(PopType.CONTAINED);
 		pop.setItem(item);
-		pop.setOwner(container);
+		pop.setOwner(containerPop);
 		item.addPop(pop);
-		container.getPops().get(container.getPops().size() - 1).addContainedPop(pop);
+		containerPop.addContainedPop(pop);
 		return pop;
 	}
 
@@ -252,6 +253,20 @@ public class Pop {
 		this.owner = owner;
 	}
 
+	public Object getLinkableOwner() {
+		if (getOwner() instanceof Room) {
+			return getOwner();
+		} else if (getOwner() instanceof Pop) {
+			return ((Pop) getOwner()).getItem();
+		} else if (getOwner() instanceof Spawn) {
+			return ((Spawn) getOwner()).getMob();
+		} else if (getOwner() instanceof Prog) {
+			return ((Prog) getOwner()).getOwner();
+		} else {
+			throw new UnsupportedOperationException("Unknown owner type: " + getOwner());
+		}
+	}
+
 	/** Level range the item can appear at this location */
 	public Range getItemLevel() {
 		return itemLevel;
@@ -290,9 +305,9 @@ public class Pop {
 		return getType() == PopType.SOLD ? getItem().getCost() * getSpawn().getMob().getSellPercent() / 100 : 0;
 	}
 
-	/** The contain the item pops in */
+	/** The container the item pops in */
 	public Item getContainer() {
-		return owner instanceof Item ? (Item) owner : null;
+		return owner instanceof Pop ? ((Pop) owner).getItem() : null;
 	}
 
 	/** The room the item pops in, or the room containing the mob or container the item pops */

@@ -9,12 +9,26 @@ import com.bromleyoil.smaugdb.model.enums.ProgType;
 
 public class Prog {
 
+	private Object owner;
+
 	private ProgType type;
 	private String trigger;
 	private List<String> definition;
 
 	private List<Pop> containedPops = new ArrayList<>();
 	private List<Spawn> containedSpawns = new ArrayList<>();
+
+	public Object getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Object owner) {
+		this.owner = owner;
+	}
+
+	public Object getLinkableOwner() {
+		return getOwner();
+	}
 
 	public ProgType getType() {
 		return type;

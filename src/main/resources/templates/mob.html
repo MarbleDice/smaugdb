@@ -114,7 +114,7 @@
 			<li th:each="spawn : ${mob.spawns}">
 				<span th:text="${spawn.description}">Found in</span>
 
-				<span th:replace="~{link::to(${spawn.owner})}">Containing object</span>
+				<span th:replace="~{link::to(${spawn.linkableOwner})}">Containing object</span>
 
 				<span th:if="${spawn.limit > 0 and spawn.limit != mob.spawns.size()}"
 						th:text="${'(maximum ' + spawn.limit + ')'}">(maximum 1)</span>

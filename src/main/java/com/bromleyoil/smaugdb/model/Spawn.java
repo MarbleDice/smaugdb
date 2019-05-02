@@ -131,6 +131,16 @@ public class Spawn {
 		this.owner = owner;
 	}
 
+	public Object getLinkableOwner() {
+		if (getOwner() instanceof Room) {
+			return getOwner();
+		} else if (getOwner() instanceof Prog) {
+			return ((Prog) getOwner()).getOwner();
+		} else {
+			throw new UnsupportedOperationException("Unknown owner type: " + getOwner());
+		}
+	}
+
 	/** The mob that spawns */
 	public Mob getMob() {
 		return mob;

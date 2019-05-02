@@ -144,8 +144,10 @@ public class Item {
 	}
 
 	public String getSubType() {
-		String subType = isWeapon() ? String.format(" / %s / %s", getWeaponSkill(), getDamageType()) : "";
-		return String.format("%s%s", type, subType);
+		String subType = isWeapon()
+				? String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageType().getLabel())
+				: "";
+		return String.format("%s%s", type.getLabel(), subType);
 	}
 
 	public void setType(ItemType type) {

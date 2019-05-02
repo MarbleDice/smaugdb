@@ -2,7 +2,7 @@ package com.bromleyoil.smaugdb.model.enums;
 
 import static com.bromleyoil.smaugdb.model.enums.WeaponSkill.*;
 
-public enum DamageType {
+public enum DamageType implements Labelable {
 	HIT(PUGILISM), SLICE(LONG_BLADES), STAB(SHORT_BLADES), SLASH(LONG_BLADES), WHIP(FLEXIBLE_ARMS), CLAW(TALONOUS_ARMS),
 	BLAST(PUGILISM), POUND(BLUDGEONS), CRUSH(BLUDGEONS), GREP(WeaponSkill.NONE), BITE(PUGILISM), PIERCE(SHORT_BLADES),
 	SUCTION(PUGILISM), BOLT(MISSILE_WEAPONS), ARROW(MISSILE_WEAPONS), DART(MISSILE_WEAPONS), STONE(MISSILE_WEAPONS),

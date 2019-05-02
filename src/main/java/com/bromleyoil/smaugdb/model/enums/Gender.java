@@ -1,5 +1,5 @@
 package com.bromleyoil.smaugdb.model.enums;
 
-public enum Gender {
+public enum Gender implements Labelable {
 	NEUTRAL, MALE, FEMALE;
 }

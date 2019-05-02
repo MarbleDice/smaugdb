@@ -23,7 +23,7 @@
 			</tr>
 			<tr th:if="${!item.extraFlags.isEmpty()}">
 				<td>Properties</td>
-				<td th:text="${#strings.listJoin(item.extraFlags, ', ')}"></td>
+				<td th:text="${@utils.label(item.extraFlags)}"></td>
 		 	</tr>
 		
 			<th:block th:if="${item.isItem()}">
@@ -49,7 +49,7 @@
 			<th:block th:if="${item.isEquipment()}">
 			<tr>
 				<td>Wearable</td>
-				<td th:text="${#strings.listJoin(item.wearFlags, ', ')}"></td>
+				<td th:text="${@utils.label(item.wearFlags)}"></td>
 			</tr>
 			<tr th:if="${item.isWeapon()}">
 				<td>Damage</td>
@@ -61,7 +61,7 @@
 			</tr>
 			<tr th:if="${!item.applies.isEmpty()}">
 				<td>Applies</td>
-				<td th:text="${#strings.listJoin(item.applies, ', ')}"></td>
+				<td th:text="${@utils.label(item.applies)}"></td>
 			</tr>
 			</th:block>
 		
@@ -86,7 +86,7 @@
 			</tr>
 			<tr>
 				<td>Container Flags</td>
-				<td th:text="${#strings.listJoin(item.containerFlags, ', ')}"></td>
+				<td th:text="${@utils.label(item.containerFlags)}"></td>
 			</tr>
 			<tr th:if="${item.key}">
 				<td>Unlocked by</td>

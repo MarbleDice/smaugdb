@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.thymeleaf.util.StringUtils;
 
-public enum ProgType {
+public enum ProgType implements Labelable {
 	ACT("when acted upon"), SPEECH("when spoken to"), RAND("when nearby"), FIGHT("during combat"), DEATH("when slain"),
 	HITPRCNT("when injured"), ENTRY("upon entry"), GREET("when encountered"), ALL_GREET("when encountered"),
 	GIVE("when given an item"), BRIBE("when paid"), HOUR("at a certain time"), TIME("at a certain time"),
@@ -29,7 +29,8 @@ public enum ProgType {
 		return valueOf(ProgType.class, value.toUpperCase().replace("_PROG", ""));
 	}
 
-	public String getLabel() {
+	@Override
+	public String getCustomLabel() {
 		return String.format("on %s", name().toLowerCase());
 	}
 

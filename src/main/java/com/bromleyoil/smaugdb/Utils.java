@@ -2,13 +2,16 @@ package com.bromleyoil.smaugdb;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.bromleyoil.smaugdb.model.enums.Labelable;
 
 /**
  * Contains various helper methods for use in thymeleaf templates.
@@ -89,7 +92,7 @@ public class Utils {
 		return flags;
 	}
 
-	public static String enumToString(Enum<?> anEnum) {
-		return StringUtils.capitalize(anEnum.name().toLowerCase().replace("_", " "));
+	public String label(Collection<Labelable> items) {
+		return items.stream().map(Labelable::getLabel).collect(Collectors.joining(", "));
 	}
 }

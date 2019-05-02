@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public enum WearFlag {
+public enum WearFlag implements Labelable {
 	TAKE, FINGER, NECK, BODY, HEAD, LEGS, FEET, HANDS, ARMS, SHIELD, ABOUT, WAIST, WRIST, WIELD, HOLD, DUAL_WIELD, EARS,
 	EYES, MISSILE_WIELD, BACK, FACE, ANKLE;
 

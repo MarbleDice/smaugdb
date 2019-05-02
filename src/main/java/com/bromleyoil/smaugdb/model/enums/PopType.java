@@ -1,6 +1,6 @@
 package com.bromleyoil.smaugdb.model.enums;
 
-public enum PopType {
+public enum PopType implements Labelable {
 	/** Found in a room */
 	FOUND,
 	/** Contained in another item */

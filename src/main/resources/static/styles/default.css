@@ -45,7 +45,7 @@ nav li {
 	display: inline-block;
 }
 
-nav li a {
+nav li a, nav li a:visited {
 	color: #ffffff;
 	background-color: #000000;
 	padding: 8px 16px;

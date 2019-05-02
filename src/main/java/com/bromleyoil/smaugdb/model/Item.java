@@ -35,6 +35,7 @@ public class Item {
 	private List<Apply> applies = new ArrayList<>();
 
 	private List<Integer> values = new ArrayList<>();
+	private Range totalArmor;
 	private Range damage;
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
@@ -278,6 +279,14 @@ public class Item {
 
 	public int getArmor() {
 		return type == ItemType.ARMOR ? values.get(1) : 0;
+	}
+
+	public Range getTotalArmor() {
+		return totalArmor;
+	}
+
+	public void setTotalArmor(Range totalArmor) {
+		this.totalArmor = totalArmor;
 	}
 
 	public List<ContainerFlag> getContainerFlags() {

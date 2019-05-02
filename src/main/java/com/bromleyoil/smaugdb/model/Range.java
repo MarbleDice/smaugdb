@@ -47,6 +47,10 @@ public class Range {
 		}
 	}
 
+	public boolean equalsValue(int value) {
+		return getMin() == value && getMax() == value;
+	}
+
 	public static RangeCollector unionCollector() {
 		return new RangeCollector(Range::union);
 	}
@@ -130,17 +134,23 @@ public class Range {
 		return this;
 	}
 
-	public Range add(int amount) {
-		min = getMin() + amount;
-		max = getMax() + amount;
+	public Range add(int addend) {
+		min = getMin() + addend;
+		max = getMax() + addend;
 		conformMax();
 		return this;
 	}
 
-	public Range subtract(int amount) {
-		min = getMin() - amount;
-		max = getMax() - amount;
+	public Range subtract(int subtrahend) {
+		min = getMin() - subtrahend;
+		max = getMax() - subtrahend;
 		conformMax();
+		return this;
+	}
+
+	public Range multiply(int factor) {
+		min = getMin() * factor;
+		max = getMax() * factor;
 		return this;
 	}
 

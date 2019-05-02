@@ -55,9 +55,12 @@
 				<td>Damage</td>
 				<td th:text="${item.damage}"></td>
 			</tr>
-			<tr th:if="${item.isArmor()}">
+			<tr th:if="${!item.totalArmor.equalsValue(0)}">
 				<td>Armor</td>
-				<td th:text="${item.armor}"></td>
+				<td>
+					<span th:text="${item.totalArmor}"></span>
+					<span th:if="${!item.totalArmor.equalsValue(item.armor)}" th:text="${'(base ' + item.armor + ')'}"></span>
+				</td>
 			</tr>
 			<tr th:if="${!item.applies.isEmpty()}">
 				<td>Applies</td>

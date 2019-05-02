@@ -167,7 +167,7 @@ public class Item {
 		this.extraFlags = extraFlags;
 	}
 
-	public List<WearFlag> getWearFlags() {
+	public Collection<WearFlag> getWearFlags() {
 		return wearFlags;
 	}
 
@@ -177,6 +177,10 @@ public class Item {
 
 	public void setWearFlags(List<WearFlag> wearFlags) {
 		this.wearFlags = wearFlags;
+	}
+
+	public Collection<WearFlag> getEquipFlags() {
+		return wearFlags.stream().filter(f -> f != WearFlag.TAKE).collect(Collectors.toList());
 	}
 
 	/** The item's declared level (only used sometimes) */

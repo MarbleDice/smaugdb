@@ -49,7 +49,7 @@
 			<th:block th:if="${item.isEquipment()}">
 			<tr>
 				<td>Wearable</td>
-				<td th:text="${@utils.label(item.wearFlags)}"></td>
+				<td th:text="${@utils.label(item.equipFlags)}"></td>
 			</tr>
 			<tr th:if="${item.isWeapon()}">
 				<td>Damage</td>

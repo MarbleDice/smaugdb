@@ -23,10 +23,29 @@
 			</tr>
 			<tr th:if="${!item.extraFlags.isEmpty()}">
 				<td>Properties</td>
-				<td th:text="${@utils.label(item.extraFlags)}"></td>
+				<td th:text="${@utils.label(item.extraFlagsWithoutReq)}"></td>
 		 	</tr>
 		
 			<th:block th:if="${item.isItem()}">
+			<tr th:if="${!item.alignRequirements.isEmpty()}">
+				<td>Req. Alignment</td>
+				<td>
+					<span th:class="${item.hasExtraFlag('ANTI_EVIL') ? 'invalid' : ''}">evil</span>
+					<span th:class="${item.hasExtraFlag('ANTI_NEUTRAL') ? 'invalid' : ''}">neutral</span>
+					<span th:class="${item.hasExtraFlag('ANTI_GOOD') ? 'invalid' : ''}">good</span>
+				</td>
+		 	</tr>
+			<tr th:if="${!item.classRequirements.isEmpty()}">
+				<td>Req. Class</td>
+				<td>
+					<span th:class="${item.hasExtraFlag('ANTI_WARRIOR') ? 'invalid' : ''}">warrior</span>
+					<span th:class="${item.hasExtraFlag('ANTI_THIEF') ? 'invalid' : ''}">thief</span>
+					<span th:class="${item.hasExtraFlag('ANTI_MAGE') ? 'invalid' : ''}">mage</span>
+					<span th:class="${item.hasExtraFlag('ANTI_CLERIC') ? 'invalid' : ''}">cleric</span>
+					<span th:class="${item.hasExtraFlag('ANTI_DRUID') ? 'invalid' : ''}">druid</span>
+					<span th:class="${item.hasExtraFlag('ANTI_VAMPIRE') ? 'invalid' : ''}">vampire</span>
+				</td>
+		 	</tr>
 			<tr>
 				<td>Level</td>
 				<td th:text="${item.level}"></td>

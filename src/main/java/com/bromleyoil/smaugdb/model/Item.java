@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
@@ -159,12 +160,26 @@ public class Item {
 		return extraFlags;
 	}
 
-	public boolean hasExtraFlag(ExtraFlag extraFlag) {
-		return extraFlags.contains(extraFlag);
+	public boolean hasExtraFlag(String extraFlag) {
+		return extraFlags.contains(ExtraFlag.valueOf(extraFlag));
 	}
 
 	public void setExtraFlags(List<ExtraFlag> extraFlags) {
 		this.extraFlags = extraFlags;
+	}
+
+	public Collection<ExtraFlag> getExtraFlagsWithoutReq() {
+		List<ExtraFlag> rv = new ArrayList<>(extraFlags);
+		rv.removeAll(ExtraFlag.getRequirements());
+		return rv;
+	}
+
+	public Collection<ExtraFlag> getClassRequirements() {
+		return CollectionUtils.intersection(extraFlags, ExtraFlag.getClasses());
+	}
+
+	public Collection<ExtraFlag> getAlignRequirements() {
+		return CollectionUtils.intersection(extraFlags, ExtraFlag.getAlignments());
 	}
 
 	public Collection<WearFlag> getWearFlags() {

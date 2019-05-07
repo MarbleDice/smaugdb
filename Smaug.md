@@ -23,7 +23,7 @@ Purchase prices modified by
 Interesting commands include:
 * c[ast] <spell>
 * mpdamage
-* mpforce (remove, drop, sac)
+* mpforce (drop, get, give, hold, put, remove, sac, wear, wield)
 * mpjunk
 * mpoload / mpmload
 * mppurge

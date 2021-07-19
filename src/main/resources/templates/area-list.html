@@ -20,8 +20,8 @@
 	<tr th:each="area : ${areas}">
 		<td><a th:replace="~{link::area(${area})}"></a></td>
 		<td th:text="${area.author}"></td>
-		<td th:text="${area.softRange.min}"></td>
-		<td th:text="${area.softRange.max}"></td>
+		<td th:text="${area.softRange} ? ${area.softRange.min} : '-'"></td>
+		<td th:text="${area.softRange} ? ${area.softRange.max} : '-'"></td>
 		<td th:text="${area.mobs.?[exists == true].size()}"></td>
 		<td th:text="${area.items.?[exists == true].size()}"></td>
 		<td th:text="${area.rooms.size()}"></td>

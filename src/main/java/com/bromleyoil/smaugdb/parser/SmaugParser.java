@@ -406,7 +406,7 @@ public class SmaugParser {
 
 		while (line != null) {
 			Matcher matcher = resetPattern.matcher(line);
-			if (matcher.matches()) {
+			if (matcher.find()) {
 				// Found a reset. Groups are 1=code, 2=ignored, 3=vnum, 4=limit/ignored, 5=vnum/absent
 				parseReset(matcher.group(1).charAt(0),
 						Integer.valueOf(matcher.group(3)),

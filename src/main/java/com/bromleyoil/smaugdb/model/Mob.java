@@ -27,26 +27,35 @@ public class Mob {
 	private String name;
 	private String keywords;
 	private String description;
+	private String race;
 	private List<String> longDescription = new ArrayList<>();
 	private List<ActFlag> actFlags = new ArrayList<>();
 	private List<AffectFlag> affectFlags = new ArrayList<>();
 	private int alignment;
+	private String assistGroup;
 	private int suggestedLevel;
 	private Range level;
 	private int gold;
 	private int experience;
 	private Range hp;
+	private Range mana;
 	private int armor;
+	private int pierceArmor;
+	private int bashArmor;
+	private int slashArmor;
+	private int magicArmor;
 	private int thac0;
 	private int hitroll;
 	private Range damage;
 	private int damroll;
+	private String damageType;
 	private List<ExtraFlag> extraFlags = new ArrayList<>();
 	private List<ResistFlag> resistFlags = new ArrayList<>();
 	private List<ResistFlag> immuneFlags = new ArrayList<>();
 	private List<ResistFlag> vulnerableFlags = new ArrayList<>();
 	private List<AttackFlag> attackFlags = new ArrayList<>();
 	private List<DefenseFlag> defenseFlags = new ArrayList<>();
+	private String size;
 
 	private boolean isShopkeeper;
 	private List<ItemType> purchasedTypes = new ArrayList<>();
@@ -126,6 +135,14 @@ public class Mob {
 		this.description = description;
 	}
 
+	public String getRace() {
+		return race;
+	}
+
+	public void setRace(String race) {
+		this.race = race;
+	}
+
 	public List<String> getLongDescription() {
 		return longDescription;
 	}
@@ -164,6 +181,14 @@ public class Mob {
 
 	public void setAlignment(int alignment) {
 		this.alignment = alignment;
+	}
+
+	public String getAssistGroup() {
+		return assistGroup;
+	}
+
+	public void setAssistGroup(String assistGroup) {
+		this.assistGroup = assistGroup;
 	}
 
 	public int getSuggestedLevel() {
@@ -218,6 +243,38 @@ public class Mob {
 		this.armor = armor;
 	}
 
+	public int getPierceArmor() {
+		return pierceArmor;
+	}
+
+	public void setPierceArmor(int pierceArmor) {
+		this.pierceArmor = pierceArmor;
+	}
+
+	public int getBashArmor() {
+		return bashArmor;
+	}
+
+	public void setBashArmor(int bashArmor) {
+		this.bashArmor = bashArmor;
+	}
+
+	public int getSlashArmor() {
+		return slashArmor;
+	}
+
+	public void setSlashArmor(int slashArmor) {
+		this.slashArmor = slashArmor;
+	}
+
+	public int getMagicArmor() {
+		return magicArmor;
+	}
+
+	public void setMagicArmor(int magicArmor) {
+		this.magicArmor = magicArmor;
+	}
+
 	public Range getHp() {
 		return hp;
 	}
@@ -226,12 +283,28 @@ public class Mob {
 		this.hp = hp;
 	}
 
+	public Range getMana() {
+		return mana;
+	}
+
+	public void setMana(Range mana) {
+		this.mana = mana;
+	}
+
 	public Range getDamage() {
 		return damage;
 	}
 
 	public void setDamage(Range damage) {
 		this.damage = damage;
+	}
+
+	public String getDamageType() {
+		return damageType;
+	}
+
+	public void setDamageType(String damageType) {
+		this.damageType = damageType;
 	}
 
 	public int getGold() {
@@ -304,6 +377,14 @@ public class Mob {
 
 	public void setDefenseFlags(List<DefenseFlag> defenseFlags) {
 		this.defenseFlags = defenseFlags;
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
 	}
 
 	public List<Spawn> getSpawns() {

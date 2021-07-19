@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.bromleyoil.smaugdb.parser.SmaugParser;
+import com.bromleyoil.smaugdb.parser.RomParser;
 
 @Component
 public class World {
@@ -38,7 +38,8 @@ public class World {
 			throw new IllegalArgumentException("Invalid mud.path: " + mudPath);
 		}
 
-		SmaugParser.loadWorld(this, mudPath);
+		// SmaugParser.loadWorld(this, mudPath);
+		RomParser.loadWorld(this, mudPath);
 	}
 
 	public Collection<Area> getAreas() {

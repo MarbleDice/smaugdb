@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.AffectFlag;
+import com.bromleyoil.smaugdb.model.enums.AttackFlag;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
+import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 
 /**
  * Contains various helper methods for use in thymeleaf templates.
@@ -86,6 +90,74 @@ public class Utils {
 			if (bitVector >= bitFlag) {
 				bitVector -= bitFlag;
 				flags.add(enumType.getEnumConstants()[i]);
+			}
+		}
+
+		return flags;
+	}
+
+	public static List<ActFlag> convertActFlagCodes(String charVector) {
+		List<ActFlag> flags = new ArrayList<>();
+
+		for (int i = 0; i < charVector.length(); i++) {
+			String code = charVector.substring(i, i + 1);
+			try {
+				flags.add(ActFlag.ofCode(code));
+			} catch (IllegalArgumentException e) {
+				if (!e.getMessage().equals("0")) {
+					LOG.warn("Unrecognized ActFlag: {}", e.getMessage());
+				}
+			}
+		}
+
+		return flags;
+	}
+
+	public static List<AffectFlag> convertAffectFlagCodes(String charVector) {
+		List<AffectFlag> flags = new ArrayList<>();
+
+		for (int i = 0; i < charVector.length(); i++) {
+			String code = charVector.substring(i, i + 1);
+			try {
+				flags.add(AffectFlag.ofCode(code));
+			} catch (IllegalArgumentException e) {
+				if (!e.getMessage().equals("0")) {
+					LOG.warn("Unrecognized AffectFlag: {}", e.getMessage());
+				}
+			}
+		}
+
+		return flags;
+	}
+
+	public static List<AttackFlag> convertAttackFlagCodes(String charVector) {
+		List<AttackFlag> flags = new ArrayList<>();
+
+		for (int i = 0; i < charVector.length(); i++) {
+			String code = charVector.substring(i, i + 1);
+			try {
+				flags.add(AttackFlag.ofCode(code));
+			} catch (IllegalArgumentException e) {
+				if (!e.getMessage().equals("0")) {
+					LOG.warn("Unrecognized AttackFlag: {}", e.getMessage());
+				}
+			}
+		}
+
+		return flags;
+	}
+
+	public static List<ResistFlag> convertResistFlagCodes(String charVector) {
+		List<ResistFlag> flags = new ArrayList<>();
+
+		for (int i = 0; i < charVector.length(); i++) {
+			String code = charVector.substring(i, i + 1);
+			try {
+				flags.add(ResistFlag.ofCode(code));
+			} catch (IllegalArgumentException e) {
+				if (!e.getMessage().equals("0")) {
+					LOG.warn("Unrecognized ResistFlag: {}", e.getMessage());
+				}
 			}
 		}
 

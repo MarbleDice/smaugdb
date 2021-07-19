@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DamageType;
@@ -36,6 +37,7 @@ public class Item {
 	private List<Apply> applies = new ArrayList<>();
 
 	private List<Integer> values = new ArrayList<>();
+	private List<String> stringValues = new ArrayList<>();
 	private Range totalArmor;
 	private Range damage;
 	private int capacity;
@@ -247,33 +249,47 @@ public class Item {
 		return values;
 	}
 
+	public List<String> getStringValues() {
+		return stringValues;
+	}
+
 	public Integer getValue(int index) {
 		return values.get(index);
 	}
 
+	public String getStringValue(int index) {
+		return stringValues.get(index);
+	}
+
 	public void setValues(List<Integer> values) {
 		this.values = values;
+		this.stringValues = values.stream().map(Object::toString).collect(Collectors.toList());
+	}
+
+	public void setStringValues(List<String> stringValues) {
+		this.stringValues = stringValues;
+		this.values = stringValues.stream().map(x -> NumberUtils.toInt(x, 0)).collect(Collectors.toList());
 	}
 
 	public int getLightHours() {
-		return type == ItemType.LIGHT ? values.get(2) : 0;
+		return type == ItemType.LIGHT ? getValue(2) : 0;
 	}
 
 	public int getSpellLevel() {
 		return ItemType.SPELL_ITEMS.contains(type)
-				? values.get(0)
+				? getValue(0)
 				: 0;
 	}
 
 	public List<Skill> getSkills() {
 		if (type == ItemType.SALVE) {
-			return Stream.of(Skill.of(values.get(4)), Skill.of(values.get(5))).collect(Collectors.toList());
+			return Stream.of(Skill.of(getValue(4)), Skill.of(getValue(5))).collect(Collectors.toList());
 		} else if (ItemType.MAGICAL_DEVICES.contains(type)) {
 			// Wands and staves
-			return Stream.of(Skill.of(values.get(3))).collect(Collectors.toList());
+			return Stream.of(Skill.of(getValue(3))).collect(Collectors.toList());
 		} else if (ItemType.SPELL_ITEMS.contains(type)) {
 			// Potions, scrolls, pills
-			return Stream.of(Skill.of(values.get(1)), Skill.of(values.get(2)), Skill.of(values.get(3)))
+			return Stream.of(Skill.of(getValue(1)), Skill.of(getValue(2)), Skill.of(getValue(3)))
 					.collect(Collectors.toList());
 		} else {
 			return Collections.emptyList();
@@ -289,7 +305,7 @@ public class Item {
 	}
 
 	public DamageType getDamageType() {
-		return type == ItemType.WEAPON ? DamageType.values()[values.get(3)] : DamageType.NONE;
+		return type == ItemType.WEAPON ? DamageType.values()[getValue(3)] : DamageType.NONE;
 	}
 
 	public WeaponSkill getWeaponSkill() {
@@ -297,7 +313,7 @@ public class Item {
 	}
 
 	public int getArmor() {
-		return type == ItemType.ARMOR ? values.get(1) : 0;
+		return type == ItemType.ARMOR ? getValue(1) : 0;
 	}
 
 	public Range getTotalArmor() {

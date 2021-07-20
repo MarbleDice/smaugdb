@@ -5,6 +5,82 @@
 	layout:decorate="~{template}" th:with="title='Item Search'">
 <th:block layout:fragment="content">
 
+<form th:action="@{/item-search}" th:object="${itemSearchForm}" method="post">
+<button name="search" style="display: none;"></button>
+<p th:if="${#fields.hasAnyErrors()}" class="errors">
+	There were input errors, please correct them below.
+</p>
+<table class="form">
+	<tr>
+		<th class="subheader">Min Level</th>
+		<th class="subheader">Max Level</th>
+		<th class="subheader">Item Type</th>
+		<th class="subheader">Weapon Type</th>
+		<th class="subheader">Wear</th>
+		<th class="subheader">Applies</th>
+	</tr>
+	<tr>
+		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
+		<td>
+			<label th:for="${#ids.next('notItemType')}">Not</label>
+			<input type="checkbox" th:field="*{notItemType}" />
+			<select th:field="*{itemType}">
+				<option selected value="">any</option>
+				<option th:each="itemType : ${itemTypes}" th:value="${itemType.name()}" th:text="${itemType.label}"></option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{weaponType}">
+				<option selected value="">any</option>
+				<option th:each="weaponType : ${weaponTypes}" th:value="${weaponType.name()}" th:text="${weaponType.label}"></option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{wearFlag}">
+				<option selected value="">any</option>
+				<option th:each="wearFlag : ${wearFlags}" th:value="${wearFlag.name()}" th:text="${wearFlag.label}"></option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{applyType}">
+				<option selected value="">any</option>
+				<option th:each="applyType : ${applyTypes}" th:value="${applyType.name()}" th:text="${applyType.label}"></option>
+			</select>
+			>=
+			<input type="text" th:field="*{applyValue}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" />
+		</td>
+	</tr>
+</table>
+<div class="actions">
+	<button name="search">Search</button>
+</div>
+</form>
+
+<h2>Search Results</h2>
+
+<table class="data">
+	<tr>
+		<th>Level</th>
+		<th>Item Name</th>
+		<th>Area Name</th>
+		<th>Type</th>
+		<!-- <th>Subtpye</th> -->
+		<th>Wear</th>
+		<th>Summary</th>
+		<th>Apply</th>
+	</tr>
+	<tr th:each="item : ${items}">
+		<td th:text="${item.level}"></td>
+		<td><a th:replace="~{link::to(${item})}"></a></td>
+		<td><a th:replace="~{link::area(${item.area})}"></a></td>
+		<td th:text="${item.type.label}"></td>
+		<!-- <td th:text="${item.subType}"></td> -->
+		<td th:text="${@utils.label(item.equipFlags)}"></td>
+		<td th:text="${item.summary}"></td>
+		<td th:text="${@utils.label(item.applies)}"></td>
+	</tr>
+</table>
 
 </th:block>
 </html>

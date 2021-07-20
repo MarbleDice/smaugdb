@@ -13,11 +13,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WeaponSkill;
+import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class Item {
@@ -38,7 +40,13 @@ public class Item {
 
 	private List<Integer> values = new ArrayList<>();
 	private List<String> stringValues = new ArrayList<>();
+	private String summary;
+	private WeaponType weaponType;
 	private Range totalArmor;
+	private int pierceArmor;
+	private int bashArmor;
+	private int slashArmor;
+	private int magicArmor;
 	private Range damage;
 	private int capacity;
 	private List<ContainerFlag> containerFlags = new ArrayList<>();
@@ -71,7 +79,7 @@ public class Item {
 				return true;
 			}
 		}
-		return false;
+		return getType() == ItemType.LIGHT;
 	}
 
 	public boolean isWeapon() {
@@ -148,9 +156,14 @@ public class Item {
 	}
 
 	public String getSubType() {
-		String subType = isWeapon()
-				? String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageType().getLabel())
-				: "";
+		String subType = "";
+
+		if (isWeapon() && getDamageType() != null) {
+			subType = String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageType().getLabel());
+		} else if (isWeapon() && getWeaponType() != null) {
+			subType = String.format(" / %s", getWeaponType().getLabel());
+		}
+
 		return String.format("%s%s", type.getLabel(), subType);
 	}
 
@@ -237,6 +250,14 @@ public class Item {
 		return applies;
 	}
 
+	public boolean hasApply(ApplyType applyType) {
+		return applies.stream().anyMatch(x -> x.getType().equals(applyType));
+	}
+
+	public boolean hasApply(ApplyType applyType, int value) {
+		return applies.stream().anyMatch(x -> x.getType().equals(applyType) && x.getValue() >= value);
+	}
+
 	public void addApply(Apply apply) {
 		applies.add(apply);
 	}
@@ -269,6 +290,22 @@ public class Item {
 	public void setStringValues(List<String> stringValues) {
 		this.stringValues = stringValues;
 		this.values = stringValues.stream().map(x -> NumberUtils.toInt(x, 0)).collect(Collectors.toList());
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public WeaponType getWeaponType() {
+		return weaponType;
+	}
+
+	public void setWeaponType(WeaponType weaponType) {
+		this.weaponType = weaponType;
 	}
 
 	public int getLightHours() {
@@ -322,6 +359,38 @@ public class Item {
 
 	public void setTotalArmor(Range totalArmor) {
 		this.totalArmor = totalArmor;
+	}
+
+	public int getPierceArmor() {
+		return pierceArmor;
+	}
+
+	public void setPierceArmor(int pierceArmor) {
+		this.pierceArmor = pierceArmor;
+	}
+
+	public int getBashArmor() {
+		return bashArmor;
+	}
+
+	public void setBashArmor(int bashArmor) {
+		this.bashArmor = bashArmor;
+	}
+
+	public int getSlashArmor() {
+		return slashArmor;
+	}
+
+	public void setSlashArmor(int slashArmor) {
+		this.slashArmor = slashArmor;
+	}
+
+	public int getMagicArmor() {
+		return magicArmor;
+	}
+
+	public void setMagicArmor(int magicArmor) {
+		this.magicArmor = magicArmor;
 	}
 
 	public List<ContainerFlag> getContainerFlags() {

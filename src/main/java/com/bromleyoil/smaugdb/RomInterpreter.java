@@ -32,6 +32,7 @@ import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.PopType;
+import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 /**
@@ -203,7 +204,21 @@ public class RomInterpreter {
 			item.setCapacity(item.getValue(0));
 		} else if (item.getType() == WEAPON) {
 			// type num size verb flags
+			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));
 			item.setDamage(Range.of(item.getValue(1), item.getValue(1) * item.getValue(2)));
+			item.setSummary(String.format("%.1f damage", item.getDamage().getAverage()));
+		} else if (item.getType() == ARMOR) {
+			// pierce bash slash exotic bulk
+			item.setPierceArmor(item.getValue(0));
+			item.setBashArmor(item.getValue(1));
+			item.setSlashArmor(item.getValue(2));
+			item.setMagicArmor(item.getValue(3));
+			item.setTotalArmor(Range.of(item.getValue(0) + item.getValue(1) + item.getValue(2) + item.getValue(3)));
+			item.setSummary(String.format("%.0f armor (%d/%d/%d/%d)", item.getTotalArmor().getAverage(),
+					item.getSlashArmor(), item.getBashArmor(), item.getPierceArmor(), item.getMagicArmor()));
+			
+		} else {
+			item.setSummary(String.join(", ", item.getStringValues()));
 		}
 	}
 

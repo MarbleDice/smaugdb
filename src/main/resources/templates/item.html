@@ -129,7 +129,7 @@
 			<li th:each="pop : ${item.sortedPops}">
 				<span th:text="${pop.description}">Found in</span>
 				<a th:replace="~{link::to(${pop.linkableOwner})}">containing object</a>
-				<span th:text="${': level ' + pop.itemLevel}">level 0</span>
+				<span th:text="${': level ' + pop.itemLevel}" th:if="${pop.itemLevel.average > 0}">level 0</span>
 				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">1000 coins</span>
 				<!-- Container contents -->
 				<ul th:if="${item.isContainer()}">

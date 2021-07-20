@@ -1,8 +1,5 @@
 package com.bromleyoil.smaugdb.form;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
@@ -33,14 +30,12 @@ public class ItemSearchForm {
 	public void setMaxLevel(Integer maxLevel) {
 		this.maxLevel = maxLevel;
 	}
-	private Logger log = LoggerFactory.getLogger("steve");
+
 	public boolean getNotItemType() {
-		log.info("Get {}", notItemType);
 		return notItemType;
 	}
 
 	public void setNotItemType(boolean notItemType) {
-		log.info("Set {}", notItemType);
 		this.notItemType = notItemType;
 	}
 

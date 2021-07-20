@@ -1,5 +1,6 @@
 package com.bromleyoil.smaugdb;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
+	}
+
+	@Value("${application.title:SMAUG MUD DB}")
+	private String applicationTitle;
+
+	@Bean
+	public String applicationTitle() {
+		return applicationTitle;
 	}
 
 	@Bean

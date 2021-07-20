@@ -37,12 +37,11 @@ import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 /**
- * Interprets all the code-level adjustments that Smaug makes and applies them to the data model. Various code paths
+ * Interprets all the code-level adjustments that ROM makes and applies them to the data model. Various code paths
  * are responsible for this:
  * 
  * load_objects (db.c)
  * reset_area (reset.c)
- * generate_itemlevel (reset.c)
  * create_object (db.c)
  * 
  */
@@ -212,6 +211,9 @@ public class RomInterpreter {
 			item.getDamage().add(bonusDam);
 			item.setSummary(String.format("%.1f damage", item.getDamage().getAverage()));
 			item.setTooltip(String.format("%dd%d+%d", item.getValue(1), item.getValue(2), bonusDam));
+			// TODO 3 verb
+			// TODO 4 weapon flag
+
 		} else if (item.getType() == ARMOR) {
 			// pierce bash slash exotic bulk
 			item.setPierceArmor(item.getValue(0));
@@ -223,6 +225,7 @@ public class RomInterpreter {
 			item.setSummary(String.format("%.1f armor", item.getTotalArmor().getAverage() / 4));
 			item.setTooltip(String.format("%d/%d/%d/%d", item.getSlashArmor(), item.getBashArmor(),
 					item.getPierceArmor(), item.getMagicArmor()));
+
 		} else {
 			if (!item.getStringValues().stream().map(x -> x.replace("0", "")).allMatch(StringUtils::isBlank)) {
 				item.setSummary(String.join(", ", item.getStringValues()));
@@ -254,13 +257,11 @@ public class RomInterpreter {
 
 	private void processMob(Mob mob) {
 		calculateMobLevel(mob);
+		int gold = mob.getGold().getMax();
+		mob.setGold(Range.of(gold / 2, 3 * gold / 2));
 	}
 
 	private void calculateMobLevel(Mob mob) {
-		if (mob.getLevel() != null) {
-			return;
-		}
-
-		mob.setLevel(Range.of(mob.getSuggestedLevel()).extend(1).constrainMin(1));
+		mob.setLevel(Range.of(mob.getSuggestedLevel()));
 	}
 }

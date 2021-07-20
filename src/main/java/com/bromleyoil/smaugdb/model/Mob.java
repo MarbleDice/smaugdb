@@ -35,7 +35,7 @@ public class Mob {
 	private String assistGroup;
 	private int suggestedLevel;
 	private Range level;
-	private int gold;
+	private Range gold;
 	private int experience;
 	private Range hp;
 	private Range mana;
@@ -307,11 +307,11 @@ public class Mob {
 		this.damageType = damageType;
 	}
 
-	public int getGold() {
+	public Range getGold() {
 		return gold;
 	}
 
-	public void setGold(int gold) {
+	public void setGold(Range gold) {
 		this.gold = gold;
 	}
 

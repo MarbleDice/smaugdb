@@ -252,7 +252,7 @@ public class SmaugParser {
 
 		// gold exp
 		values = nextValues(reader);
-		mob.setGold(values.get(0));
+		mob.setGold(Range.of(values.get(0)));
 		if (values.size() > 1) {
 			mob.setExperience(values.get(1));
 		}

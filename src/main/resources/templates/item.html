@@ -74,7 +74,7 @@
 				<td>Damage</td>
 				<td th:text="${item.damage}"></td>
 			</tr>
-			<tr th:if="${item.totalArmor?.equalsValue(0)}">
+			<tr th:if="${item.totalArmor?.average > 0}">
 				<td>Armor</td>
 				<td>
 					<span th:text="${item.totalArmor}"></span>
@@ -86,8 +86,12 @@
 				<td th:text="${@utils.label(item.applies)}"></td>
 			</tr>
 			</th:block>
-		
-		
+
+			<tr>
+				<td>Summary</td>
+				<td th:text="${item.summary}" th:title="${item.tooltip}"></td>
+			</tr>
+
 			<tr th:if="${item.isUsableKey()}">
 				<td>Unlocks</td>
 				<td>

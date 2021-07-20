@@ -242,7 +242,7 @@ public class RomParser {
 
 		// start_pos return_pos gender gold
 		strings = nextStringValues(reader);
-		mob.setGold(Integer.valueOf(strings.get(3)));
+		mob.setGold(Range.of(Integer.valueOf(strings.get(3))));
 
 		// form part size material
 		strings = nextStringValues(reader);

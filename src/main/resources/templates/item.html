@@ -74,7 +74,7 @@
 				<td>Damage</td>
 				<td th:text="${item.damage}"></td>
 			</tr>
-			<tr th:if="${!item.totalArmor.equalsValue(0)}">
+			<tr th:if="${item.totalArmor?.equalsValue(0)}">
 				<td>Armor</td>
 				<td>
 					<span th:text="${item.totalArmor}"></span>

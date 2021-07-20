@@ -15,10 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bromleyoil.smaugdb.form.ItemSearchForm;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.World;
-import com.bromleyoil.smaugdb.model.enums.ApplyType;
-import com.bromleyoil.smaugdb.model.enums.ItemType;
-import com.bromleyoil.smaugdb.model.enums.WeaponType;
-import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 @Controller
 public class MainController {
@@ -63,6 +59,9 @@ public class MainController {
 	public ModelAndView itemSearchPost(ItemSearchForm form) {
 		ModelAndView mav = itemSearchMav();
 		Stream<Item> stream = world.getItems().stream();
+		if (form.getName() != null) {
+			stream = stream.filter(x -> x.getName().contains(form.getName()));
+		}
 		if (form.getMinLevel() != null) {
 			stream = stream.filter(x -> x.getLevel().getMax() >= form.getMinLevel());
 		}

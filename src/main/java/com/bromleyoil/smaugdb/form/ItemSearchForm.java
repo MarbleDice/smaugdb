@@ -6,6 +6,7 @@ import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class ItemSearchForm {
+	private String name;
 	private Integer minLevel;
 	private Integer maxLevel;
 	private boolean notItemType;
@@ -14,6 +15,14 @@ public class ItemSearchForm {
 	private WearFlag wearFlag;
 	private ApplyType applyType;
 	private Integer applyValue;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public Integer getMinLevel() {
 		return minLevel;

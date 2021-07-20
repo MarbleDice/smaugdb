@@ -12,6 +12,7 @@
 </p>
 <table class="form">
 	<tr>
+		<th class="subheader">Name</th>
 		<th class="subheader">Min Level</th>
 		<th class="subheader">Max Level</th>
 		<th class="subheader">Item Type</th>
@@ -20,6 +21,7 @@
 		<th class="subheader">Applies</th>
 	</tr>
 	<tr>
+		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
 		<td>
@@ -48,7 +50,7 @@
 				<option th:each="applyType : ${applyTypes}" th:value="${applyType.name()}" th:text="${applyType.label}"></option>
 			</select>
 			>=
-			<input type="text" th:field="*{applyValue}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" />
+			<input type="text" th:field="*{applyValue}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" />
 		</td>
 	</tr>
 </table>

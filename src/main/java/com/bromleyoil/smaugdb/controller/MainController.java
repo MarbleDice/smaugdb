@@ -47,10 +47,10 @@ public class MainController {
 
 	protected ModelAndView itemSearchMav() {
 		ModelAndView mav = new ModelAndView("item-search");
-		mav.addObject("itemTypes", ItemType.values());
-		mav.addObject("weaponTypes", WeaponType.values());
-		mav.addObject("wearFlags", WearFlag.values());
-		mav.addObject("applyTypes", ApplyType.values());
+		mav.addObject("itemTypes", world.getItemTypes());
+		mav.addObject("weaponTypes", world.getWeaponTypes());
+		mav.addObject("wearFlags", world.getWearFlags());
+		mav.addObject("applyTypes", world.getApplyTypes());
 		return mav;
 	}
 

@@ -3,9 +3,13 @@ package com.bromleyoil.smaugdb.model;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -15,6 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.bromleyoil.smaugdb.model.enums.ApplyType;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.WeaponType;
+import com.bromleyoil.smaugdb.model.enums.WearFlag;
 import com.bromleyoil.smaugdb.parser.RomParser;
 
 @Component
@@ -29,6 +37,11 @@ public class World {
 	private Map<Integer, Room> rooms = new HashMap<>();
 	private Map<Integer, Mob> mobs = new HashMap<>();
 	private Map<Integer, Item> items = new HashMap<>();
+
+	private List<ItemType> itemTypes;
+	private List<WeaponType> weaponTypes;
+	private List<WearFlag> wearFlags;
+	private List<ApplyType> applyTypes;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -106,5 +119,51 @@ public class World {
 		item.setArea(area);
 		area.addItem(item);
 		items.put(item.getVnum(), item);
+	}
+	
+	public List<ItemType> getItemTypes() {
+		if (itemTypes == null) {
+			itemTypes = items.values().stream()
+					.map(Item::getType)
+					.distinct()
+					.sorted(Comparator.comparing(ItemType::name))
+					.collect(Collectors.toList());
+		}
+		return itemTypes;
+	}
+
+	public List<WeaponType> getWeaponTypes() {
+		if (weaponTypes == null) {
+			weaponTypes = items.values().stream()
+					.map(Item::getWeaponType)
+					.filter(Objects::nonNull)
+					.distinct()
+					.sorted(Comparator.comparing(WeaponType::name))
+					.collect(Collectors.toList());
+		}
+		return weaponTypes;
+	}
+
+	public List<WearFlag> getWearFlags() {
+		if (wearFlags == null) {
+			wearFlags = items.values().stream()
+					.flatMap(x -> x.getWearFlags().stream())
+					.distinct()
+					.sorted(Comparator.comparing(WearFlag::name))
+					.collect(Collectors.toList());
+		}
+		return wearFlags;
+	}
+
+	public List<ApplyType> getApplyTypes() {
+		if (applyTypes == null) {
+			applyTypes = items.values().stream()
+					.flatMap(x -> x.getApplies().stream())
+					.map(Apply::getType)
+					.distinct()
+					.sorted(Comparator.comparing(ApplyType::name))
+					.collect(Collectors.toList());
+		}
+		return applyTypes;
 	}
 }

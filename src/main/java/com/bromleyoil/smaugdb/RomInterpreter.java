@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +121,6 @@ public class RomInterpreter {
 	private void processItem(Item item) {
 		calculateItemLevel(item);
 		interpretValues(item);
-		calculateArmor(item);
 	}
 
 	private void calculateItemLevel(Item item) {
@@ -206,19 +206,27 @@ public class RomInterpreter {
 			// type num size verb flags
 			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));
 			item.setDamage(Range.of(item.getValue(1), item.getValue(1) * item.getValue(2)));
+			int bonusDam = item.getApplies().stream()
+					.filter(x -> x.getType() == ApplyType.DAMROLL)
+					.collect(Collectors.summingInt(Apply::getValue));
+			item.getDamage().add(bonusDam);
 			item.setSummary(String.format("%.1f damage", item.getDamage().getAverage()));
+			item.setTooltip(String.format("%dd%d+%d", item.getValue(1), item.getValue(2), bonusDam));
 		} else if (item.getType() == ARMOR) {
 			// pierce bash slash exotic bulk
 			item.setPierceArmor(item.getValue(0));
 			item.setBashArmor(item.getValue(1));
 			item.setSlashArmor(item.getValue(2));
 			item.setMagicArmor(item.getValue(3));
-			item.setTotalArmor(Range.of(item.getValue(0) + item.getValue(1) + item.getValue(2) + item.getValue(3)));
-			item.setSummary(String.format("%.0f armor (%d/%d/%d/%d)", item.getTotalArmor().getAverage(),
-					item.getSlashArmor(), item.getBashArmor(), item.getPierceArmor(), item.getMagicArmor()));
-			
+			// calculateArmor yields a total armor of average * 4
+			calculateArmor(item);
+			item.setSummary(String.format("%.1f armor", item.getTotalArmor().getAverage() / 4));
+			item.setTooltip(String.format("%d/%d/%d/%d", item.getSlashArmor(), item.getBashArmor(),
+					item.getPierceArmor(), item.getMagicArmor()));
 		} else {
-			item.setSummary(String.join(", ", item.getStringValues()));
+			if (!item.getStringValues().stream().map(x -> x.replace("0", "")).allMatch(StringUtils::isBlank)) {
+				item.setSummary(String.join(", ", item.getStringValues()));
+			}
 		}
 	}
 
@@ -226,30 +234,20 @@ public class RomInterpreter {
 		Range totalArmor = null;
 
 		// Establish an armor multiplier range for the slots it can be equipped in
+		int mult = 1;
 		for (WearFlag wearFlag : item.getWearFlags()) {
-			int mult = 0;
-			if (wearFlag == WearFlag.TAKE) {
-				continue;
-			} else if (wearFlag == WearFlag.BODY) {
-				mult = 3;
-			} else if (wearFlag == WearFlag.HEAD || wearFlag == WearFlag.LEGS) {
-				mult = 2;
-			} else {
-				mult = 1;
-			}
-
-			if (totalArmor == null) {
-				totalArmor = Range.of(mult);
-			} else {
-				totalArmor.union(Range.of(mult));
+			if (wearFlag == WearFlag.BODY) {
+				mult = Integer.max(mult, 3);
+			} else if (wearFlag == WearFlag.HEAD || wearFlag == WearFlag.LEGS || wearFlag == WearFlag.ABOUT) {
+				mult = Integer.max(mult, 2);
 			}
 		}
 
-		totalArmor = totalArmor == null ? Range.of(0) : totalArmor.multiply(item.getArmor());
-
-		totalArmor.subtract(item.getApplies().stream()
+		int applyAc = 0 - item.getApplies().stream()
 				.filter(a -> a.getType() == ApplyType.AC)
-				.collect(Collectors.summingInt(Apply::getValue)));
+				.collect(Collectors.summingInt(Apply::getValue));
+		totalArmor = Range.of(4 * applyAc + mult * (item.getSlashArmor() + item.getBashArmor()
+				+ item.getPierceArmor() + item.getMagicArmor()));
 
 		item.setTotalArmor(totalArmor);
 	}

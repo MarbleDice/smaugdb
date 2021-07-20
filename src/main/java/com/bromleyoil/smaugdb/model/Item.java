@@ -41,6 +41,7 @@ public class Item {
 	private List<Integer> values = new ArrayList<>();
 	private List<String> stringValues = new ArrayList<>();
 	private String summary;
+	private String tooltip;
 	private WeaponType weaponType;
 	private Range totalArmor;
 	private int pierceArmor;
@@ -158,10 +159,10 @@ public class Item {
 	public String getSubType() {
 		String subType = "";
 
-		if (isWeapon() && getDamageType() != null) {
-			subType = String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageType().getLabel());
-		} else if (isWeapon() && getWeaponType() != null) {
+		if (isWeapon() && getWeaponType() != null) {
 			subType = String.format(" / %s", getWeaponType().getLabel());
+		} else if (isWeapon() && getDamageType() != null) {
+			subType = String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageType().getLabel());
 		}
 
 		return String.format("%s%s", type.getLabel(), subType);
@@ -298,6 +299,14 @@ public class Item {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 
 	public WeaponType getWeaponType() {

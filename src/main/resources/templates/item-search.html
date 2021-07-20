@@ -65,7 +65,6 @@
 		<th>Item Name</th>
 		<th>Area Name</th>
 		<th>Type</th>
-		<!-- <th>Subtpye</th> -->
 		<th>Wear</th>
 		<th>Summary</th>
 		<th>Apply</th>
@@ -74,10 +73,9 @@
 		<td th:text="${item.level}"></td>
 		<td><a th:replace="~{link::to(${item})}"></a></td>
 		<td><a th:replace="~{link::area(${item.area})}"></a></td>
-		<td th:text="${item.type.label}"></td>
-		<!-- <td th:text="${item.subType}"></td> -->
+		<td th:text="${item.subType}"></td>
 		<td th:text="${@utils.label(item.equipFlags)}"></td>
-		<td th:text="${item.summary}"></td>
+		<td th:text="${item.summary}" th:title="${item.tooltip}"></td>
 		<td th:text="${@utils.label(item.applies)}"></td>
 	</tr>
 </table>

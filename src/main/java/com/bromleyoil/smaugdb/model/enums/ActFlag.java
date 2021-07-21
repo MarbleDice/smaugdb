@@ -1,5 +1,7 @@
 package com.bromleyoil.smaugdb.model.enums;
 
+import java.util.Optional;
+
 public enum ActFlag implements Labelable {
 	IS_NPC("A"), SENTINEL("B"), SCAVENGER("C"), NOLOCATE, AGGRESSIVE("F"), STAY_AREA("G"), WIMPY("H"), PET("I"),
 	TRAIN("J"), PRACTICE("K"), IMMORTAL, DEADLY, POLYSELF, META_AGGR, GUARDIAN, RUNNING, NOWANDER, MOUNTABLE, MOUNTED,
@@ -17,19 +19,12 @@ public enum ActFlag implements Labelable {
 		this.code = code;
 	}
 
-	public static ActFlag ofCode(String code) {
-		for (ActFlag actFlag : values()) {
-			if (actFlag.getCode().equals(code)) {
-				return actFlag;
+	public static Optional<ActFlag> ofCode(String code) {
+		for (ActFlag flag : values()) {
+			if (code.equals(flag.code)) {
+				return Optional.of(flag);
 			}
 		}
-		throw new IllegalArgumentException(code);
-	}
-
-	/**
-	 * @return The ROM character code
-	 */
-	public String getCode() {
-		return code;
+		return Optional.empty();
 	}
 }

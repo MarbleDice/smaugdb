@@ -24,7 +24,8 @@ public class Spawn {
 
 	private Object owner;
 
-	private int limit;
+	private int worldLimit;
+	private int roomLimit;
 	private Prog prog;
 
 	/** Equipment and inventory are assigned to the Spawn */
@@ -40,7 +41,7 @@ public class Spawn {
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.APPEARS);
 		spawn.setOwner(room);
-		spawn.setLimit(limit);
+		spawn.setWorldLimit(limit);
 		mob.addSpawn(spawn);
 		room.addContainedSpawn(spawn);
 		return spawn;
@@ -84,7 +85,7 @@ public class Spawn {
 
 	@Override
 	public String toString() {
-		return String.format("%s in %s%s", mob, owner, limit == 1 ? "" : (" (max " + limit + ")"));
+		return String.format("%s in %s%s", mob, owner, worldLimit == 1 ? "" : (" (max " + worldLimit + ")"));
 	}
 
 	/** Gets a description of this spawn from the mob's perspective. */
@@ -151,14 +152,27 @@ public class Spawn {
 	}
 
 	/** The maximum number of this mob that can spawn in the area */
+	public int getWorldLimit() {
+		return worldLimit;
+	}
+
+	public void setWorldLimit(int worldLimit) {
+		this.worldLimit = worldLimit;
+	}
+
+	public int getRoomLimit() {
+		return roomLimit;
+	}
+
+	public void setRoomLimit(int roomLimit) {
+		this.roomLimit = roomLimit;
+	}
+
 	public int getLimit() {
-		return limit;
+		return getMob().hasActFlag(ActFlag.SENTINEL)
+				? Integer.min(roomLimit, worldLimit)
+				: worldLimit;
 	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
 	public Prog getProg() {
 		return prog;
 	}

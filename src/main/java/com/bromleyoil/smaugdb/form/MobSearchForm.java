@@ -4,6 +4,8 @@ public class MobSearchForm {
 	private String name;
 	private Integer minLevel;
 	private Integer maxLevel;
+	private Integer alignment;
+	private Integer spawnCount;
 
 	public String getName() {
 		return name;
@@ -27,5 +29,21 @@ public class MobSearchForm {
 
 	public void setMaxLevel(Integer maxLevel) {
 		this.maxLevel = maxLevel;
+	}
+
+	public Integer getAlignment() {
+		return alignment;
+	}
+
+	public void setAlignment(Integer alignment) {
+		this.alignment = alignment;
+	}
+
+	public Integer getSpawnCount() {
+		return spawnCount;
+	}
+
+	public void setSpawnCount(Integer spawnCount) {
+		this.spawnCount = spawnCount;
 	}
 }

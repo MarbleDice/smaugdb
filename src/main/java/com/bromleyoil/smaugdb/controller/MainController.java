@@ -24,12 +24,7 @@ public class MainController {
 	@Autowired
 	private World world;
 
-	@RequestMapping("/")
-	public String index() {
-		return "index";
-	}
-
-	@RequestMapping("/area-list")
+	@RequestMapping(path = {"/", "/area-list"})
 	public ModelAndView areaList() {
 		ModelAndView mav = new ModelAndView("area-list");
 		mav.addObject("areas", world.getAreas());
@@ -125,6 +120,12 @@ public class MainController {
 		}
 		if (form.getMaxLevel() != null) {
 			stream = stream.filter(x -> x.getLevel().getAverage() <= form.getMaxLevel());
+		}
+		if (form.getAlignment() != null) {
+			stream = stream.filter(x -> x.getAlignment() <= form.getAlignment());
+		}
+		if (form.getSpawnCount() != null) {
+			stream = stream.filter(x -> x.getSpawnCount() >= form.getSpawnCount());
 		}
 		stream = stream.filter(Mob::getExists)
 				.sorted(Comparator.comparingDouble(x -> x.getLevel().getAverage()));

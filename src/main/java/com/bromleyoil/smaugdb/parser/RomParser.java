@@ -8,8 +8,10 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.ObjIntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,12 +36,16 @@ import com.bromleyoil.smaugdb.model.Range;
 import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
+import com.bromleyoil.smaugdb.model.enums.AttackFlag;
 import com.bromleyoil.smaugdb.model.enums.Direction;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.ProgType;
+import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class RomParser {
@@ -47,11 +53,13 @@ public class RomParser {
 	private static final Logger log = LoggerFactory.getLogger(RomParser.class);
 
 	private static final Pattern vnumPattern = Pattern.compile("^\\s*#\\s*([1-9]\\d*)\\s*$");
-	private static final Pattern resetPattern = Pattern.compile("^\\s*([OPMEG])\\s+(-?\\d+)\\s+(-?\\d+)\\s+(-?\\d+)\\s*(-?\\d+)?");
+	private static final Pattern resetPattern = Pattern.compile("^\\s*([RDOPMEG])\\s+(-?\\d+)\\s+(-?\\d+)\\s+(-?\\d+)\\s*(-?\\d+)?\\s*(-?\\d+)?");
 	private static final Pattern shopPattern = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)"
 			+ "\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 	private static final Pattern doorPattern = Pattern.compile("^\\s*D(\\d+)\\s*$");
 	private static final Pattern progPattern = Pattern.compile("^>\\s+(\\w+)\\s+(.+)~$");
+
+	private Set<String> warnings = new HashSet<>();
 
 	private World world;
 	private Area area;
@@ -65,6 +73,13 @@ public class RomParser {
 	private RomParser(World world) {
 		// Private constructor
 		this.world = world;
+	}
+	
+	private void warnOnce(String warning) {
+		if (!warnings.contains(warning)) {
+			log.warn(warning);
+			warnings.add(warning);
+		}
 	}
 
 	/**
@@ -217,8 +232,8 @@ public class RomParser {
 
 		// act affected alignment recordType
 		strings = nextStringValues(reader);
-		mob.setActFlags(Utils.convertActFlagCodes(strings.get(0)));
-		mob.setAffectFlags(Utils.convertAffectFlagCodes(strings.get(1)));
+		mob.setActFlags(Utils.convertCharVector(ActFlag::ofCode, strings.get(0)));
+		mob.setAffectFlags(Utils.convertCharVector(AffectFlag::ofCode, strings.get(1)));
 		mob.setAlignment(Integer.parseInt(strings.get(2)));
 		mob.setAssistGroup(strings.get(3));
 
@@ -240,10 +255,10 @@ public class RomParser {
 		
 		// attack_flags imm_flags res_flags vuln_flags
 		strings = nextStringValues(reader);
-		mob.setAttackFlags(Utils.convertAttackFlagCodes(strings.get(0)));
-		mob.setImmuneFlags(Utils.convertResistFlagCodes(strings.get(1)));
-		mob.setResistFlags(Utils.convertResistFlagCodes(strings.get(2)));
-		mob.setVulnerableFlags(Utils.convertResistFlagCodes(strings.get(3)));
+		mob.setAttackFlags(Utils.convertCharVector(AttackFlag::ofCode, strings.get(0)));
+		mob.setImmuneFlags(Utils.convertCharVector(ResistFlag::ofCode, strings.get(1)));
+		mob.setResistFlags(Utils.convertCharVector(ResistFlag::ofCode, strings.get(2)));
+		mob.setVulnerableFlags(Utils.convertCharVector(ResistFlag::ofCode, strings.get(3)));
 
 		// start_pos return_pos gender gold
 		strings = nextStringValues(reader);
@@ -278,14 +293,14 @@ public class RomParser {
 		// type extra wear
 		strings = nextStringValues(reader);
 		item.setType(ItemType.valueOf(strings.get(0).toUpperCase()));
-		item.setExtraFlags(ExtraFlag.convertCodes(strings.get(1)));
-		item.setWearFlags(WearFlag.convertCodes(strings.get(2)));
+		item.setExtraFlags(Utils.convertCharVector(ExtraFlag::ofCode, strings.get(1)));
+		item.setWearFlags(Utils.convertCharVector(WearFlag::ofCode, strings.get(2)));
 
 		// "the values line" requires interpretation by type
 		strings = nextStringValues(reader);
 		item.setStringValues(strings);
 
-		// level weight cost
+		// level weight cost condition(unused)
 		strings = nextStringValues(reader);
 		item.setLevel(Range.of(Integer.valueOf(strings.get(0))));
 		item.setWeight(Integer.valueOf(strings.get(1)));
@@ -296,7 +311,11 @@ public class RomParser {
 		while ("E".equals(line) || "A".equals(line)) {
 			if ("A".equals(line)) {
 				values = nextValues(reader);
-				item.addApply(new Apply(ApplyType.values()[values.get(0)], values.get(1)));
+				int applyTypeCode = values.get(0);
+				int applyValue = values.get(1);
+				ApplyType.ofCode(applyTypeCode).ifPresentOrElse(
+						x -> item.addApply(new Apply(x, applyValue)),
+						() -> warnOnce(String.format("Unrecognized ApplyType: %d", applyTypeCode)));
 			} else if ("E".equals(line)) {
 				nextString(reader);
 				nextBlock(reader);
@@ -434,6 +453,10 @@ public class RomParser {
 			Pop.worn(world.getItem(vnum1), area, lastSpawn, EquipSlot.values()[arg].getWearFlag());
 		} else if (code == 'G') {
 			Pop.held(world.getItem(vnum1), area, lastSpawn);
+		} else if (code == 'D') {
+			// Skip door resets
+		} else if (code == 'R') {
+			// Skip door randomization
 		} else {
 			throw new ParseException("Unknown reset code: " + code);
 		}

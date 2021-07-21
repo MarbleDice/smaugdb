@@ -1,14 +1,8 @@
 package com.bromleyoil.smaugdb.model.enums;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public enum ExtraFlag implements Labelable {
 	GLOW("A"), HUM("B"), DARK("C"), LOYAL, EVIL("E"), INVIS("F"), MAGIC("G"), NODROP("H"), BLESS("I"), ANTI_GOOD("J"),
@@ -17,8 +11,6 @@ public enum ExtraFlag implements Labelable {
 	DEATHROT("P"), BURIED, PROTOTYPE, NOLOCATE("T"), GROUNDROT, LOOTABLE, PERMANENT, MULTI_INVOKE, DEATHDROP, SKINNED,
 	NOFILL, BLACKENED, NOSCAVANGE, NOPURGE("O"), VISDEATH("Q"), NOSAC("R"), MELT_DROP("U"), SELL_EXTRACT("W"),
 	BURN_RPOOF("Y"), NOUNCURSE("Z");
-
-	private static final Logger LOG = LoggerFactory.getLogger(ExtraFlag.class);
 
 	private static EnumSet<ExtraFlag> alignments;
 	private static EnumSet<ExtraFlag> classes;
@@ -41,17 +33,6 @@ public enum ExtraFlag implements Labelable {
 			}
 		}
 		return Optional.empty();
-	}
-
-	public static List<ExtraFlag> convertCodes(String charVector) {
-		List<ExtraFlag> flags = new ArrayList<>();
-		for (int i = 0; i < charVector.length(); i++) {
-			String code = charVector.substring(i, i + 1);
-			ofCode(code).ifPresentOrElse(flags::add, () -> {
-				if (!"0".equals(code)) LOG.warn("Unrecognized ExtraFlag: {}", code);
-			});
-		}
-		return flags;
 	}
 
 	private static void constructSubsets() {

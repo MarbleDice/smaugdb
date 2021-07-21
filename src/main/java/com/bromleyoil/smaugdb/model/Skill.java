@@ -11,7 +11,6 @@ public class Skill {
 	}
 
 	public static Skill of(int slot) {
-		// TODO need to load these
 		return new Skill(slot, "Spell " + slot);
 	}
 

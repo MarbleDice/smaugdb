@@ -17,11 +17,15 @@
 		<th class="subheader">Name</th>
 		<th class="subheader">Min Level</th>
 		<th class="subheader">Max Level</th>
+		<th class="subheader">Alignment</th>
+		<th class="subheader">Spawns</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{alignment}" maxlength="4" placeholder="-750" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{spawnCount}" maxlength="3" placeholder="5" class="numberBox" th:errorclass="field-error" /></td>
 	</tr>
 </table>
 <div class="actions">

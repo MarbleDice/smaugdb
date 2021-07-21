@@ -251,6 +251,10 @@ input.numberBox {
 	width: var(--gap);
 }
 
+input.numberBoxW {
+	width: 40px;
+}
+
 .actions {
 	margin: 10px 0;
 }

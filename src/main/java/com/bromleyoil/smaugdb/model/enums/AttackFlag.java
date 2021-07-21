@@ -1,5 +1,7 @@
 package com.bromleyoil.smaugdb.model.enums;
 
+import java.util.Optional;
+
 public enum AttackFlag implements Labelable {
 	BITE, CLAWS, TAIL("M"), STING, PUNCH, KICK("I"), TRIP("N"), BASH("C"), STUN, GOUGE, BACKSTAB("B"), FEED, DRAIN,
 	FIREBREATH, FROSTBREATH, ACIDBREATH, LIGHTNBREATH, GASBREATH, POISON, NASTYPOISON, GAZE, BLINDNESS, CAUSESERIOUS,
@@ -16,20 +18,12 @@ public enum AttackFlag implements Labelable {
 	private AttackFlag(String code) {
 		this.code = code;
 	}
-
-	public static AttackFlag ofCode(String code) {
-		for (AttackFlag attackFlag : values()) {
-			if (attackFlag.getCode().equals(code)) {
-				return attackFlag;
+	public static Optional<AttackFlag> ofCode(String code) {
+		for (AttackFlag flag : values()) {
+			if (code.equals(flag.code)) {
+				return Optional.of(flag);
 			}
 		}
-		throw new IllegalArgumentException(code);
-	}
-
-	/**
-	 * @return The ROM character code
-	 */
-	public String getCode() {
-		return code;
+		return Optional.empty();
 	}
 }

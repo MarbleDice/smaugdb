@@ -1,5 +1,7 @@
 package com.bromleyoil.smaugdb.model.enums;
 
+import java.util.Optional;
+
 public enum AffectFlag implements Labelable {
 	BLIND("A"), INVISIBLE("B"), DETECT_EVIL("C"), DETECT_INVIS("D"), DETECT_MAGIC("E"), DETECT_HIDDEN("F"), HOLD,
 	SANCTUARY("H"), FAERIE_FIRE("I"), INFRARED("J"), CURSE, FLAMING, POISON, PROTECT, PARALYSIS, SNEAK("P"), HIDE("Q"),
@@ -17,19 +19,12 @@ public enum AffectFlag implements Labelable {
 		this.code = code;
 	}
 
-	public static AffectFlag ofCode(String code) {
-		for (AffectFlag affectFlag : values()) {
-			if (affectFlag.getCode().equals(code)) {
-				return affectFlag;
+	public static Optional<AffectFlag> ofCode(String code) {
+		for (AffectFlag flag : values()) {
+			if (code.equals(flag.code)) {
+				return Optional.of(flag);
 			}
 		}
-		throw new IllegalArgumentException(code);
-	}
-
-	/**
-	 * @return The ROM character code
-	 */
-	public String getCode() {
-		return code;
+		return Optional.empty();
 	}
 }

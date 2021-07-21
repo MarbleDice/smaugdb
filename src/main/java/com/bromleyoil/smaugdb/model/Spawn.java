@@ -36,12 +36,17 @@ public class Spawn {
 	}
 
 	public static Spawn in(Mob mob, Room room, int limit) {
-		log.debug("Spawning {} in {} with limit {}", mob, room, limit);
+		return in(mob, room, limit, limit);
+	}
+
+	public static Spawn in(Mob mob, Room room, int worldLimit, int roomLimit) {
+		log.debug("Spawning {} in {} with limit {}", mob, room, worldLimit);
 		Spawn spawn = new Spawn();
 		spawn.setMob(mob);
 		spawn.setType(SpawnType.APPEARS);
 		spawn.setOwner(room);
-		spawn.setWorldLimit(limit);
+		spawn.setWorldLimit(worldLimit);
+		spawn.setRoomLimit(roomLimit);
 		mob.addSpawn(spawn);
 		room.addContainedSpawn(spawn);
 		return spawn;

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bromleyoil.smaugdb.RomInterpreter;
-import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.ValueList;
 import com.bromleyoil.smaugdb.model.Apply;
 import com.bromleyoil.smaugdb.model.Area;
@@ -232,8 +232,8 @@ public class RomParser {
 
 		// act affected alignment recordType
 		strings = nextStringValues(reader);
-		mob.setActFlags(Utils.convertCharVector(ActFlag::ofCode, strings.get(0)));
-		mob.setAffectFlags(Utils.convertCharVector(AffectFlag::ofCode, strings.get(1)));
+		mob.setActFlags(convertCharVector(ActFlag.class, ActFlag::ofCode, strings.get(0)));
+		mob.setAffectFlags(convertCharVector(AffectFlag.class, AffectFlag::ofCode, strings.get(1)));
 		mob.setAlignment(Integer.parseInt(strings.get(2)));
 		mob.setAssistGroup(strings.get(3));
 
@@ -255,10 +255,10 @@ public class RomParser {
 		
 		// attack_flags imm_flags res_flags vuln_flags
 		strings = nextStringValues(reader);
-		mob.setAttackFlags(Utils.convertCharVector(AttackFlag::ofCode, strings.get(0)));
-		mob.setImmuneFlags(Utils.convertCharVector(ResistFlag::ofCode, strings.get(1)));
-		mob.setResistFlags(Utils.convertCharVector(ResistFlag::ofCode, strings.get(2)));
-		mob.setVulnerableFlags(Utils.convertCharVector(ResistFlag::ofCode, strings.get(3)));
+		mob.setAttackFlags(convertCharVector(AttackFlag.class, AttackFlag::ofCode, strings.get(0)));
+		mob.setImmuneFlags(convertCharVector(ResistFlag.class, ResistFlag::ofCode, strings.get(1)));
+		mob.setResistFlags(convertCharVector(ResistFlag.class, ResistFlag::ofCode, strings.get(2)));
+		mob.setVulnerableFlags(convertCharVector(ResistFlag.class, ResistFlag::ofCode, strings.get(3)));
 
 		// start_pos return_pos gender gold
 		strings = nextStringValues(reader);
@@ -293,8 +293,8 @@ public class RomParser {
 		// type extra wear
 		strings = nextStringValues(reader);
 		item.setType(ItemType.valueOf(strings.get(0).toUpperCase()));
-		item.setExtraFlags(Utils.convertCharVector(ExtraFlag::ofCode, strings.get(1)));
-		item.setWearFlags(Utils.convertCharVector(WearFlag::ofCode, strings.get(2)));
+		item.setExtraFlags(convertCharVector(ExtraFlag.class, ExtraFlag::ofCode, strings.get(1)));
+		item.setWearFlags(convertCharVector(WearFlag.class, WearFlag::ofCode, strings.get(2)));
 
 		// "the values line" requires interpretation by type
 		strings = nextStringValues(reader);
@@ -414,11 +414,12 @@ public class RomParser {
 		while (line != null) {
 			Matcher matcher = resetPattern.matcher(line);
 			if (matcher.find()) {
-				// Found a reset. Groups are 1=code, 2=ignored, 3=vnum, 4=limit/ignored, 5=vnum/absent
+				// Found a reset. Groups are 1=code(MOPGEDR), 2=ignored, 3=arg1, 4=arg2, 5=arg3(!GR), 6=arg4(MP)
 				parseReset(matcher.group(1).charAt(0),
 						Integer.valueOf(matcher.group(3)),
 						Integer.valueOf(matcher.group(4)),
-						Optional.ofNullable(matcher.group(5)).map(Integer::valueOf).orElse(0));
+						Optional.ofNullable(matcher.group(5)).map(Integer::valueOf).orElse(0),
+						Optional.ofNullable(matcher.group(6)).map(Integer::valueOf).orElse(0));
 				nextLine(reader);
 			} else if (line.startsWith("#")) {
 				// We hit the end of the section
@@ -435,24 +436,24 @@ public class RomParser {
 	 * 
 	 * @param code
 	 *        The type of reset.
-	 * @param vnum1
+	 * @param arg1
 	 *        The object or mob being reset.
-	 * @param limit
+	 * @param arg2
 	 *        The mob spawning limit (only used for mob resets)
-	 * @param arg
+	 * @param arg3
 	 *        The containing room, mob, object, or wear location of the mob/object being reset.
 	 */
-	private void parseReset(char code, int vnum1, int limit, int arg) {
+	private void parseReset(char code, int arg1, int arg2, int arg3, int arg4) {
 		if (code == 'O') {
-			Pop.found(world.getItem(vnum1), area, world.getRoom(arg));
+			Pop.found(world.getItem(arg1), area, world.getRoom(arg3));
 		} else if (code == 'P') {
-			Pop.contained(world.getItem(vnum1), area, world.getItem(arg));
+			Pop.contained(world.getItem(arg1), area, world.getItem(arg3));
 		} else if (code == 'M') {
-			lastSpawn = Spawn.in(world.getMob(vnum1), world.getRoom(arg), limit);
+			lastSpawn = Spawn.in(world.getMob(arg1), world.getRoom(arg3), arg2, arg4);
 		} else if (code == 'E') {
-			Pop.worn(world.getItem(vnum1), area, lastSpawn, EquipSlot.values()[arg].getWearFlag());
+			Pop.worn(world.getItem(arg1), area, lastSpawn, EquipSlot.values()[arg3].getWearFlag());
 		} else if (code == 'G') {
-			Pop.held(world.getItem(vnum1), area, lastSpawn);
+			Pop.held(world.getItem(arg1), area, lastSpawn);
 		} else if (code == 'D') {
 			// Skip door resets
 		} else if (code == 'R') {
@@ -627,5 +628,22 @@ public class RomParser {
 	 */
 	public String convertKeywords(String keywords) {
 		return String.join(", ", keywords.split("\\s+"));
+	}
+
+	public <T extends Enum<T>> List<T> convertCharVector(Class<T> clazz, Function<String, Optional<T>> func,
+			String charVector) {
+		List<T> flags = new ArrayList<>();
+
+		for (int i = 0; i < charVector.length(); i++) {
+			String code = charVector.substring(i, i + 1);
+			if (code.equals("0")) {
+				continue;
+			}
+			func.apply(code).ifPresentOrElse(
+					flags::add,
+					() -> warnOnce(String.format("Unrecognized %s: %s", clazz.getSimpleName(), code)));
+		}
+
+		return flags;
 	}
 }

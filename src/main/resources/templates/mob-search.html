@@ -45,7 +45,6 @@
 		<th>HP</th>
 		<th>Damage</th>
 		<th>Coins</th>
-		<th>Exp</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
 		<td th:text="${mob.level}"></td>
@@ -56,7 +55,6 @@
 		<td th:text="${#numbers.formatDecimal(mob.hp.average, 1, 0)}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.damage.average, 1, 1)}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>
-		<td th:text="${mob.experience}"></td>
 	</tr>
 </table>
 

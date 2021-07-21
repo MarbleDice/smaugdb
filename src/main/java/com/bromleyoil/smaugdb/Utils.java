@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
@@ -89,19 +87,6 @@ public class Utils {
 				bitVector -= bitFlag;
 				flags.add(enumType.getEnumConstants()[i]);
 			}
-		}
-
-		return flags;
-	}
-
-	public static <T extends Enum<T>> List<T> convertCharVector(Function<String, Optional<T>> func, String charVector) {
-		List<T> flags = new ArrayList<>();
-
-		for (int i = 0; i < charVector.length(); i++) {
-			String code = charVector.substring(i, i + 1);
-			func.apply(code).ifPresent(flags::add);
-			// TODO warn once
-			// if (!e.getMessage().equals("0")) LOG.warn("Unrecognized flag: {}", e.getMessage());
 		}
 
 		return flags;

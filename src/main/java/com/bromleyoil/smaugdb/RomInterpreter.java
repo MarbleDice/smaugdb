@@ -211,8 +211,8 @@ public class RomInterpreter {
 			item.getDamage().add(bonusDam);
 			item.setSummary(String.format("%.1f damage", item.getDamage().getAverage()));
 			item.setTooltip(String.format("%dd%d+%d", item.getValue(1), item.getValue(2), bonusDam));
-			// TODO 3 verb
-			// TODO 4 weapon flag
+			// 3 verb
+			// TODO 4 weapon flag (burning, etc)
 
 		} else if (item.getType() == ARMOR) {
 			// pierce bash slash exotic bulk

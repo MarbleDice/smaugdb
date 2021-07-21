@@ -5,6 +5,8 @@
 	layout:decorate="~{template}" th:with="title='Item Search'">
 <th:block layout:fragment="content">
 
+<h2>Item Search</h2>
+
 <form th:action="@{/item-search}" th:object="${itemSearchForm}" method="post">
 <button name="search" style="display: none;"></button>
 <p th:if="${#fields.hasAnyErrors()}" class="errors">

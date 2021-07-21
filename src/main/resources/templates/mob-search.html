@@ -5,6 +5,55 @@
 	layout:decorate="~{template}" th:with="title='Mob Search'">
 <th:block layout:fragment="content">
 
+<h2>Mob Search</h2>
+
+<form th:action="@{/mob-search}" th:object="${mobSearchForm}" method="post">
+<button name="search" style="display: none;"></button>
+<p th:if="${#fields.hasAnyErrors()}" class="errors">
+	There were input errors, please correct them below.
+</p>
+<table class="form">
+	<tr>
+		<th class="subheader">Name</th>
+		<th class="subheader">Min Level</th>
+		<th class="subheader">Max Level</th>
+	</tr>
+	<tr>
+		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
+	</tr>
+</table>
+<div class="actions">
+	<button name="search">Search</button>
+</div>
+</form>
+
+<h2>Search Results</h2>
+
+<table class="data">
+	<tr>
+		<th>Level</th>
+		<th>Mob Name</th>
+		<th>Area Name</th>
+		<th>Spawns</th>
+		<th>HP</th>
+		<th>Damage</th>
+		<th>Coins</th>
+		<th>Exp</th>
+	</tr>
+	<tr th:each="mob : ${mobs}">
+		<td th:text="${mob.level}"></td>
+		<td><a th:replace="~{link::to(${mob})}"></a></td>
+		<td><a th:replace="~{link::area(${mob.area})}"></a></td>
+		<td th:text="${mob.spawnCount}"></td>
+		<td th:text="${#numbers.formatDecimal(mob.hp.average, 1, 0)}"></td>
+		<td th:text="${#numbers.formatDecimal(mob.damage.average, 1, 1)}"></td>
+		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>
+		<td th:text="${mob.experience}"></td>
+	</tr>
+</table>
+
 
 </th:block>
 </html>

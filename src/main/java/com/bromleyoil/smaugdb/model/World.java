@@ -1,12 +1,15 @@
 package com.bromleyoil.smaugdb.model;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -24,6 +27,7 @@ import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 import com.bromleyoil.smaugdb.parser.RomParser;
+
 
 @Component
 public class World {
@@ -55,6 +59,23 @@ public class World {
 		RomParser.loadWorld(this, mudPath);
 	}
 
+	public void removeUnloaded() {
+		List<Room> removedRooms = new ArrayList<>();
+
+		// Remove rooms
+		Iterator<Entry<Integer, Room>> it = rooms.entrySet().iterator();
+		while (it.hasNext()) {
+			Room room = it.next().getValue();
+			if (!room.isLoaded()) {
+				log.info("Removing unloaded room: #{}", room.getVnum());
+				removedRooms.add(room);
+				it.remove();
+			}
+		}
+		
+		// TODO Remove exits
+	}
+
 	public Collection<Area> getAreas() {
 		return Collections.unmodifiableCollection(areas.values());
 	}
@@ -69,6 +90,10 @@ public class World {
 
 	public Collection<Room> getRooms() {
 		return Collections.unmodifiableCollection(rooms.values());
+	}
+
+	public boolean hasRoom(int vnum) {
+		return rooms.containsKey(vnum);
 	}
 
 	public Room getRoom(int vnum) {

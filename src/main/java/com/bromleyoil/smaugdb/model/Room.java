@@ -10,15 +10,16 @@ import com.bromleyoil.smaugdb.model.enums.SectorType;
 
 public class Room {
 
+	private boolean isLoaded;
 	private Area area;
 	private int vnum;
 	private String name;
 	private String description;
+	private List<Exit> exits = new ArrayList<>();
 	private List<RoomFlag> roomFlags = new ArrayList<>();
 	private SectorType sectorType;
 	private List<String> extras = new ArrayList<>();
 	// teleports
-	// exits
 
 	private List<Pop> containedPops = new ArrayList<>();
 	private List<Spawn> containedSpawns = new ArrayList<>();
@@ -28,6 +29,14 @@ public class Room {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	public boolean isLoaded() {
+		return isLoaded;
+	}
+
+	public void setIsLoaded(boolean isLoaded) {
+		this.isLoaded = isLoaded;
 	}
 
 	public Area getArea() {
@@ -60,6 +69,14 @@ public class Room {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<Exit> getExits() {
+		return exits;
+	}
+
+	public void setExits(List<Exit> exits) {
+		this.exits = exits;
 	}
 
 	public List<RoomFlag> getRoomFlags() {

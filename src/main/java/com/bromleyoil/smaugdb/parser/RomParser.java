@@ -25,6 +25,7 @@ import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.ValueList;
 import com.bromleyoil.smaugdb.model.Apply;
 import com.bromleyoil.smaugdb.model.Area;
+import com.bromleyoil.smaugdb.model.Exit;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Pop;
@@ -34,6 +35,7 @@ import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
+import com.bromleyoil.smaugdb.model.enums.Direction;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
@@ -95,6 +97,9 @@ public class RomParser {
 				log.warn("Listed area file does not exist at {}", areaFilePath);
 			}
 		}
+
+		// Remove unloaded entities
+		world.removeUnloaded();
 
 		// Interpret loaded data
 		RomInterpreter.process(world);
@@ -302,6 +307,16 @@ public class RomParser {
 		world.addItem(item, area);
 	}
 
+	private Room reserveRoom(int vnum) {
+		if (!world.hasRoom(vnum)) {
+			Room room = new Room();
+			room.setVnum(vnum);
+			room.setName("");
+			world.addRoom(room, area);
+		}
+		return world.getRoom(vnum);
+	}
+
 	/**
 	 * Parses a single room.
 	 * 
@@ -313,8 +328,8 @@ public class RomParser {
 		List<Integer> values;
 		Matcher matcher;
 
-		Room room = new Room();
-		room.setVnum(vnum);
+		Room room = reserveRoom(vnum);
+		room.setIsLoaded(true);
 
 		room.setName(nextString(reader));
 
@@ -329,7 +344,11 @@ public class RomParser {
 		matcher = doorPattern.matcher(line);
 		while ("E".equals(line) || matcher.matches()) {
 			if (matcher.matches()) {
+				Exit exit = new Exit();
+				exit.setFrom(room);
+
 				// Door line: D[0-5]
+				exit.setDir(Direction.values()[Integer.parseInt(matcher.group(1))]);
 	
 				// Description
 				nextBlock(reader);
@@ -337,12 +356,19 @@ public class RomParser {
 				// Door name
 				nextString(reader);
 	
-				// door_state exit_vnum key_vnum
+				// door_state key_vnum to_vnum
 				values = nextValues(reader);
 				Item key = world.getItem(values.get(1));
 				if (key != null) {
 					key.addKeyDoor(room);
+					exit.setKey(key);
 				}
+				exit.setTo(reserveRoom(values.get(2)));
+				if (exit.getTo().getVnum() > 0) {
+					// TODO not needed if exits are pruned
+					room.getExits().add(exit);
+				}
+				
 			} else if ("E".equals(line)) {
 				// Extra line: E
 				nextString(reader);

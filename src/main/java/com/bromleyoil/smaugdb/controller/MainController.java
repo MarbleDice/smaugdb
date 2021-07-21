@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bromleyoil.smaugdb.form.ItemSearchForm;
+import com.bromleyoil.smaugdb.form.MobSearchForm;
 import com.bromleyoil.smaugdb.model.Item;
+import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.World;
 
 @Controller
@@ -102,10 +104,31 @@ public class MainController {
 		return mav;
 	}
 
-	@RequestMapping("/mob-search")
-	public ModelAndView mobSearch() {
+	protected ModelAndView getMovSearchMav() {
 		ModelAndView mav = new ModelAndView("mob-search");
+		return mav;
+	}
+	@GetMapping("/mob-search")
+	public ModelAndView mobSearchGet(MobSearchForm form) {
+		return getMovSearchMav();
+	}
 
+	@PostMapping("/mob-search")
+	public ModelAndView mobSearchPost(MobSearchForm form) {
+		ModelAndView mav = getMovSearchMav();
+		Stream<Mob> stream = world.getMobs().stream();
+		if (form.getName() != null) {
+			stream = stream.filter(x -> x.getName().contains(form.getName()));
+		}
+		if (form.getMinLevel() != null) {
+			stream = stream.filter(x -> x.getLevel().getAverage() >= form.getMinLevel());
+		}
+		if (form.getMaxLevel() != null) {
+			stream = stream.filter(x -> x.getLevel().getAverage() <= form.getMaxLevel());
+		}
+		stream = stream.filter(Mob::getExists)
+				.sorted(Comparator.comparingDouble(x -> x.getLevel().getAverage()));
+		mav.addObject("mobs", stream.collect(Collectors.toList()));
 		return mav;
 	}
 

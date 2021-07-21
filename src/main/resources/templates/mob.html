@@ -124,7 +124,7 @@
 					<li th:each="pop : ${spawn.containedPops}">
 						<span th:text="${pop.containedDescription}">Equipped with</span>
 						<a th:replace="~{link::to(${pop.item})}"></a>
-						<span th:text="${': level ' + pop.itemLevel}"></span>
+						<span th:text="${': level ' + pop.itemLevel}" th:if="${pop.itemLevel.average > 0}"></span>
 						<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}"></span>
 					</li>
 				</ul>

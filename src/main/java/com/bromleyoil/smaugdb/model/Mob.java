@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -393,6 +394,10 @@ public class Mob {
 
 	public void addSpawn(Spawn spawn) {
 		spawns.add(spawn);
+	}
+
+	public int getSpawnCount() {
+		return spawns.stream().collect(Collectors.summingInt(Spawn::getLimit));
 	}
 
 	public boolean isShopkeeper() {

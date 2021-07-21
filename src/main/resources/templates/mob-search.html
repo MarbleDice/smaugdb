@@ -36,6 +36,7 @@
 		<th>Level</th>
 		<th>Mob Name</th>
 		<th>Area Name</th>
+		<th>Alignment</th>
 		<th>Spawns</th>
 		<th>HP</th>
 		<th>Damage</th>
@@ -46,6 +47,7 @@
 		<td th:text="${mob.level}"></td>
 		<td><a th:replace="~{link::to(${mob})}"></a></td>
 		<td><a th:replace="~{link::area(${mob.area})}"></a></td>
+		<td th:text="${mob.alignment}"></td>
 		<td th:text="${mob.spawnCount}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.hp.average, 1, 0)}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.damage.average, 1, 1)}"></td>

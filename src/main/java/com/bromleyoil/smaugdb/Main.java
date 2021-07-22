@@ -48,26 +48,30 @@ public class Main {
 				i.incrementAndGet() % 10 == 0 ? System.lineSeparator() + indent: ""));
 	}
 
+	private void dumpWorld() {
+		println("digraph ROM {");
+		// Dump every area
+		for (Area area : world.getAreas()) {
+			println("\tsubgraph %s {", area.getUrlSafeName().replace("-", "_"));
+			print("\t\t");
+			dumpExits("\t\t", area.getRooms().stream().flatMap(x -> x.getExits().stream())
+					.filter(x -> x.getFrom().getArea().equals(x.getTo().getArea())));
+			println("%n\t}");
+		}
+		// Dump all cross-area exits
+		print("\t");
+		dumpExits("\t", world.getAreas().stream()
+				.flatMap(x -> x.getRooms().stream())
+				.flatMap(x -> x.getExits().stream())
+				.filter(x -> !x.getFrom().getArea().equals(x.getTo().getArea())));
+		println("%n}");
+	}
+
 	public ApplicationRunner graphvizDump() {
 		return new ApplicationRunner() {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
-				println("digraph ROM {");
-				// Dump every area
-				for (Area area : world.getAreas()) {
-					println("\tsubgraph %s {", area.getUrlSafeName().replace("-", "_"));
-					print("\t\t");
-					dumpExits("\t\t", area.getRooms().stream().flatMap(x -> x.getExits().stream())
-							.filter(x -> x.getFrom().getArea().equals(x.getTo().getArea())));
-					println("%n\t}");
-				}
-				// Dump all cross-area exits
-				print("\t");
-				dumpExits("\t", world.getAreas().stream()
-						.flatMap(x -> x.getRooms().stream())
-						.flatMap(x -> x.getExits().stream())
-						.filter(x -> !x.getFrom().getArea().equals(x.getTo().getArea())));
-				println("%n}");
+				dumpWorld();
 			}
 		};
 	}

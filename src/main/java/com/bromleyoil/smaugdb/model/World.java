@@ -103,11 +103,24 @@ public class World {
 		return rooms.get(vnum);
 	}
 
-	public void addRoom(Room room, Area area) {
+	public Room reserveRoom(int vnum) {
+		if (!hasRoom(vnum)) {
+			log.trace("Holding room \"{}\"", vnum);
+			Room room = new Room();
+			room.setVnum(vnum);
+			room.setName("");
+			rooms.put(room.getVnum(), room);
+		}
+		return getRoom(vnum);
+	}
+
+	public Room addRoom(Area area, int vnum) {
+		Room room = reserveRoom(vnum);
 		log.trace("Adding room \"{}\" to {}", room, area);
 		room.setArea(area);
+		room.setIsLoaded(true);
 		area.addRoom(room);
-		rooms.put(room.getVnum(), room);
+		return room;
 	}
 
 	public Collection<Mob> getMobs() {

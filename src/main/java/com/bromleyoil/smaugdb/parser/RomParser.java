@@ -326,16 +326,6 @@ public class RomParser {
 		world.addItem(item, area);
 	}
 
-	private Room reserveRoom(int vnum) {
-		if (!world.hasRoom(vnum)) {
-			Room room = new Room();
-			room.setVnum(vnum);
-			room.setName("");
-			world.addRoom(room, area);
-		}
-		return world.getRoom(vnum);
-	}
-
 	/**
 	 * Parses a single room.
 	 * 
@@ -347,8 +337,7 @@ public class RomParser {
 		List<Integer> values;
 		Matcher matcher;
 
-		Room room = reserveRoom(vnum);
-		room.setIsLoaded(true);
+		Room room = world.addRoom(area, vnum);
 
 		room.setName(nextString(reader));
 
@@ -358,10 +347,12 @@ public class RomParser {
 		// unused room_flags sector_flags
 		nextStringValues(reader);
 
+		// H <heal> M <mana> (optional)
+
 		// Door sections
 		nextLine(reader);
 		matcher = doorPattern.matcher(line);
-		while ("E".equals(line) || matcher.matches()) {
+		while (!"S".equals(line.substring(0, 1))) {
 			if (matcher.matches()) {
 				Exit exit = new Exit();
 				exit.setFrom(room);
@@ -382,7 +373,7 @@ public class RomParser {
 					key.addKeyDoor(room);
 					exit.setKey(key);
 				}
-				exit.setTo(reserveRoom(values.get(2)));
+				exit.setTo(world.reserveRoom(values.get(2)));
 				if (exit.getTo().getVnum() > 0) {
 					// TODO not needed if exits are pruned
 					room.getExits().add(exit);

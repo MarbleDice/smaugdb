@@ -16,19 +16,33 @@
 	<caption>Search parameters</caption>
 	<tr>
 		<th class="subheader" scope="col">Name</th>
+		<th class="subheader" scope="col">Area</th>
 		<th class="subheader" scope="col">Min Level</th>
 		<th class="subheader" scope="col">Max Level</th>
 		<th class="subheader" scope="col">Alignment</th>
 		<th class="subheader" scope="col">Spawns</th>
 		<th class="subheader" scope="col">Damage</th>
+		<th class="subheader" scope="col">Act</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
+		<td>
+			<select th:field="*{area}">
+				<option selected value="">any</option>
+				<option th:each="area : ${areas}" th:value="${area.urlSafeName}" th:text="${area.name}"></option>
+			</select>
+		</td>
 		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
 		<td><span>&leq;</span> <input type="text" th:field="*{alignment}" maxlength="4" placeholder="-750" class="numberBoxW" th:errorclass="field-error" /></td>
 		<td><span>&geq;</span> <input type="text" th:field="*{spawnCount}" maxlength="3" placeholder="5" class="numberBox" th:errorclass="field-error" /></td>
 		<td><span>&leq;</span> <input type="text" th:field="*{damage}" maxlength="4" placeholder="" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td>
+			<select th:field="*{actFlag}">
+				<option selected value="">any</option>
+				<option th:each="actFlag : ${actFlags}" th:value="${actFlag.name()}" th:text="${actFlag.label}"></option>
+			</select>
+		</td>
 	</tr>
 </table>
 <table class="form">

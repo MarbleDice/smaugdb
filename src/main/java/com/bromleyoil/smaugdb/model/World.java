@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
@@ -46,6 +47,7 @@ public class World {
 	private List<WeaponType> weaponTypes;
 	private List<WearFlag> wearFlags;
 	private List<ApplyType> applyTypes;
+	private List<ActFlag> actFlags;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -234,5 +236,16 @@ public class World {
 					.collect(Collectors.toList());
 		}
 		return applyTypes;
+	}
+
+	public List<ActFlag> getActFlags() {
+		if (actFlags == null) {
+			actFlags = mobs.values().stream()
+					.flatMap(x -> x.getActFlags().stream())
+					.distinct()
+					.sorted(Comparator.comparing(ActFlag::name))
+					.collect(Collectors.toList());
+		}
+		return actFlags;
 	}
 }

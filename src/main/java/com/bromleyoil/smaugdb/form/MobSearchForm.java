@@ -1,12 +1,17 @@
 package com.bromleyoil.smaugdb.form;
 
+import com.bromleyoil.smaugdb.model.Area;
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
+
 public class MobSearchForm {
 	private String name;
+	private Area area;
 	private Integer minLevel;
 	private Integer maxLevel;
 	private Integer alignment;
 	private Integer spawnCount;
 	private Double damage;
+	private ActFlag actFlag;
 
 	private Integer playerLevel;
 	private Integer playerAlignment;
@@ -58,6 +63,22 @@ public class MobSearchForm {
 
 	public void setDamage(Double damage) {
 		this.damage = damage;
+	}
+
+	public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
+
+	public ActFlag getActFlag() {
+		return actFlag;
+	}
+
+	public void setActFlag(ActFlag actFlag) {
+		this.actFlag = actFlag;
 	}
 
 	public Integer getPlayerLevel() {

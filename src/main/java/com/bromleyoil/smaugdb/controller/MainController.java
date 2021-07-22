@@ -101,7 +101,10 @@ public class MainController {
 	}
 
 	protected ModelAndView getMovSearchMav() {
-		return new ModelAndView("mob-search");
+		ModelAndView mav = new ModelAndView("mob-search");
+		mav.addObject("areas", world.getAreas());
+		mav.addObject("actFlags", world.getActFlags());
+		return mav;
 	}
 	@GetMapping("/mob-search")
 	public ModelAndView mobSearchGet(MobSearchForm form) {
@@ -114,6 +117,9 @@ public class MainController {
 		Stream<Mob> stream = world.getMobs().stream();
 		if (form.getName() != null) {
 			stream = stream.filter(x -> x.getName().contains(form.getName()));
+		}
+		if (form.getArea() != null) {
+			stream = stream.filter(x -> x.getArea().equals(form.getArea()));
 		}
 		if (form.getMinLevel() != null) {
 			stream = stream.filter(x -> x.getLevel().getAverage() >= form.getMinLevel());
@@ -129,6 +135,9 @@ public class MainController {
 		}
 		if (form.getDamage() != null) {
 			stream = stream.filter(x -> x.getDamage().getAverage() <= form.getDamage());
+		}
+		if (form.getActFlag() != null) {
+			stream = stream.filter(x -> x.hasActFlag(form.getActFlag()));
 		}
 
 		// TODO just specify the Comparator<Mob> somehow instead of a utils method

@@ -2,7 +2,9 @@ package com.bromleyoil.smaugdb;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.bromleyoil.smaugdb.form.MobSearchForm;
+import com.bromleyoil.smaugdb.model.Mob;
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
 
 /**
@@ -94,5 +99,94 @@ public class Utils {
 
 	public String label(Collection<Labelable> items) {
 		return items.stream().map(Labelable::getLabel).collect(Collectors.joining(", "));
+	}
+
+	public static double calcExp(Mob mob, MobSearchForm form) {
+		// Base exp based on level diff ranges, from -9 to +4 inclusive
+		List<Integer> baseExpTable = Arrays.asList(1, 2, 5, 9, 11, 22, 33, 50, 66, 83, 99, 121, 143, 165);
+		int exp = 0;
+		int diff = ((int) mob.getLevel().getAverage()) - form.getPlayerLevel();
+
+		// Calculate base experience
+		if (diff >= -9 && diff <= 4) {
+			exp = baseExpTable.get(diff + 9);
+		} else if (diff > 4) {
+			exp = 160 + 20 * (diff - 4);
+		}
+
+		// Adjust for alignment
+		if (form.getPlayerAlignment() != null && !mob.hasActFlag(ActFlag.NOALIGN)) {
+			if (form.getPlayerAlignment() > 500) {
+				// Very good player
+				if (mob.getAlignment() < -750) {
+					exp = exp * 4 / 3;
+				} else if (mob.getAlignment() < -500) {
+					exp = exp * 5 / 4;
+				} else if (mob.getAlignment() > 750) {
+					exp = exp / 4;
+				} else if (mob.getAlignment() > 500) {
+					exp = exp / 2;
+				} else if (mob.getAlignment() > 250) {
+					exp = exp * 3 / 4;
+				}
+			} else if (form.getPlayerAlignment() > 200) {
+				// Good player
+				if (mob.getAlignment() < -500) {
+					exp = exp * 6 / 5;
+				} else if (mob.getAlignment() > 750) {
+					exp = exp / 2;
+				} else if (mob.getAlignment() > 0) {
+					exp = exp * 3 / 4;
+				}
+			} else if (form.getPlayerAlignment() < -200) {
+				// Evil player
+				if (mob.getAlignment() < -750) {
+					exp = exp / 2;
+				} else if (mob.getAlignment() < 0) {
+					exp = exp * 3 / 4;
+				} else if (mob.getAlignment() > 500) {
+					exp = exp * 6 / 5;
+				}
+			} else if (form.getPlayerAlignment() < -500) {
+				// Very evil player
+				if (mob.getAlignment() < -750) {
+					exp = exp / 2;
+				} else if (mob.getAlignment() < -500) {
+					exp = exp * 3 / 4;
+				} else if (mob.getAlignment() < -250) {
+					exp = exp * 9 / 10;
+				} else if (mob.getAlignment() > 750) {
+					exp = exp * 5 / 4;
+				} else if (mob.getAlignment() > 500) {
+					exp = exp * 11 / 10;
+				}
+			} else {
+				// Neutral player
+				if (mob.getAlignment() < -500 || mob.getAlignment() > 500) {
+					exp = exp * 4 / 3;
+				} else if (mob.getAlignment() > -200 || mob.getAlignment() < 200) {
+					exp = exp / 2;
+				}
+			}
+		}
+
+		// Adjust for level
+		if (form.getPlayerLevel() < 6) {
+			exp = 10 * exp / (form.getPlayerLevel() + 4);
+		} else if (form.getPlayerLevel() > 35) {
+			exp = 15 * exp / (form.getPlayerLevel() - 25);
+		}
+
+		// Adjust for party size
+		if (form.getTotalPartyLevel() != null && form.getTotalPartyLevel() > form.getPlayerLevel()) {
+			exp = exp * form.getPlayerLevel() / (form.getTotalPartyLevel() - 1);
+		}
+
+		// Calculate the Exp/100HP
+		return 100d * exp / mob.getHp().getAverage();
+	}
+	
+	public static Comparator<Mob> getExpComparator(MobSearchForm form) {
+		return Comparator.comparingDouble(x -> Utils.calcExp(x, form));
 	}
 }

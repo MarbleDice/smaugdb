@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{template}" th:with="title='Item Search'">
@@ -52,7 +52,7 @@
 				<option selected value="">any</option>
 				<option th:each="applyType : ${applyTypes}" th:value="${applyType.name()}" th:text="${applyType.label}"></option>
 			</select>
-			>=
+			<span>&geq;</span>
 			<input type="text" th:field="*{applyValue}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" />
 		</td>
 	</tr>

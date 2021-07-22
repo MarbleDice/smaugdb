@@ -55,7 +55,6 @@ public class World {
 			throw new IllegalArgumentException("Invalid mud.path: " + mudPath);
 		}
 
-		// SmaugParser.loadWorld(this, mudPath);
 		RomParser.loadWorld(this, mudPath);
 	}
 

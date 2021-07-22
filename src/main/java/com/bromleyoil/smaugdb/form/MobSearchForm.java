@@ -6,6 +6,11 @@ public class MobSearchForm {
 	private Integer maxLevel;
 	private Integer alignment;
 	private Integer spawnCount;
+	private Double damage;
+
+	private Integer playerLevel;
+	private Integer playerAlignment;
+	private Integer totalPartyLevel;
 
 	public String getName() {
 		return name;
@@ -45,5 +50,37 @@ public class MobSearchForm {
 
 	public void setSpawnCount(Integer spawnCount) {
 		this.spawnCount = spawnCount;
+	}
+
+	public Double getDamage() {
+		return damage;
+	}
+
+	public void setDamage(Double damage) {
+		this.damage = damage;
+	}
+
+	public Integer getPlayerLevel() {
+		return playerLevel;
+	}
+
+	public void setPlayerLevel(Integer playerLevel) {
+		this.playerLevel = playerLevel;
+	}
+
+	public Integer getPlayerAlignment() {
+		return playerAlignment;
+	}
+
+	public void setPlayerAlignment(Integer playerAlignment) {
+		this.playerAlignment = playerAlignment;
+	}
+
+	public Integer getTotalPartyLevel() {
+		return totalPartyLevel;
+	}
+
+	public void setTotalPartyLevel(Integer totalPartyLevel) {
+		this.totalPartyLevel = totalPartyLevel;
 	}
 }

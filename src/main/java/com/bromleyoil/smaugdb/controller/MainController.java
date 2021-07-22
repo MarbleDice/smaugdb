@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.form.ItemSearchForm;
 import com.bromleyoil.smaugdb.form.MobSearchForm;
 import com.bromleyoil.smaugdb.model.Item;
@@ -100,8 +101,7 @@ public class MainController {
 	}
 
 	protected ModelAndView getMovSearchMav() {
-		ModelAndView mav = new ModelAndView("mob-search");
-		return mav;
+		return new ModelAndView("mob-search");
 	}
 	@GetMapping("/mob-search")
 	public ModelAndView mobSearchGet(MobSearchForm form) {
@@ -127,8 +127,16 @@ public class MainController {
 		if (form.getSpawnCount() != null) {
 			stream = stream.filter(x -> x.getMaxSpawnCount() >= form.getSpawnCount());
 		}
+		if (form.getDamage() != null) {
+			stream = stream.filter(x -> x.getDamage().getAverage() <= form.getDamage());
+		}
+
+		// TODO just specify the Comparator<Mob> somehow instead of a utils method
+		Comparator<Mob> comparator = form.getPlayerLevel() != null
+				? Utils.getExpComparator(form).reversed()
+				: Comparator.comparingDouble(x -> x.getLevel().getAverage());
 		stream = stream.filter(Mob::getExists)
-				.sorted(Comparator.comparingDouble(x -> x.getLevel().getAverage()));
+				.sorted(comparator);
 		mav.addObject("mobs", stream.collect(Collectors.toList()));
 		return mav;
 	}

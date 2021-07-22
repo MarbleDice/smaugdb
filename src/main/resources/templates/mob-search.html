@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{template}" th:with="title='Mob Search'">
@@ -20,13 +20,28 @@
 		<th class="subheader" scope="col">Max Level</th>
 		<th class="subheader" scope="col">Alignment</th>
 		<th class="subheader" scope="col">Spawns</th>
+		<th class="subheader" scope="col">Damage</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
-		<td><input type="text" th:field="*{alignment}" maxlength="4" placeholder="-750" class="numberBoxW" th:errorclass="field-error" /></td>
-		<td><input type="text" th:field="*{spawnCount}" maxlength="3" placeholder="5" class="numberBox" th:errorclass="field-error" /></td>
+		<td><span>&leq;</span> <input type="text" th:field="*{alignment}" maxlength="4" placeholder="-750" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td><span>&geq;</span> <input type="text" th:field="*{spawnCount}" maxlength="3" placeholder="5" class="numberBox" th:errorclass="field-error" /></td>
+		<td><span>&leq;</span> <input type="text" th:field="*{damage}" maxlength="4" placeholder="" class="numberBoxW" th:errorclass="field-error" /></td>
+	</tr>
+</table>
+<table class="form">
+	<caption>Player parameters</caption>
+	<tr>
+		<th class="subheader" scope="col">Player Level</th>
+		<th class="subheader" scope="col">Player Alignment</th>
+		<th class="subheader" scope="col">Total Party Level</th>
+	</tr>
+	<tr>
+		<td><input type="text" th:field="*{playerLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{playerAlignment}" maxlength="4" placeholder="1000" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{totalPartyLevel}" maxlength="3" placeholder="150" class="numberBox" th:errorclass="field-error" /></td>
 	</tr>
 </table>
 <div class="actions">
@@ -42,21 +57,24 @@
 		<th scope="row">Level</th>
 		<th scope="row">Mob Name</th>
 		<th scope="row">Area Name</th>
-		<th scope="row">Alignment</th>
-		<th scope="row">Spawns</th>
 		<th scope="row">HP</th>
 		<th scope="row">Damage</th>
+		<th scope="row">Alignment</th>
+		<th scope="row">Spawns</th>
 		<th scope="row">Coins</th>
+		<th scope="row" th:if="${mobSearchForm.playerLevel != null}">Exp/HP</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
 		<td th:text="${mob.level}"></td>
 		<td><a th:replace="~{link::to(${mob})}"></a></td>
 		<td><a th:replace="~{link::area(${mob.area})}"></a></td>
-		<td th:text="${mob.alignment}"></td>
-		<td th:text="${mob.maxSpawnCount}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.hp.average, 1, 0)}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.damage.average, 1, 1)}"></td>
+		<td th:text="${mob.alignment}"></td>
+		<td th:text="${mob.maxSpawnCount}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>
+		<td th:text="${#numbers.formatDecimal(@utils.calcExp(mob, mobSearchForm), 1, 1)}"
+				th:if="${mobSearchForm.playerLevel != null}"></td>
 	</tr>
 </table>
 

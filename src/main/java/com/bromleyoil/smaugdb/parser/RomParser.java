@@ -46,6 +46,8 @@ import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.ProgType;
 import com.bromleyoil.smaugdb.model.enums.ResistFlag;
+import com.bromleyoil.smaugdb.model.enums.RoomFlag;
+import com.bromleyoil.smaugdb.model.enums.SectorType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class RomParser {
@@ -334,6 +336,7 @@ public class RomParser {
 	private void parseRoom(BufferedReader reader, int vnum) {
 		log.trace("Reading room {}", vnum);
 		List<Integer> values;
+		List<String> strings;
 		Matcher matcher;
 
 		Room room = world.addRoom(area, vnum);
@@ -344,7 +347,10 @@ public class RomParser {
 		nextString(reader);
 
 		// unused room_flags sector_flags
-		nextStringValues(reader);
+		strings = nextStringValues(reader);
+		room.setRoomFlags(convertCharVector(RoomFlag.class, RoomFlag::ofCode, strings.get(1)));
+		room.setSectorType(Optional.of(Integer.parseInt(strings.get(2))).filter(x -> x >= 0)
+				.map(x -> SectorType.values()[x]).orElse(null));
 
 		// H <heal> M <mana> (optional)
 

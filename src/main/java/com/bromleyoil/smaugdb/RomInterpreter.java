@@ -9,15 +9,9 @@ import static com.bromleyoil.smaugdb.model.enums.ItemType.STAFF;
 import static com.bromleyoil.smaugdb.model.enums.ItemType.WAND;
 import static com.bromleyoil.smaugdb.model.enums.ItemType.WEAPON;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +20,7 @@ import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.Pop;
-import com.bromleyoil.smaugdb.model.Prog;
 import com.bromleyoil.smaugdb.model.Range;
-import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
@@ -52,8 +44,6 @@ public class RomInterpreter {
 
 	private static final int LEVEL_AVATAR = 50;
 
-	private static final Pattern mploadPattern = Pattern.compile("mp[om]load\\s+(\\d+)(\\s+(\\d+))?");
-
 	private World world;
 
 	private RomInterpreter(World world) {
@@ -63,51 +53,12 @@ public class RomInterpreter {
 	public static void process(World world) {
 		RomInterpreter interpreter = new RomInterpreter(world);
 
-		interpreter.processProgs();
-
 		for (Item item : world.getItems()) {
 			interpreter.processItem(item);
 		}
 
 		for (Mob mob : world.getMobs()) {
 			interpreter.processMob(mob);
-		}
-	}
-
-	private void processProgs() {
-		for (Mob producer : world.getMobs()) {
-			processProgs(producer.getProgs(),
-					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i, l) -> Pop.produced(i, p, producer, l));
-		}
-
-		for (Item producer : world.getItems()) {
-			processProgs(producer.getProgs(),
-					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i, l) -> Pop.produced(i, p, producer, l));
-		}
-
-		for (Room producer : world.getRooms()) {
-			processProgs(producer.getProgs(),
-					(p, m) -> Spawn.produced(m, p, producer),
-					(p, i, l) -> Pop.produced(i, p, producer, l));
-		}
-	}
-
-	private void processProgs(Collection<Prog> progs, BiConsumer<Prog, Mob> mpmLoader,
-			TriConsumer<Prog, Item, Integer> mpoLoader) {
-		for (Prog prog : progs) {
-			Matcher matcher = mploadPattern.matcher(String.join(" ", prog.getDefinition()));
-			while (matcher.find()) {
-				if (matcher.group(1).equals("m")) {
-					Optional.ofNullable(world.getMob(Integer.parseInt(matcher.group(2))))
-							.ifPresent(m -> mpmLoader.accept(prog, m));
-				} else if (matcher.group(1).equals("o")) {
-					int level = matcher.groupCount() > 4 ? Integer.parseInt(matcher.group(5)) : 0;
-					Optional.ofNullable(world.getItem(Integer.parseInt(matcher.group(2))))
-							.ifPresent(i -> mpoLoader.accept(prog, i, level));
-				}
-			}
 		}
 	}
 

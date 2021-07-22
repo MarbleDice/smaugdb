@@ -239,6 +239,10 @@ table.form {
 	margin: 10px 0;
 }
 
+table.form caption {
+	display: none;
+}
+
 table.form th, table.form td {
 	padding: 4px 8px;
 }

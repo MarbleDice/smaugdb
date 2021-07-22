@@ -13,12 +13,13 @@
 	There were input errors, please correct them below.
 </p>
 <table class="form">
+	<caption>Search parameters</caption>
 	<tr>
-		<th class="subheader">Name</th>
-		<th class="subheader">Min Level</th>
-		<th class="subheader">Max Level</th>
-		<th class="subheader">Alignment</th>
-		<th class="subheader">Spawns</th>
+		<th class="subheader" scope="col">Name</th>
+		<th class="subheader" scope="col">Min Level</th>
+		<th class="subheader" scope="col">Max Level</th>
+		<th class="subheader" scope="col">Alignment</th>
+		<th class="subheader" scope="col">Spawns</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
@@ -36,15 +37,16 @@
 <h2>Search Results</h2>
 
 <table class="data">
+	<caption></caption>
 	<tr>
-		<th>Level</th>
-		<th>Mob Name</th>
-		<th>Area Name</th>
-		<th>Alignment</th>
-		<th>Spawns</th>
-		<th>HP</th>
-		<th>Damage</th>
-		<th>Coins</th>
+		<th scope="row">Level</th>
+		<th scope="row">Mob Name</th>
+		<th scope="row">Area Name</th>
+		<th scope="row">Alignment</th>
+		<th scope="row">Spawns</th>
+		<th scope="row">HP</th>
+		<th scope="row">Damage</th>
+		<th scope="row">Coins</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
 		<td th:text="${mob.level}"></td>

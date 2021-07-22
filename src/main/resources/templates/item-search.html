@@ -13,14 +13,15 @@
 	There were input errors, please correct them below.
 </p>
 <table class="form">
+	<caption>Search parameters</caption>
 	<tr>
-		<th class="subheader">Name</th>
-		<th class="subheader">Min Level</th>
-		<th class="subheader">Max Level</th>
-		<th class="subheader">Item Type</th>
-		<th class="subheader">Weapon Type</th>
-		<th class="subheader">Wear</th>
-		<th class="subheader">Applies</th>
+		<th class="subheader" scope="col">Name</th>
+		<th class="subheader" scope="col">Min Level</th>
+		<th class="subheader" scope="col">Max Level</th>
+		<th class="subheader" scope="col">Item Type</th>
+		<th class="subheader" scope="col">Weapon Type</th>
+		<th class="subheader" scope="col">Wear</th>
+		<th class="subheader" scope="col">Applies</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
@@ -64,14 +65,15 @@
 <h2>Search Results</h2>
 
 <table class="data">
+	<caption></caption>
 	<tr>
-		<th>Level</th>
-		<th>Item Name</th>
-		<th>Area Name</th>
-		<th>Type</th>
-		<th>Wear</th>
-		<th>Summary</th>
-		<th>Apply</th>
+		<th scope="col">Level</th>
+		<th scope="col">Item Name</th>
+		<th scope="col">Area Name</th>
+		<th scope="col">Type</th>
+		<th scope="col">Wear</th>
+		<th scope="col">Summary</th>
+		<th scope="col">Apply</th>
 	</tr>
 	<tr th:each="item : ${items}">
 		<td th:text="${item.level}"></td>

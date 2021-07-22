@@ -399,8 +399,6 @@ public class RomParser {
 
 		// Progs
 		room.setProgs(nextProgs(reader));
-
-		world.addRoom(room, area);
 	}
 
 	/**

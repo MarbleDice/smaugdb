@@ -203,6 +203,8 @@ public class RomInterpreter {
 		if (item.getType() == CONTAINER) {
 			item.setCapacity(item.getValue(0));
 			item.setKey(world.getItem(item.getValue(2)));
+			String reduction = item.getValue(4) < 100 ? " R " + (100 - item.getValue(4)) : "";
+			item.setSummary(String.format("C %d M %d%s", item.getCapacity(), item.getValue(3), reduction));
 		} else if (item.getType() == WEAPON) {
 			// type num size verb flags
 			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));

@@ -51,7 +51,7 @@
 		<td><a th:replace="~{link::to(${mob})}"></a></td>
 		<td><a th:replace="~{link::area(${mob.area})}"></a></td>
 		<td th:text="${mob.alignment}"></td>
-		<td th:text="${mob.spawnCount}"></td>
+		<td th:text="${mob.maxSpawnCount}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.hp.average, 1, 0)}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.damage.average, 1, 1)}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>

@@ -125,7 +125,7 @@ public class MainController {
 			stream = stream.filter(x -> x.getAlignment() <= form.getAlignment());
 		}
 		if (form.getSpawnCount() != null) {
-			stream = stream.filter(x -> x.getSpawnCount() >= form.getSpawnCount());
+			stream = stream.filter(x -> x.getMaxSpawnCount() >= form.getSpawnCount());
 		}
 		stream = stream.filter(Mob::getExists)
 				.sorted(Comparator.comparingDouble(x -> x.getLevel().getAverage()));

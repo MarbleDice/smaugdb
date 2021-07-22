@@ -31,6 +31,7 @@ import com.bromleyoil.smaugdb.model.Range;
 import com.bromleyoil.smaugdb.model.Room;
 import com.bromleyoil.smaugdb.model.Spawn;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.PopType;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
@@ -201,6 +202,7 @@ public class RomInterpreter {
 	private void interpretValues(Item item) {
 		if (item.getType() == CONTAINER) {
 			item.setCapacity(item.getValue(0));
+			item.setKey(world.getItem(item.getValue(2)));
 		} else if (item.getType() == WEAPON) {
 			// type num size verb flags
 			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));
@@ -259,6 +261,28 @@ public class RomInterpreter {
 		calculateMobLevel(mob);
 		int gold = mob.getGold().getMax();
 		mob.setGold(Range.of(gold / 2, 3 * gold / 2));
+
+		// Calculate max spawn count for each spawn
+		int worldCount = 0;
+		for (Spawn spawn : mob.getSpawns()) {
+			int maxSpawnCount = spawn.getMob().hasActFlag(ActFlag.SENTINEL)
+					? Integer.min(spawn.getRoomLimit(), spawn.getWorldLimit() - worldCount)
+					: spawn.getWorldLimit() - worldCount;
+			if (maxSpawnCount > 0) {
+				spawn.setMaxSpawnCount(maxSpawnCount);
+				worldCount++;
+			} else {
+				spawn.setMaxSpawnCount(0);
+			}
+		}
+
+		// Calculate max spawn count for the mob
+		worldCount = 0;
+		for (Spawn spawn : mob.getSpawns()) {
+			int newWorldCount = Integer.min(spawn.getWorldLimit(), worldCount + spawn.getMaxSpawnCount());
+			worldCount = Integer.max(worldCount, newWorldCount);
+		}
+		mob.setMaxSpawnCount(worldCount);
 	}
 
 	private void calculateMobLevel(Mob mob) {

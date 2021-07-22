@@ -52,10 +52,10 @@ public class Main {
 		return new ApplicationRunner() {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
-				println("diraph ROM {");
+				println("digraph ROM {");
 				// Dump every area
 				for (Area area : world.getAreas()) {
-					println("\tsubgraph %s {", area.getUrlSafeName());
+					println("\tsubgraph %s {", area.getUrlSafeName().replace("-", "_"));
 					print("\t\t");
 					dumpExits("\t\t", area.getRooms().stream().flatMap(x -> x.getExits().stream())
 							.filter(x -> x.getFrom().getArea().equals(x.getTo().getArea())));

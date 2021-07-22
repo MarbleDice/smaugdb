@@ -26,6 +26,7 @@ public class Spawn {
 
 	private int worldLimit;
 	private int roomLimit;
+	private int maxSpawnCount;
 	private Prog prog;
 
 	/** Equipment and inventory are assigned to the Spawn */
@@ -173,11 +174,14 @@ public class Spawn {
 		this.roomLimit = roomLimit;
 	}
 
-	public int getLimit() {
-		return getMob().hasActFlag(ActFlag.SENTINEL)
-				? Integer.min(roomLimit, worldLimit)
-				: worldLimit;
+	public int getMaxSpawnCount() {
+		return maxSpawnCount;
 	}
+
+	public void setMaxSpawnCount(int maxSpawnCount) {
+		this.maxSpawnCount = maxSpawnCount;
+	}
+
 	public Prog getProg() {
 		return prog;
 	}

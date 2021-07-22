@@ -3,9 +3,7 @@ package com.bromleyoil.smaugdb.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,6 +65,7 @@ public class Mob {
 	private int closeHour;
 
 	private List<Spawn> spawns = new ArrayList<>();
+	private int maxSpawnCount;
 
 	private List<Prog> progs = new ArrayList<>();
 
@@ -397,8 +396,12 @@ public class Mob {
 		spawns.add(spawn);
 	}
 
-	public int getSpawnCount() {
-		return spawns.stream().map(Spawn::getLimit).collect(Collectors.maxBy(Comparator.naturalOrder())).orElse(0);
+	public int getMaxSpawnCount() {
+		return maxSpawnCount;
+	}
+
+	public void setMaxSpawnCount(int maxSpawnCount) {
+		this.maxSpawnCount = maxSpawnCount;
 	}
 
 	public boolean isShopkeeper() {

@@ -109,6 +109,8 @@
 	<div class="two-col-right">
 		<h3>Location and Possessions</h3>
 
+		<p>A maximum of <span th:text="${mob.maxSpawnCount}">20</span> may appear at once.</p>
+
 		<!-- Spawns and their contained pops -->
 		<ul class="unstyled gap">
 			<li th:each="spawn : ${mob.spawns}">
@@ -116,8 +118,8 @@
 
 				<span th:replace="~{link::to(${spawn.linkableOwner})}">Containing object</span>
 
-				<span th:if="${spawn.limit > 0 and spawn.limit != mob.spawns.size()}"
-						th:text="${'(maximum ' + spawn.limit + ')'}">(maximum 1)</span>
+				<span th:if="${spawn.maxSpawnCount > 1}"
+						th:text="${'(up to ' + spawn.maxSpawnCount + ')'}">(up to 2)</span>
 
 				<!-- Spawn's contained pops -->
 				<ul th:if="${not #lists.isEmpty(spawn.containedPops)}">

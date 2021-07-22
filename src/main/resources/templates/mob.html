@@ -109,7 +109,7 @@
 	<div class="two-col-right">
 		<h3>Location and Possessions</h3>
 
-		<p>A maximum of <span th:text="${mob.maxSpawnCount}">20</span> may appear at once.</p>
+		<p th:if="${mob.maxSpawnCount > 1}">A maximum of <span th:text="${mob.maxSpawnCount}">20</span> may appear at once.</p>
 
 		<!-- Spawns and their contained pops -->
 		<ul class="unstyled gap">

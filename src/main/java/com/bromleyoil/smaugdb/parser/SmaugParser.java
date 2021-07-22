@@ -357,7 +357,7 @@ public class SmaugParser {
 		List<Integer> values;
 		Matcher matcher;
 
-		Room room = new Room();
+		Room room = world.addRoom(area, vnum);
 		room.setVnum(vnum);
 
 		room.setName(nextString(reader));
@@ -392,8 +392,6 @@ public class SmaugParser {
 
 		// Progs
 		room.setProgs(nextProgs(reader));
-
-		world.addRoom(room, area);
 	}
 
 	/**

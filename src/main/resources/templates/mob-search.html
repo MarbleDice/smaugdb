@@ -76,7 +76,9 @@
 		<th scope="row">Alignment</th>
 		<th scope="row">Spawns</th>
 		<th scope="row">Coins</th>
+		<th scope="row" th:if="${mobSearchForm.playerLevel != null}">Exp</th>
 		<th scope="row" th:if="${mobSearchForm.playerLevel != null}">Exp/HP</th>
+		<th scope="row" th:if="${mobSearchForm.playerLevel != null}">Threat</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
 		<td th:text="${mob.level}"></td>
@@ -87,7 +89,10 @@
 		<td th:text="${mob.alignment}"></td>
 		<td th:text="${mob.maxSpawnCount}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>
-		<td th:text="${#numbers.formatDecimal(@utils.calcExp(mob, mobSearchForm), 1, 1)}"
+		<td th:text="${#numbers.formatDecimal(mobSearchForm.calcExp(mob), 1, 0)}"></td>
+		<td th:text="${#numbers.formatDecimal(mobSearchForm.getExpPerHp(mob), 1, 1)}"
+				th:if="${mobSearchForm.playerLevel != null}"></td>
+		<td th:text="${#numbers.formatDecimal(mob.hp.average * mob.damage.average / 10d, 1, 1)}"
 				th:if="${mobSearchForm.playerLevel != null}"></td>
 	</tr>
 </table>

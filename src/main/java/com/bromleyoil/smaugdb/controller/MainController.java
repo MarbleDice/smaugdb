@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.form.ItemSearchForm;
 import com.bromleyoil.smaugdb.form.MobSearchForm;
 import com.bromleyoil.smaugdb.model.Item;
@@ -140,12 +139,10 @@ public class MainController {
 			stream = stream.filter(x -> x.hasActFlag(form.getActFlag()));
 		}
 
-		// TODO just specify the Comparator<Mob> somehow instead of a utils method
-		Comparator<Mob> comparator = form.getPlayerLevel() != null
-				? Utils.getExpComparator(form).reversed()
-				: Comparator.comparingDouble(x -> x.getLevel().getAverage());
 		stream = stream.filter(Mob::getExists)
-				.sorted(comparator);
+				.sorted(form.getPlayerLevel() != null
+						? form.getExpPerHpComparator()
+						: Comparator.comparingDouble(x -> x.getLevel().getAverage()));
 		mav.addObject("mobs", stream.collect(Collectors.toList()));
 		return mav;
 	}

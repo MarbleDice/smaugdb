@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{template}" th:with="title='Areas'">
@@ -8,14 +8,15 @@
 <h2>Areas</h2>
 
 <table class="data">
+	<caption>Area details</caption>
 	<tr>
-		<th>Area Name</th>
-		<th>Author</th>
-		<th>Min Lv</th>
-		<th>Max Lv</th>
-		<th>Mobiles</th>
-		<th>Items</th>
-		<th>Rooms</th>
+		<th scope="row">Area Name</th>
+		<th scope="row">Author</th>
+		<th scope="row">Min Lv</th>
+		<th scope="row">Max Lv</th>
+		<th scope="row">Mobiles</th>
+		<th scope="row">Items</th>
+		<th scope="row">Rooms</th>
 	</tr>
 	<tr th:each="area : ${areas}">
 		<td><a th:replace="~{link::area(${area})}"></a></td>

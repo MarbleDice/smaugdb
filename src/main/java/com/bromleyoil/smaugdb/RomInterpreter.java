@@ -52,7 +52,7 @@ public class RomInterpreter {
 
 	private static final int LEVEL_AVATAR = 50;
 
-	private static final Pattern mploadPattern = Pattern.compile("mp(o|m)load\\s+(\\d+)(\\s+(\\d+))?");
+	private static final Pattern mploadPattern = Pattern.compile("mp[om]load\\s+(\\d+)(\\s+(\\d+))?");
 
 	private World world;
 
@@ -64,10 +64,6 @@ public class RomInterpreter {
 		RomInterpreter interpreter = new RomInterpreter(world);
 
 		interpreter.processProgs();
-
-		for (Area area : world.getAreas()) {
-			interpreter.processArea(area);
-		}
 
 		for (Item item : world.getItems()) {
 			interpreter.processItem(item);
@@ -113,9 +109,6 @@ public class RomInterpreter {
 				}
 			}
 		}
-	}
-
-	private void processArea(Area area) {
 	}
 
 	private void processItem(Item item) {

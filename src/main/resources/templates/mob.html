@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{template}" th:with="title=${mob.title}">
@@ -17,89 +17,90 @@
 		</ul>
 
 		<table class="data">
+			<caption>Mob details</caption>
 			<tr>
-				<td>Description</td>
+				<th scope="row">Description</th>
 				<td th:text="${mob.description}"></td>
 			</tr>
 			<tr>
-				<td>Keywords</td>
+				<th scope="row">Keywords</th>
 				<td th:text="${mob.keywords}"></td>
 			</tr>
 			<tr>
-				<td>Level</td>
+				<th scope="row">Level</th>
 				<td th:text="${mob.level}"></td>
 			</tr>
 			<tr>
-				<td>Alignment</td>
+				<th scope="row">Alignment</th>
 				<td th:text="${mob.alignment}"></td>
 			</tr>
 			<tr>
-				<td>Coins</td>
+				<th scope="row">Coins</th>
 				<td th:text="${mob.gold}"></td>
 			</tr>
 			<tr>
-				<td>Experience</td>
+				<th scope="row">Experience</th>
 				<td th:text="${mob.experience}"></td>
 			</tr>
 			<tr th:if="${!mob.actFlags.isEmpty()}">
-				<td>Behavior</td>
+				<th scope="row">Behavior</th>
 				<td th:text="${@utils.label(mob.actFlags)}"></td>
 			</tr>
 			<tr th:if="${!mob.affectFlags.isEmpty()}">
-				<td>Special Effects</td>
+				<th scope="row">Special Effects</th>
 				<td th:text="${@utils.label(mob.affectFlags)}"></td>
 			</tr>
 			<tr th:if="${!mob.resistFlags.isEmpty()}">
-				<td>Resistances</td>
+				<th scope="row">Resistances</th>
 				<td th:text="${@utils.label(mob.resistFlags)}"></td>
 			</tr>
 			<tr th:if="${!mob.immuneFlags.isEmpty()}">
-				<td>Immunities</td>
+				<th scope="row">Immunities</th>
 				<td th:text="${@utils.label(mob.immuneFlags)}"></td>
 			</tr>
 			<tr th:if="${!mob.vulnerableFlags.isEmpty()}">
-				<td>Vulnerabilities</td>
+				<th scope="row">Vulnerabilities</th>
 				<td th:text="${@utils.label(mob.vulnerableFlags)}"></td>
 			</tr>
 			<tr th:if="${!mob.attackFlags.isEmpty()}">
-				<td>Attacks</td>
+				<th scope="row">Attacks</th>
 				<td th:text="${@utils.label(mob.attackFlags)}"></td>
 			</tr>
 			<tr th:if="${!mob.defenseFlags.isEmpty()}">
-				<td>Defenses</td>
+				<th scope="row">Defenses</th>
 				<td th:text="${@utils.label(mob.defenseFlags)}"></td>
 			</tr>
 			<tr>
-				<td>THAC0</td>
+				<th scope="row">THAC0</th>
 				<td th:text="${mob.thac0 + ' (' + mob.accuracy + ')'}"></td>
 			</tr>
 			<tr>
-				<td>Damage</td>
+				<th scope="row">Damage</th>
 				<td th:text="${mob.damage}"></td>
 			</tr>
 			<tr>
-				<td>Hit Points</td>
+				<th scope="row">Hit Points</th>
 				<td th:text="${mob.hp}"></td>
 			</tr>
 			<tr>
-				<td>Armor</td>
+				<th scope="row">Armor</th>
 				<td th:text="${mob.armor}"></td>
 			</tr>
 			<tbody th:if="${mob.isShopkeeper()}">
 				<tr>
-					<td>Hours</td>
+					<th scope="row">Hours</th>
 					<td th:text="${mob.openHour + ' - ' + mob.closeHour}"></td>
 				</tr>
 				<tr>
-					<td>Sale Rate</td>
+					<th scope="row">Sale Rate</th>
 					<td th:text="${mob.sellPercent}"></td>
 				</tr>
 				<tr th:if="${!mob.purchasedTypes.isEmpty()}">
-					<td>Purchases</td>
+					<th scope="row">Purchases</th>
 					<td th:text="${@utils.label(mob.purchasedTypes)}"></td>
 				</tr>
 				<tr th:if="${!mob.purchasedTypes.isEmpty()}">
-					<td>Purchase Rate</td>
+					<th scope="row">Purchase Rate</th>
 					<td th:text="${mob.buyPercent}"></td>
 				</tr>
 			</tbody>

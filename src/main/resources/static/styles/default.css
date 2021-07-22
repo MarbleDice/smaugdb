@@ -191,12 +191,18 @@ table.data {
 	border-collapse: collapse;
 }
 
+table.data caption {
+	display: none;
+}
+
 table.data tr:nth-child(even) {
 	background-color: #eee;
 }
 
 table.data th, table.data td {
 	padding: 4px 8px;
+	text-align: left;
+	vertical-align: top;
 }
 
 table.data tr td:first-child {

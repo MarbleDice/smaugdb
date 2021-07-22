@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
+import java.util.function.ObjIntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -194,7 +194,7 @@ public class SmaugParser {
 	 * @param handler
 	 *        Accepts a buffered reader and the vnum of the object being parsed
 	 */
-	private void parseVnumBlock(BufferedReader reader, BiConsumer<BufferedReader, Integer> handler) {
+	private void parseVnumBlock(BufferedReader reader, ObjIntConsumer<BufferedReader> handler) {
 		nextLine(reader);
 
 		while (line != null) {

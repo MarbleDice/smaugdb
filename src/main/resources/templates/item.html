@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{template}" th:with="title=${item.title}">
@@ -13,22 +13,23 @@
 
 	<div class="two-col-left">
 		<table class="data">
+			<caption>Item details</caption>
 			<tr>
-				<td>Description</td>
+				<th scope="row">Description</th>
 				<td th:text="${item.description}"></td>
 			</tr>
 			<tr>
-				<td>Keywords</td>
+				<th scope="row">Keywords</th>
 				<td th:text="${item.keywords}"></td>
 			</tr>
 			<tr th:if="${!item.extraFlags.isEmpty()}">
-				<td>Properties</td>
+				<th scope="row">Properties</th>
 				<td th:text="${@utils.label(item.extraFlagsWithoutReq)}"></td>
 		 	</tr>
 		
 			<th:block th:if="${item.isItem()}">
 			<tr th:if="${!item.alignRequirements.isEmpty()}">
-				<td>Req. Alignment</td>
+				<th scope="row">Req. Alignment</th>
 				<td>
 					<span th:class="${item.hasExtraFlag('ANTI_EVIL') ? 'invalid' : ''}">evil</span>
 					<span th:class="${item.hasExtraFlag('ANTI_NEUTRAL') ? 'invalid' : ''}">neutral</span>
@@ -36,7 +37,7 @@
 				</td>
 		 	</tr>
 			<tr th:if="${!item.classRequirements.isEmpty()}">
-				<td>Req. Class</td>
+				<th scope="row">Req. Class</th>
 				<td>
 					<span th:class="${item.hasExtraFlag('ANTI_WARRIOR') ? 'invalid' : ''}">warrior</span>
 					<span th:class="${item.hasExtraFlag('ANTI_THIEF') ? 'invalid' : ''}">thief</span>
@@ -47,53 +48,53 @@
 				</td>
 		 	</tr>
 			<tr>
-				<td>Level</td>
+				<th scope="row">Level</th>
 				<td th:text="${item.level}"></td>
 			</tr>
 			<tr>
-				<td>Weight</td>
+				<th scope="row">Weight</th>
 				<td th:text="${item.weight}"></td>
 			</tr>
 			<tr>
-				<td>Cost</td>
+				<th scope="row">Cost</th>
 				<td th:text="${item.cost}"></td>
 			</tr>
 			</th:block>
 		
 			<tr>
-				<td>Type</td>
+				<th scope="row">Type</th>
 				<td th:text="${item.subType}"></td>
 			</tr>
 		
 			<th:block th:if="${item.isEquipment()}">
 			<tr>
-				<td>Wearable</td>
+				<th scope="row">Wearable</th>
 				<td th:text="${@utils.label(item.equipFlags)}"></td>
 			</tr>
 			<tr th:if="${item.isWeapon()}">
-				<td>Damage</td>
+				<th scope="row">Damage</th>
 				<td th:text="${item.damage}"></td>
 			</tr>
 			<tr th:if="${item.totalArmor?.average > 0}">
-				<td>Armor</td>
+				<th scope="row">Armor</th>
 				<td>
 					<span th:text="${item.totalArmor}"></span>
 					<span th:if="${!item.totalArmor.equalsValue(item.armor)}" th:text="${'(base ' + item.armor + ')'}"></span>
 				</td>
 			</tr>
 			<tr th:if="${!item.applies.isEmpty()}">
-				<td>Applies</td>
+				<th scope="row">Applies</th>
 				<td th:text="${@utils.label(item.applies)}"></td>
 			</tr>
 			</th:block>
 
 			<tr>
-				<td>Summary</td>
+				<th scope="row">Summary</th>
 				<td th:text="${item.summary}" th:title="${item.tooltip}"></td>
 			</tr>
 
 			<tr th:if="${item.isUsableKey()}">
-				<td>Unlocks</td>
+				<th scope="row">Unlocks</th>
 				<td>
 					<ul class="unstyled">
 						<li th:each="keyItem : ${item.keyItems}"><a th:replace="~{link::to(${keyItem})}"></a></li>
@@ -107,15 +108,15 @@
 		
 			<th:block th:if="${item.isContainer()}">
 			<tr>
-				<td>Capacity</td>
+				<th scope="row">Capacity</th>
 				<td th:text="${item.capacity}"></td>
 			</tr>
 			<tr>
-				<td>Container Flags</td>
+				<th scope="row">Container Flags</th>
 				<td th:text="${@utils.label(item.containerFlags)}"></td>
 			</tr>
 			<tr th:if="${item.key}">
-				<td>Unlocked by</td>
+				<th scope="row">Unlocked by</th>
 				<td><a th:replace="~{link::to(${item.key})}"></a></td>
 			</tr>
 			</th:block>

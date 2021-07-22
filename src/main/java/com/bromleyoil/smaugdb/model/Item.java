@@ -24,6 +24,7 @@ import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class Item {
 
+	private boolean isLoaded;
 	private Area area;
 	private int vnum;
 	private String name;
@@ -102,6 +103,14 @@ public class Item {
 
 	public boolean getExists() {
 		return !pops.isEmpty();
+	}
+
+	public boolean isLoaded() {
+		return isLoaded;
+	}
+
+	public void setIsLoaded(boolean isLoaded) {
+		this.isLoaded = isLoaded;
 	}
 
 	public Area getArea() {

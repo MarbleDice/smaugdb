@@ -282,8 +282,7 @@ public class RomParser {
 		List<Integer> values;
 		List<String> strings;
 
-		Item item = new Item();
-		item.setVnum(vnum);
+		Item item = world.addItem(area, vnum);
 		item.setKeywords(convertKeywords(nextString(reader)));
 		item.setName(nextString(reader));
 		item.setDescription(nextString(reader));
@@ -368,7 +367,7 @@ public class RomParser {
 	
 				// door_state key_vnum to_vnum
 				values = nextValues(reader);
-				Item key = world.getItem(values.get(1));
+				Item key = world.reserveItem(values.get(1));
 				if (key != null) {
 					key.addKeyDoor(room);
 					exit.setKey(key);
@@ -435,19 +434,19 @@ public class RomParser {
 	private void parseReset(char code, int arg1, int arg2, int arg3, int arg4) {
 		if (code == 'O') {
 			// arg1=item_vnum arg2=unused arg3=room_vnum arg4=unused
-			Pop.found(world.getItem(arg1), area, world.getRoom(arg3));
+			Pop.found(world.reserveItem(arg1), area, world.getRoom(arg3));
 		} else if (code == 'P') {
 			// arg1=item_vnum arg2=world_limit arg3=container arg4=container_limit
-			Pop.contained(world.getItem(arg1), area, world.getItem(arg3));
+			Pop.contained(world.reserveItem(arg1), area, world.reserveItem(arg3));
 		} else if (code == 'M') {
 			// arg1=mob_vnum arg2=world_limit arg3=room_vnum arg4=room_limit
 			lastSpawn = Spawn.in(world.getMob(arg1), world.getRoom(arg3), arg2, arg4);
 		} else if (code == 'E') {
 			// arg1=item_vnum arg2=soft_world_limit arg3=wear_flag arg4=unused
-			Pop.worn(world.getItem(arg1), area, lastSpawn, EquipSlot.values()[arg3].getWearFlag());
+			Pop.worn(world.reserveItem(arg1), area, lastSpawn, EquipSlot.values()[arg3].getWearFlag());
 		} else if (code == 'G') {
 			// arg1=item_vnum arg2=soft_world_limit arg3=unused arg4=unused
-			Pop.held(world.getItem(arg1), area, lastSpawn);
+			Pop.held(world.reserveItem(arg1), area, lastSpawn);
 		} else if (code == 'D') {
 			// arg1=room_vnum arg2=direction arg3=flags
 			// Skip door resets

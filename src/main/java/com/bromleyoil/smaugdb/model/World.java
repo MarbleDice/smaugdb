@@ -60,20 +60,36 @@ public class World {
 	}
 
 	public void removeUnloaded() {
-		List<Room> removedRooms = new ArrayList<>();
+		removeUnloadedRooms();
+		removeUnloadedItems();
+	}
 
-		// Remove rooms
+	private void removeUnloadedRooms() {
+		List<Room> removed = new ArrayList<>();
 		Iterator<Entry<Integer, Room>> it = rooms.entrySet().iterator();
 		while (it.hasNext()) {
-			Room room = it.next().getValue();
-			if (!room.isLoaded()) {
-				log.info("Removing unloaded room: #{}", room.getVnum());
-				removedRooms.add(room);
+			Room entity = it.next().getValue();
+			if (!entity.isLoaded()) {
+				log.info("Removing unloaded room: #{}", entity.getVnum());
+				removed.add(entity);
 				it.remove();
 			}
 		}
-		
 		// TODO Remove exits
+	}
+
+	private void removeUnloadedItems() {
+		List<Item> removed = new ArrayList<>();
+		Iterator<Entry<Integer, Item>> it = items.entrySet().iterator();
+		while (it.hasNext()) {
+			Item entity = it.next().getValue();
+			if (!entity.isLoaded()) {
+				log.info("Removing unloaded item: #{}", entity.getVnum());
+				removed.add(entity);
+				it.remove();
+			}
+		}
+		// TODO remove resets, container keys
 	}
 
 	public Collection<Area> getAreas() {
@@ -92,10 +108,6 @@ public class World {
 		return Collections.unmodifiableCollection(rooms.values());
 	}
 
-	public boolean hasRoom(int vnum) {
-		return rooms.containsKey(vnum);
-	}
-
 	public Room getRoom(int vnum) {
 		if (vnum > 0 && !rooms.containsKey(vnum)) {
 			log.warn("Room not found: {}", vnum);
@@ -104,8 +116,8 @@ public class World {
 	}
 
 	public Room reserveRoom(int vnum) {
-		if (!hasRoom(vnum)) {
-			log.trace("Holding room \"{}\"", vnum);
+		if (!rooms.containsKey(vnum)) {
+			log.trace("Holding room {}", vnum);
 			Room room = new Room();
 			room.setVnum(vnum);
 			room.setName("");
@@ -115,8 +127,8 @@ public class World {
 	}
 
 	public Room addRoom(Area area, int vnum) {
+		log.trace("Adding room {} to {}", vnum, area);
 		Room room = reserveRoom(vnum);
-		log.trace("Adding room \"{}\" to {}", room, area);
 		room.setArea(area);
 		room.setIsLoaded(true);
 		area.addRoom(room);
@@ -150,6 +162,26 @@ public class World {
 			log.warn("Item not found: {}", vnum);
 		}
 		return items.get(vnum);
+	}
+
+	public Item reserveItem(int vnum) {
+		if (!items.containsKey(vnum)) {
+			log.trace("Holding item {}", vnum);
+			Item item = new Item();
+			item.setVnum(vnum);
+			item.setName("");
+			items.put(item.getVnum(), item);
+		}
+		return getItem(vnum);
+	}
+
+	public Item addItem(Area area, int vnum) {
+		log.trace("Adding item {} to {}", vnum, area);
+		Item item = reserveItem(vnum);
+		item.setArea(area);
+		item.setIsLoaded(true);
+		area.addItem(item);
+		return item;
 	}
 
 	public void addItem(Item item, Area area) {

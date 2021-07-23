@@ -89,7 +89,8 @@
 		<td th:text="${mob.alignment}"></td>
 		<td th:text="${mob.maxSpawnCount}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>
-		<td th:text="${#numbers.formatDecimal(mobSearchForm.calcExp(mob), 1, 0)}"></td>
+		<td th:text="${#numbers.formatDecimal(mobSearchForm.calcExp(mob), 1, 0)}"
+				th:if="${mobSearchForm.playerLevel != null}"></td>
 		<td th:text="${#numbers.formatDecimal(mobSearchForm.getExpPerHp(mob), 1, 1)}"
 				th:if="${mobSearchForm.playerLevel != null}"></td>
 		<td th:text="${#numbers.formatDecimal(mob.hp.average * mob.damage.average / 10d, 1, 1)}"

@@ -594,8 +594,20 @@ public class RomParser {
 
 	private List<String> nextStringValues(BufferedReader reader) {
 		nextLine(reader);
-		// TODO don't split quotes
-		return Stream.of(line.split("\\s+")).collect(Collectors.toList());
+		List<String> rv = new ArrayList<>();
+		List<String> quoted = new ArrayList<>();
+		for (String token : line.split("\\s+")) {
+			if (token.startsWith("'") && !token.endsWith("'")) {
+				quoted.add(token);
+			} else if (token.endsWith("'") && !token.startsWith("'")) {
+				quoted.add(token);
+				rv.add(String.join(" ", quoted));
+				quoted.clear();
+			} else {
+				rv.add(token);
+			}
+		}
+		return rv;
 	}
 
 	private List<Prog> nextProgs(BufferedReader reader) {

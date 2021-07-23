@@ -19,6 +19,7 @@ public class Area {
 			.thenComparing(Comparator.comparing(Mob::getVnum)));
 	private Collection<Item> items = new TreeSet<>(Comparator.comparing(Item::getName)
 			.thenComparing(Comparator.comparing(Item::getVnum)));
+	private Collection<Path> entrances = new TreeSet<>(Comparator.comparingInt(Path::getLength));
 
 	@Override
 	public String toString() {
@@ -91,5 +92,13 @@ public class Area {
 
 	public void addItem(Item item) {
 		items.add(item);
+	}
+	
+	public Collection<Path> getEntrances() {
+		return Collections.unmodifiableCollection(entrances);
+	}
+	
+	public void addEntrance(Path path) {
+		entrances.add(path);
 	}
 }

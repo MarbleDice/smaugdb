@@ -123,7 +123,7 @@ public class RomParser {
 		RomInterpreter.process(world);
 
 		// Find all paths around the world
-		Path.findAllPaths(world.getRoom(3001));
+		Path.setAllPaths(world.getRoom(3001));
 	}
 
 	/**

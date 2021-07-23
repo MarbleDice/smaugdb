@@ -16,9 +16,20 @@
 		<td>Suggested Level</td>
 		<td th:text="${area.softRange}">Suggested level</td>
 	</tr>
-	<tr>
+	<tr th:if="${area.hardRange != null}">
 		<td>Level Limit</td>
 		<td th:text="${area.hardRange}">Level limit</td>
+	</tr>
+	<tr>
+		<td>Entrances</td>
+		<td>
+			<ul class="unstyled">
+				<li th:each="path : ${area.entrances}">
+					<span th:replace="~{link::to(${path.last.to})}">Entrance name</span>
+					<span th:text="${path}">#2s6e4s</span>
+				</li>
+			</ul>
+		</td>
 	</tr>
 </table>
 

@@ -12,12 +12,16 @@ public class Path {
 	private StringBuilder sb = new StringBuilder("#");
 	private Direction lastDirection;
 	private int lastDirectionCount;
+	private boolean requiresSwim;
+	private boolean requiresFlight;
+	private int hostileTo;
+	private int hostileToDetect;
 
-	public Path() {
+	private Path() {
 		exits = new ArrayList<>();
 	}
 
-	public Path(Path path, Exit exit) {
+	private Path(Path path, Exit exit) {
 		exits = new ArrayList<>(path.exits);
 		sb = new StringBuilder(path.sb);
 		lastDirection = path.lastDirection;
@@ -25,9 +29,55 @@ public class Path {
 		addExit(exit);
 	}
 
-	public Path(Exit exit) {
+	private Path(Exit exit) {
 		exits = new ArrayList<>();
 		addExit(exit);
+	}
+
+	public static void setAllPaths(Room fromRoom) {
+		Queue<Path> paths = new ArrayDeque<>();
+		// Set the path to the root room
+		fromRoom.setPath(new Path());
+
+		// Prime the queue with exits from the root room
+		fromRoom.getExits().stream().map(Path::new).forEach(paths::add);
+
+		// Process the queue with a BFS to get shortest paths
+		while (!paths.isEmpty()) {
+			Path path = paths.remove();
+			expandExits(path, paths);
+		}
+	}
+
+	private static void expandExits(Path path, Queue<Path> paths) {
+		// Expand every exit from the last step in the path
+		path.getLast().getTo().getExits().stream()
+				// Filter for exits to rooms without a path
+				.filter(x -> x.getTo().getPath() == null)
+				// Convert each exit to a new, slightly longer path
+				.map(x -> new Path(path, x))
+				// Set the path on the destination room and add it to the queue
+				.forEach(x -> {
+					x.getLast().getTo().setPath(x);
+					paths.add(x);
+					// Check for area entrances
+					if (!x.getLast().getFrom().getArea().equals(x.getLast().getTo().getArea())) {
+						x.getLast().getTo().getArea().addEntrance(x);
+					}
+				});
+	}
+
+	@Override
+	public String toString() {
+		return sb.toString() + lastDirectionToString();
+	}
+
+	public int getLength() {
+		return exits.size();
+	}
+
+	public Exit getLast() {
+		return exits.get(exits.size() - 1);
 	}
 
 	protected void addExit(Exit exit) {
@@ -52,39 +102,5 @@ public class Path {
 		} else {
 			return String.format("%s%s", lastDirectionCount > 1 ? lastDirectionCount : "", lastDirection.getCode());
 		} 
-	}
-
-	public static void findAllPaths(Room fromRoom) {
-		Queue<Path> paths = new ArrayDeque<>();
-		// Set the path to the root room
-		fromRoom.setPath(new Path());
-
-		// Prime the queue with exits from the root 
-		fromRoom.getExits().stream().map(Path::new).forEach(paths::add);
-
-		// Process the queue with a BFS to get shortest paths
-		while (!paths.isEmpty()) {
-			Path path = paths.remove();
-			expandExits(path, paths);
-		}
-	}
-
-	private static void expandExits(Path path, Queue<Path> paths) {
-		path.getLast().getTo().getExits().stream()
-				.filter(x -> x.getTo().getPath() == null)
-				.map(x -> new Path(path, x))
-				.forEach(x -> {
-					x.getLast().getTo().setPath(x);
-					paths.add(x);
-				});
-	}
-
-	@Override
-	public String toString() {
-		return sb.toString() + lastDirectionToString();
-	}
-
-	public Exit getLast() {
-		return exits.get(exits.size() - 1);
 	}
 }

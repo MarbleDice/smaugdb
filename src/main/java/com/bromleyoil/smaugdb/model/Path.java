@@ -51,18 +51,19 @@ public class Path {
 
 	private static void expandExits(Path path, Queue<Path> paths) {
 		// Expand every exit from the last step in the path
-		path.getLast().getRoomTo().getExits().stream()
+		path.getLastExit().getRoomTo().getExits().stream()
 				// Filter for exits to rooms without a path
 				.filter(x -> x.getRoomTo().getPath() == null)
 				// Convert each exit to a new, slightly longer path
 				.map(x -> new Path(path, x))
 				// Set the path on the destination room and add it to the queue
 				.forEach(x -> {
-					x.getLast().getRoomTo().setPath(x);
+					Room roomTo = x.getLastExit().getRoomTo();
+					roomTo.setPath(x);
 					paths.add(x);
 					// Check for area entrances
-					if (!x.getLast().getRoomFrom().getArea().equals(x.getLast().getRoomTo().getArea())) {
-						x.getLast().getRoomTo().getArea().addEntrance(x);
+					if (!x.getLastExit().getRoomFrom().getArea().equals(roomTo.getArea())) {
+						roomTo.getArea().addEntrance(x);
 					}
 				});
 	}
@@ -76,7 +77,7 @@ public class Path {
 		return exits.size();
 	}
 
-	public Exit getLast() {
+	public Exit getLastExit() {
 		return exits.get(exits.size() - 1);
 	}
 

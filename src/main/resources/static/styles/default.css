@@ -187,12 +187,16 @@ table.equipment td {
  * Data tables
  */
 table.data {
-	border: 1px solid #ccc;
+	border: 2px solid #ccc;
 	border-collapse: collapse;
 }
 
 table.data caption {
 	display: none;
+}
+
+table.data tr:nth-child(odd) {
+	background-color: #fff;
 }
 
 table.data tr:nth-child(even) {
@@ -216,6 +220,12 @@ table.data th {
 
 table.data td {
 	vertical-align: top;
+}
+
+table.results tr:first-child {
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
 }
 
 /**

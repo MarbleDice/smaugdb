@@ -107,6 +107,11 @@ ul.unstyled {
 	padding: 0;
 }
 
+ul.unstyled ul {
+	list-style-type: none;
+	padding-left: var(--gap);
+}
+
 ul.unstyled-gap {
 	list-style-type: none;
 	margin: 0;

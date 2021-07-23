@@ -70,7 +70,7 @@ public class Mob {
 	private List<Prog> progs = new ArrayList<>();
 
 	public String getCssClass() {
-		return hasActFlag(ActFlag.AGGRESSIVE) ? "mob aggressive" : "mob non-aggressive";
+		return isAggressive() ? "mob aggressive" : "mob non-aggressive";
 	}
 
 	public String getAccuracy() {
@@ -158,6 +158,10 @@ public class Mob {
 
 	public boolean hasActFlag(ActFlag actFlag) {
 		return actFlags.contains(actFlag);
+	}
+
+	public boolean isAggressive() {
+		return hasActFlag(ActFlag.AGGRESSIVE) && !hasActFlag(ActFlag.WIMPY);
 	}
 
 	public void setActFlags(List<ActFlag> actFlags) {

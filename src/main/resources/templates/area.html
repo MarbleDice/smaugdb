@@ -20,13 +20,16 @@
 		<td>Level Limit</td>
 		<td th:text="${area.hardRange}">Level limit</td>
 	</tr>
-	<tr>
+	<tr th:if="${!area.entrances.isEmpty()}">
 		<td>Entrances</td>
 		<td>
 			<ul class="unstyled">
 				<li th:each="path : ${area.entrances}">
 					<span th:replace="~{link::to(${path.lastExit.roomTo})}">Entrance name</span>
 					<span th:text="${path}">#2s6e4s</span>
+					<ul th:if="${!path.requirements.isEmpty()}">
+						<li th:each="req : ${path.requirements}"><span th:text="${req}">Requires flight</span></li>
+					</ul>
 				</li>
 			</ul>
 		</td>

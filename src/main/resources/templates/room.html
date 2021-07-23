@@ -32,7 +32,16 @@
 			</tr>
 			<tr>
 				<th scope="row">Path</th>
-				<td th:text="${room.path}"></td>
+				<td>
+					<ul class="unstyled" th:if="${room.path != null}">
+						<li>
+							<span th:text="${room.path}">#2s6e4s</span>
+							<ul th:if="${!room.path.requirements.isEmpty()}">
+								<li th:each="req : ${room.path.requirements}"><span th:text="${req}">Requires flight</span></li>
+							</ul>
+						</li>
+					</ul>
+				</td>
 			</tr>
 		</table>
 	</div>

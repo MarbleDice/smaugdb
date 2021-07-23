@@ -57,7 +57,7 @@ public class MainController {
 		ModelAndView mav = itemSearchMav();
 		Stream<Item> stream = world.getItems().stream();
 		if (form.getName() != null) {
-			stream = stream.filter(x -> x.getName().contains(form.getName()));
+			stream = stream.filter(x -> x.getName().toLowerCase().contains(form.getName().toLowerCase()));
 		}
 		if (form.getMinLevel() != null) {
 			stream = stream.filter(x -> x.getLevel().getMax() >= form.getMinLevel());
@@ -115,7 +115,7 @@ public class MainController {
 		ModelAndView mav = getMovSearchMav();
 		Stream<Mob> stream = world.getMobs().stream();
 		if (form.getName() != null) {
-			stream = stream.filter(x -> x.getName().contains(form.getName()));
+			stream = stream.filter(x -> x.getName().toLowerCase().contains(form.getName().toLowerCase()));
 		}
 		if (form.getArea() != null) {
 			stream = stream.filter(x -> x.getArea().equals(form.getArea()));

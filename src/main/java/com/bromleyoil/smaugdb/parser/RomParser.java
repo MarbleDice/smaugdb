@@ -30,6 +30,7 @@ import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Exit;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.Mob;
+import com.bromleyoil.smaugdb.model.Path;
 import com.bromleyoil.smaugdb.model.Pop;
 import com.bromleyoil.smaugdb.model.Prog;
 import com.bromleyoil.smaugdb.model.Range;
@@ -120,6 +121,9 @@ public class RomParser {
 
 		// Interpret loaded data
 		RomInterpreter.process(world);
+
+		// Find all paths around the world
+		Path.findAllPaths(world.getRoom(3001));
 	}
 
 	/**
@@ -590,6 +594,7 @@ public class RomParser {
 
 	private List<String> nextStringValues(BufferedReader reader) {
 		nextLine(reader);
+		// TODO don't split quotes
 		return Stream.of(line.split("\\s+")).collect(Collectors.toList());
 	}
 

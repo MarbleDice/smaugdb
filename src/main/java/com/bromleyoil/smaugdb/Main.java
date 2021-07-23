@@ -44,7 +44,7 @@ public class Main {
 				i.incrementAndGet() % 10 == 0 ? System.lineSeparator() + indent: ""));
 	}
 
-	private void dumpWorld() {
+	private void dumpWorldGraphViz() {
 		println("digraph ROM {");
 		// Dump every area
 		for (Area area : world.getAreas()) {
@@ -63,11 +63,11 @@ public class Main {
 		println("%n}");
 	}
 
-	public ApplicationRunner graphvizDump() {
+	public ApplicationRunner appRunner() {
 		return new ApplicationRunner() {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
-				dumpWorld();
+				dumpWorldGraphViz();
 			}
 		};
 	}

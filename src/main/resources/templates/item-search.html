@@ -72,6 +72,7 @@
 		<th scope="col">Area Name</th>
 		<th scope="col">Type</th>
 		<th scope="col">Wear</th>
+		<th scope="col">Weight</th>
 		<th scope="col">Summary</th>
 		<th scope="col">Apply</th>
 	</tr>
@@ -81,6 +82,7 @@
 		<td><a th:replace="~{link::area(${item.area})}"></a></td>
 		<td th:text="${item.subType}"></td>
 		<td th:text="${@utils.label(item.equipFlags)}"></td>
+		<td th:text="${item.weight}"></td>
 		<td th:text="${item.summary}" th:title="${item.tooltip}"></td>
 		<td th:text="${@utils.label(item.applies)}"></td>
 	</tr>

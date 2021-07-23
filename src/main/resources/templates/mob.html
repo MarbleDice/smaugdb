@@ -112,8 +112,8 @@
 
 		<p th:if="${mob.maxSpawnCount > 1}">A maximum of <span th:text="${mob.maxSpawnCount}">20</span> may appear at once.</p>
 
-		<!-- Spawns and their contained pops -->
-		<ul class="unstyled gap">
+		<ul class="unstyled-gap">
+			<!-- Spawns and their contained pops -->
 			<li th:each="spawn : ${mob.spawns}">
 				<span th:text="${spawn.description}">Found in</span>
 

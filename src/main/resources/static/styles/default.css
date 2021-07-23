@@ -107,10 +107,19 @@ ul.unstyled {
 	padding: 0;
 }
 
-ul.unstyled ul {
+ul.unstyled-gap {
 	list-style-type: none;
-	margin-bottom: var(--gap);
+	margin: 0;
+	padding: 0;
+}
+
+ul.unstyled-gap ul {
+	list-style-type: none;
 	padding-left: var(--gap);
+}
+
+ul.unstyled-gap > li {
+	margin-bottom: calc(var(--gap) / 2);
 }
 
 button {

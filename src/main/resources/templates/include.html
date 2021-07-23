@@ -7,7 +7,7 @@
 
 	<th:block th:fragment="progs (progs)">
 		<h3 th:if="${!progs.isEmpty()}">Interactions</h3>
-		<ul th:if="${!progs.isEmpty()}" class="unstyled">
+		<ul th:if="${!progs.isEmpty()}" class="unstyled-gap">
 			<li th:each="prog : ${progs}">
 				<span th:text="${prog.type.triggerLabel}">When slain</span>
 				<span th:text="${'(' + prog.trigger + ')'}">(trigger conditions)</span>

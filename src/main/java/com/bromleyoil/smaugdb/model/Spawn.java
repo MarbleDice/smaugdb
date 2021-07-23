@@ -110,7 +110,7 @@ public class Spawn {
 	/** Gets a description of this spawn from the container's perspective. */
 	public String getContainedDescription() {
 		if (getType() == SpawnType.APPEARS) {
-			return "May contain";
+			return mob.hasActFlag(ActFlag.SENTINEL) ? "Contains" : "May contain";
 		} else if (getType() == SpawnType.PRODUCED_MOB
 				|| getType() == SpawnType.PRODUCED_ITEM
 				|| getType() == SpawnType.PRODUCED_ROOM) {

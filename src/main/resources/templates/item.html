@@ -97,7 +97,7 @@
 				<th scope="row">Unlocks</th>
 				<td>
 					<ul class="unstyled">
-						<li th:each="keyItem : ${item.keyItems}"><a th:replace="~{link::to(${keyItem})}"></a></li>
+						<li th:each="keyItem : ${item.keyItems}"><a th:replace="~{link::to(${keyItem})}">A container</a></li>
 						<li th:each="keyDoor : ${item.keyDoors}">
 							<span>An exit in</span>
 							<span th:replace="~{link::to(${keyDoor})}">A room</span>
@@ -126,7 +126,8 @@
 	<div class="two-col-right">
 		<h3>Location</h3>
 		
-		<ul class="unstyled gap">
+		<ul class="unstyled-gap">
+			<!-- Pops and their contained pops -->
 			<li th:each="pop : ${item.sortedPops}">
 				<span th:text="${pop.description}">Found in</span>
 				<a th:replace="~{link::to(${pop.linkableOwner})}">containing object</a>

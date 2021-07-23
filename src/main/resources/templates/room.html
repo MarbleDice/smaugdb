@@ -40,8 +40,8 @@
 	<div class="two-col-right">
 		<h3>Contents</h3>
 
-		<!-- Spawns and their contained pops -->
-		<ul class="unstyled gap">
+		<ul class="unstyled-gap">
+			<!-- Spawns and their contained pops -->
 			<li th:each="spawn : ${room.containedSpawns}">
 				<span th:text="${spawn.containedDescription}">May contain</span>
 
@@ -60,6 +60,7 @@
 					</li>
 				</ul>
 			</li>
+			<!-- Pops and their contained pops -->
 			<li th:each="pop : ${room.containedPops}">
 				<span th:text="${pop.containedDescription}">May contain</span>
 				<a th:replace="~{link::to(${pop.item})}">some object</a>

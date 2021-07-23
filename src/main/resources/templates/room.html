@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}" th:with="title=${room.title}">
+<th:block layout:fragment="content">
+
+<div class="two-col">
+	<div class="two-col-header">
+		<h2 th:text="${room.styledName}" th:class="${'room inline'}"></h2>
+		<a th:replace="~{link::to(${room.area})}"></a>
+	</div>
+
+	<div class="two-col-left">
+		<ul class="unstyled gap" th:if="${!room.description.isEmpty()}">
+			<li th:text="${line}" th:each="line : ${room.description}">Lorem ipsum dolor sit amet</li>
+		</ul>
+
+		<table class="data">
+			<caption>Room details</caption>
+			<tr>
+				<th scope="row">Sector</th>
+				<td th:text="${room.sectorType.label}"></td>
+			</tr>
+			<tr>
+				<th scope="row">Room Flags</th>
+				<td th:text="${@utils.label(room.roomFlags)}"></td>
+			</tr>
+			<tr>
+				<th scope="row">Exits</th>
+				<td th:text="${@utils.label(room.directions)}"></td>
+			</tr>
+			<tr>
+				<th scope="row">Path</th>
+				<td th:text="${room.path}"></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="two-col-right">
+		<h3>Contents</h3>
+
+		<!-- Spawns and their contained pops -->
+		<ul class="unstyled gap">
+			<li th:each="spawn : ${room.containedSpawns}">
+				<span th:text="${spawn.containedDescription}">May contain</span>
+
+				<span th:replace="~{link::to(${spawn.mob})}">Some mob</span>
+
+				<span th:if="${spawn.maxSpawnCount > 1}"
+						th:text="${'(up to ' + spawn.maxSpawnCount + ')'}">(up to 2)</span>
+
+				<!-- Spawn's contained pops -->
+				<ul th:if="${not #lists.isEmpty(spawn.containedPops)}">
+					<li th:each="pop : ${spawn.containedPops}">
+						<span th:text="${pop.containedDescription}">Equipped with</span>
+						<a th:replace="~{link::to(${pop.item})}">an item</a>
+						<span th:text="${': level ' + pop.itemLevel}" th:if="${pop.itemLevel.average > 0}">(level 10)</span>
+						<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">sold for coins</span>
+					</li>
+				</ul>
+			</li>
+			<li th:each="pop : ${room.containedPops}">
+				<span th:text="${pop.containedDescription}">May contain</span>
+				<a th:replace="~{link::to(${pop.item})}">some object</a>
+				<span th:text="${': level ' + pop.itemLevel}" th:if="${pop.itemLevel.average > 0}">level 0</span>
+				<span th:if="${pop.isSold()}" th:text="${': ' + #numbers.formatInteger(pop.cost, 1, 'COMMA') + ' coins'}">1000 coins</span>
+				<!-- Container contents -->
+				<ul th:if="${pop.item.isContainer()}">
+					<li th:each="containedPop : ${pop.containedPops}">
+						<span th:text="${containedPop.containedDescription}">Containing</span>
+						<a th:replace="~{link::to(${containedPop.item})}">item</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+
+</th:block>
+</html>

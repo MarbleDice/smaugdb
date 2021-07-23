@@ -160,4 +160,11 @@ public class MainController {
 		mav.addObject("world", world);
 		return mav;
 	}
+
+	@RequestMapping("/room/{vnum}")
+	public ModelAndView room(@PathVariable Integer vnum) {
+		ModelAndView mav = new ModelAndView("room");
+		mav.addObject("room", world.getRoom(vnum));
+		return mav;
+	}
 }

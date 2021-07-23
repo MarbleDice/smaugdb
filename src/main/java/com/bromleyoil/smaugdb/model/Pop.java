@@ -193,7 +193,9 @@ public class Pop {
 
 	/** Gets a description of this pop from the container's perspective. */
 	public String getContainedDescription() {
-		if (getType() == PopType.WORN) {
+		if (getType() == PopType.FOUND) {
+			return getItem().hasWearFlag(WearFlag.TAKE) ? "May contain" : "Contains";
+		} else if (getType() == PopType.WORN) {
 			return "Equipped with ";
 		} else if (getType() == PopType.HELD) {
 			return "Carrying ";

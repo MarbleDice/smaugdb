@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.bromleyoil.smaugdb.model.enums.Direction;
 import com.bromleyoil.smaugdb.model.enums.RoomFlag;
 import com.bromleyoil.smaugdb.model.enums.SectorType;
 
@@ -14,7 +18,7 @@ public class Room {
 	private Area area;
 	private int vnum;
 	private String name;
-	private String description;
+	private List<String> description;
 	private List<Exit> exits = new ArrayList<>();
 	private List<RoomFlag> roomFlags = new ArrayList<>();
 	private SectorType sectorType;
@@ -25,6 +29,8 @@ public class Room {
 	private List<Spawn> containedSpawns = new ArrayList<>();
 
 	private List<Prog> progs = new ArrayList<>();
+
+	private Path path;
 
 	@Override
 	public String toString() {
@@ -63,11 +69,19 @@ public class Room {
 		this.name = name;
 	}
 
-	public String getDescription() {
+	public String getTitle() {
+		return StringUtils.capitalize(name);
+	}
+
+	public String getStyledName() {
+		return "[" + name + "]";
+	}
+
+	public List<String> getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(List<String> description) {
 		this.description = description;
 	}
 
@@ -103,6 +117,9 @@ public class Room {
 		this.extras = extras;
 	}
 
+	public List<Direction> getDirections () {
+		return exits.stream().map(Exit::getDirection).collect(Collectors.toList());
+	}
 	public Collection<Pop> getContainedPops() {
 		return Collections.unmodifiableCollection(containedPops);
 	}
@@ -126,5 +143,13 @@ public class Room {
 	public void setProgs(List<Prog> progs) {
 		progs.stream().forEach(p -> p.setOwner(this));
 		this.progs = progs;
+	}
+
+	public Path getPath() {
+		return path;
+	}
+
+	public void setPath(Path path) {
+		this.path = path;
 	}
 }

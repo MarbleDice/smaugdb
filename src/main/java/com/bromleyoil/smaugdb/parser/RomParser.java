@@ -342,7 +342,7 @@ public class RomParser {
 		room.setName(nextString(reader));
 
 		// description
-		nextString(reader);
+		room.setDescription(nextBlock(reader));
 
 		// unused room_flags sector_flags
 		strings = nextStringValues(reader);
@@ -361,7 +361,7 @@ public class RomParser {
 				exit.setFrom(room);
 
 				// Door line: D[0-5]
-				exit.setDir(Direction.values()[Integer.parseInt(matcher.group(1))]);
+				exit.setDirection(Direction.values()[Integer.parseInt(matcher.group(1))]);
 	
 				// Description
 				nextBlock(reader);

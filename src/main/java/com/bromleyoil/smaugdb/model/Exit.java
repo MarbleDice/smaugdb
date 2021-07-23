@@ -5,7 +5,7 @@ import com.bromleyoil.smaugdb.model.enums.Direction;
 public class Exit {
 	private Room from;
 	private Room to;
-	private Direction dir;
+	private Direction direction;
 	private Item key;
 
 	public Room getFrom() {
@@ -24,12 +24,12 @@ public class Exit {
 		this.to = to;
 	}
 
-	public Direction getDir() {
-		return dir;
+	public Direction getDirection() {
+		return direction;
 	}
 
-	public void setDir(Direction dir) {
-		this.dir = dir;
+	public void setDirection(Direction direction) {
+		this.direction = direction;
 	}
 
 	public Item getKey() {

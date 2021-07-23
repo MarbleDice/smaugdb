@@ -16,8 +16,8 @@
 				th:href="@{${'/item/' + obj.vnum}}" th:class="${obj.cssClass}" th:text="${obj.truncatedName}"></a>
 		<a th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Mob)}"
 				th:href="@{${'/mob/' + obj.vnum}}" th:class="${obj.cssClass}" th:text="${obj.truncatedName}"></a>
-		<span th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Room)}"
-				th:class="room" th:text="${'[' + obj.name + ']'}"></span>
+		<a th:if="${obj instanceof T(com.bromleyoil.smaugdb.model.Room)}"
+				th:href="@{${'/room/' + obj.vnum}}" th:class="room" th:text="${obj.styledName}"></a>
 	</th:block>
 
 </th:block>

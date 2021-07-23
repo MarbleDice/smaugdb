@@ -323,8 +323,6 @@ public class RomParser {
 			}
 			nextLine(reader);
 		}
-
-		world.addItem(item, area);
 	}
 
 	/**

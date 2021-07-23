@@ -3,25 +3,25 @@ package com.bromleyoil.smaugdb.model;
 import com.bromleyoil.smaugdb.model.enums.Direction;
 
 public class Exit {
-	private Room from;
-	private Room to;
+	private Room roomFrom;
+	private Room roomTo;
 	private Direction direction;
 	private Item key;
 
-	public Room getFrom() {
-		return from;
+	public Room getRoomFrom() {
+		return roomFrom;
 	}
 
-	public void setFrom(Room from) {
-		this.from = from;
+	public void setRoomFrom(Room roomFrom) {
+		this.roomFrom = roomFrom;
 	}
 
-	public Room getTo() {
-		return to;
+	public Room getRoomTo() {
+		return roomTo;
 	}
 
-	public void setTo(Room to) {
-		this.to = to;
+	public void setRoomTo(Room roomTo) {
+		this.roomTo = roomTo;
 	}
 
 	public Direction getDirection() {

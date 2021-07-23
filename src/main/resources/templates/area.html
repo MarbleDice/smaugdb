@@ -25,7 +25,7 @@
 		<td>
 			<ul class="unstyled">
 				<li th:each="path : ${area.entrances}">
-					<span th:replace="~{link::to(${path.last.to})}">Entrance name</span>
+					<span th:replace="~{link::to(${path.last.roomTo})}">Entrance name</span>
 					<span th:text="${path}">#2s6e4s</span>
 				</li>
 			</ul>

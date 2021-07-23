@@ -362,7 +362,7 @@ public class RomParser {
 		while (!"S".equals(line.substring(0, 1))) {
 			if (matcher.matches()) {
 				Exit exit = new Exit();
-				exit.setFrom(room);
+				exit.setRoomFrom(room);
 
 				// Door line: D[0-5]
 				exit.setDirection(Direction.values()[Integer.parseInt(matcher.group(1))]);
@@ -380,8 +380,8 @@ public class RomParser {
 					key.addKeyDoor(room);
 					exit.setKey(key);
 				}
-				exit.setTo(world.reserveRoom(values.get(2)));
-				if (exit.getTo().getVnum() > 0) {
+				exit.setRoomTo(world.reserveRoom(values.get(2)));
+				if (exit.getRoomTo().getVnum() > 0) {
 					// TODO not needed if exits are pruned
 					room.getExits().add(exit);
 				}

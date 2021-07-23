@@ -40,7 +40,7 @@ public class Main {
 
 	private static void dumpExits(String indent, Stream<Exit> stream) {
 		AtomicInteger i = new AtomicInteger();
-		stream.forEach(x -> print("%d->%d;%s", x.getFrom().getVnum(), x.getTo().getVnum(),
+		stream.forEach(x -> print("%d->%d;%s", x.getRoomFrom().getVnum(), x.getRoomTo().getVnum(),
 				i.incrementAndGet() % 10 == 0 ? System.lineSeparator() + indent: ""));
 	}
 
@@ -51,7 +51,7 @@ public class Main {
 			println("\tsubgraph %s {", area.getUrlSafeName().replace("-", "_"));
 			print("\t\t");
 			dumpExits("\t\t", area.getRooms().stream().flatMap(x -> x.getExits().stream())
-					.filter(x -> x.getFrom().getArea().equals(x.getTo().getArea())));
+					.filter(x -> x.getRoomFrom().getArea().equals(x.getRoomTo().getArea())));
 			println("%n\t}");
 		}
 		// Dump all cross-area exits
@@ -59,7 +59,7 @@ public class Main {
 		dumpExits("\t", world.getAreas().stream()
 				.flatMap(x -> x.getRooms().stream())
 				.flatMap(x -> x.getExits().stream())
-				.filter(x -> !x.getFrom().getArea().equals(x.getTo().getArea())));
+				.filter(x -> !x.getRoomFrom().getArea().equals(x.getRoomTo().getArea())));
 		println("%n}");
 	}
 

@@ -288,6 +288,10 @@ public class Mob {
 		this.hp = hp;
 	}
 
+	public Range getEhp() {
+		return Range.of(hp).multiply(hasAffectFlag(AffectFlag.SANCTUARY) ? 2 : 1);
+	}
+
 	public Range getMana() {
 		return mana;
 	}
@@ -302,6 +306,22 @@ public class Mob {
 
 	public void setDamage(Range damage) {
 		this.damage = damage;
+	}
+
+	public Range getDamagePerRound() {
+		double multiple = 1;
+		if (hasAffectFlag(AffectFlag.HASTE) || hasAttackFlag(AttackFlag.FAST)) {
+			multiple += 1;
+		}
+		if (hasActFlag(ActFlag.THIEF) || hasActFlag(ActFlag.WARRIOR)) {
+			// chance for 2nd attack = rand[0, 100) < (10 + 3 * ch->level) / 2
+			multiple += (getLevel().getAverage() * 3 + 10) / 200;
+		}
+		if (hasActFlag(ActFlag.WARRIOR)) {
+			// chance for 3rd attack = rand[0, 100) < (4 * ch->level - 40) / 4)
+			multiple += (getLevel().getAverage() * 4 - 40) / 400;
+		}
+		return Range.of(damage).multiply((int)(100 * multiple)).divide(100);
 	}
 
 	public String getDamageType() {
@@ -374,6 +394,10 @@ public class Mob {
 
 	public void setAttackFlags(List<AttackFlag> attackFlags) {
 		this.attackFlags = attackFlags;
+	}
+
+	public boolean hasAttackFlag(AttackFlag attackFlag) {
+		return attackFlags.contains(attackFlag);
 	}
 
 	public List<DefenseFlag> getDefenseFlags() {

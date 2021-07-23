@@ -154,6 +154,12 @@ public class Range {
 		return this;
 	}
 
+	public Range divide(int factor) {
+		min = getMin() / factor;
+		max = getMax() / factor;
+		return this;
+	}
+
 	public Range extend(int amount) {
 		min = getMin() - amount;
 		max = getMax() + amount;

@@ -107,7 +107,8 @@ public class MobSearchForm {
 	}
 
 	public double getExpPerHp(Mob mob) {
-		double modifiedHp = mob.getHp().getAverage() + 1d;
+		// Add 1 to make 1 hp monsters behave more reasonably
+		double modifiedHp = mob.getEhp().getAverage() + 1d;
 		double exp = calcExp(mob);
 		return 100d * exp / modifiedHp;
 	}

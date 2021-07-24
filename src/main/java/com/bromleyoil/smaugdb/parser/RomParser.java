@@ -348,7 +348,7 @@ public class RomParser {
 		// description
 		room.setDescription(nextBlock(reader));
 
-		// unused room_flags sector_flags
+		// unused room_flags sector_type
 		strings = nextStringValues(reader);
 		room.setRoomFlags(convertCharVector(RoomFlag.class, RoomFlag::ofCode, strings.get(1)));
 		room.setSectorType(Optional.of(Integer.parseInt(strings.get(2))).filter(x -> x >= 0)
@@ -373,15 +373,28 @@ public class RomParser {
 				// Door name
 				nextString(reader);
 	
-				// door_state key_vnum to_vnum
+				// door_state key_vnum to_room_vnum
 				values = nextValues(reader);
+
+				// door_state 1=door, 2=pickproof, 3=passproof, 4=pickpassproof
+				if (values.get(0) > 0) {
+					exit.setIsDoor(true);
+				}
+				if (values.get(0) == 2 || values.get(0) == 4) {
+					exit.setIsPickProof(true);
+				}
+				if (values.get(0) == 3 || values.get(0) == 4) {
+					exit.setIsPassProof(true);
+				}
+				// key_vnum
 				Item key = world.reserveItem(values.get(1));
 				if (key != null) {
 					key.addKeyDoor(room);
 					exit.setKey(key);
 				}
+				// to_room_vnum
 				exit.setRoomTo(world.reserveRoom(values.get(2)));
-				if (exit.getRoomTo().getVnum() > 0) {
+				if (exit.getRoomTo() != null) {
 					// TODO not needed if exits are pruned
 					room.getExits().add(exit);
 				}
@@ -456,11 +469,11 @@ public class RomParser {
 			// arg1=item_vnum arg2=soft_world_limit arg3=unused arg4=unused
 			Pop.held(world.reserveItem(arg1), area, lastSpawn);
 		} else if (code == 'D') {
-			// arg1=room_vnum arg2=direction arg3=flags
-			// Skip door resets
+			// arg1=room_vnum arg2=direction arg3=flags(1=closed,2=locked)
+			world.getRoom(arg1).getExit(Direction.values()[arg2]).setIsLocked(arg3 == 2);
 		} else if (code == 'R') {
-			// arg1=room_vnum arg2=shuffle_count arg3=unused arg4=unused
-			// Skip door randomization
+			// arg1=room_vnum arg2=direction_count arg3=unused arg4=unused
+			world.getRoom(arg1).setRandomExitCount(arg2);
 		} else {
 			throw new ParseException("Unknown reset code: " + code);
 		}

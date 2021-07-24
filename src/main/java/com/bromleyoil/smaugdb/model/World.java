@@ -117,6 +117,9 @@ public class World {
 	}
 
 	public Room reserveRoom(int vnum) {
+		if (vnum < 1) {
+			return null;
+		}
 		if (!rooms.containsKey(vnum)) {
 			log.trace("Holding room {}", vnum);
 			Room room = new Room();
@@ -166,6 +169,9 @@ public class World {
 	}
 
 	public Item reserveItem(int vnum) {
+		if (vnum < 1) {
+			return null;
+		}
 		if (!items.containsKey(vnum)) {
 			log.trace("Holding item {}", vnum);
 			Item item = new Item();

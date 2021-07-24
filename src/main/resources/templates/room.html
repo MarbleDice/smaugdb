@@ -28,7 +28,10 @@
 			</tr>
 			<tr>
 				<th scope="row">Exits</th>
-				<td th:text="${@utils.label(room.directions)}"></td>
+				<td>
+					<span th:text="${@utils.label(room.directions)}"></span>
+					<span th:text="${'(randomized ' + room.randomExitCount + '-way)'}" th:if="${room.isMaze}"></span>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row">Path</th>

@@ -5,17 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
-import com.bromleyoil.smaugdb.model.enums.Direction;
 import com.bromleyoil.smaugdb.model.enums.SectorType;
 
 public class Path {
 	private List<Exit> exits;
 	private StringBuilder sb = new StringBuilder("#");
-	private Direction lastDirection;
-	private int lastDirectionCount;
+	private String lastMove;
+	private int lastMoveCount;
 	private boolean requiresBoat;
 	private boolean requiresFlight;
+	private boolean requiresKey;
+	private boolean requiresMaze;
+	private boolean cannotPick;
+	private boolean cannotPass;
 	private int hostileTo;
 	private int hostileToInvis;
 
@@ -27,10 +32,14 @@ public class Path {
 		// Copy constructor
 		exits = new ArrayList<>(path.exits);
 		sb = new StringBuilder(path.sb);
-		lastDirection = path.lastDirection;
-		lastDirectionCount = path.lastDirectionCount;
+		lastMove = path.lastMove;
+		lastMoveCount = path.lastMoveCount;
 		requiresBoat = path.requiresBoat;
 		requiresFlight = path.requiresFlight;
+		requiresKey = path.requiresKey;
+		requiresMaze = path.requiresMaze;
+		cannotPick = path.cannotPick;
+		cannotPass = path.cannotPass;
 		hostileTo = path.hostileTo;
 		hostileToInvis = path.hostileToInvis;
 
@@ -79,7 +88,8 @@ public class Path {
 
 	@Override
 	public String toString() {
-		return sb.toString() + lastDirectionToString();
+		sendMove();
+		return sb.toString();
 	}
 
 	public int getLength() {
@@ -110,26 +120,45 @@ public class Path {
 		});
 
 		// Accumulate the directions
-		if (lastDirection == null) {
-			lastDirection = exit.getDirection();
-			lastDirectionCount = 1;
+		String dirCode = exit.getRoomFrom().isMaze() ? "?" : exit.getDirection().getCode();
+		requiresMaze = exit.getRoomFrom().isMaze() || requiresMaze;
+		if (exit.isLocked()) {
+			requiresKey = true;
+			cannotPick = exit.isPickProof() || cannotPick;
+			cannotPass = exit.isPassProof() || cannotPass;
+			accumulateMove("K" + dirCode + "O" + dirCode);
+			accumulateMove(dirCode);
+		} else if (exit.isDoor()) {
+			accumulateMove("O" + dirCode);
+			accumulateMove(dirCode);
 		} else {
-			if (lastDirection == exit.getDirection()) {
-				lastDirectionCount++;
-			} else {
-				sb.append(lastDirectionToString());
-				lastDirection = exit.getDirection();
-				lastDirectionCount = 1;
-			}
+			accumulateMove(dirCode);
 		}
 	}
 
-	protected String lastDirectionToString() {
-		if (lastDirectionCount == 0) {
-			return "";
+	protected void accumulateMove(String move) {
+		if (StringUtils.isBlank(move) || !move.equals(lastMove)) {
+			sendMove();
+			lastMove = move;
+			lastMoveCount = 1;
 		} else {
-			return String.format("%s%s", lastDirectionCount > 1 ? lastDirectionCount : "", lastDirection.getCode());
+			lastMoveCount++;
 		}
+	}
+
+	protected void sendMove() {
+		if (!StringUtils.isBlank(lastMove) && lastMoveCount > 0) {
+			String move = String.format("%s%s", lastMoveCount > 1 ? lastMoveCount : "", lastMove);
+			if (lastMove.startsWith("?")) {
+				sb.append(String.format(" %s #", move));
+			} else if (lastMove.startsWith("K")) {
+				sb.append(String.format(" %s ", move));
+			} else {
+				sb.append(move);
+			}
+		}
+		lastMove = "";
+		lastMoveCount = 0;
 	}
 
 	public List<String> getRequirements() {
@@ -140,10 +169,26 @@ public class Path {
 		if (hostileTo > 0 && hostileTo > hostileToInvis) {
 			rv.add(String.format("Hostile to level %d and below (invis ok)", hostileTo));
 		}
+		if (requiresMaze) {
+			rv.add("Requires maze navigation");
+		}
 		if (requiresFlight) {
 			rv.add("Requires flight");
 		} else if (requiresBoat) {
 			rv.add("Requires a boat");
+		}
+		if (requiresKey) {
+			String type;
+			if (cannotPick && cannotPass) {
+				type = "unskippable";
+			} else if (cannotPick) {
+				type = "unpickable";
+			} else if (cannotPass) {
+				type = "unpassable";
+			} else {
+				type = "pick/pass ok";
+			}
+			rv.add(String.format("Requires key (%s)", type));
 		}
 		return rv;
 	}

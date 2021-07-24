@@ -20,10 +20,10 @@ public class Room {
 	private String name;
 	private List<String> description;
 	private List<Exit> exits = new ArrayList<>();
+	private int randomExitCount;
 	private List<RoomFlag> roomFlags = new ArrayList<>();
 	private SectorType sectorType;
 	private List<String> extras = new ArrayList<>();
-	// teleports
 
 	private List<Pop> containedPops = new ArrayList<>();
 	private List<Spawn> containedSpawns = new ArrayList<>();
@@ -91,6 +91,22 @@ public class Room {
 
 	public void setExits(List<Exit> exits) {
 		this.exits = exits;
+	}
+
+	public Exit getExit(Direction direction) {
+		return exits.stream().filter(x -> x.getDirection() == direction).findAny().orElse(null);
+	}
+
+	public int getRandomExitCount() {
+		return randomExitCount;
+	}
+
+	public void setRandomExitCount(int randomExitCount) {
+		this.randomExitCount = randomExitCount;
+	}
+
+	public boolean isMaze() {
+		return randomExitCount > 0;
 	}
 
 	public List<RoomFlag> getRoomFlags() {

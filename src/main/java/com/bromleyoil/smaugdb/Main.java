@@ -3,6 +3,8 @@ package com.bromleyoil.smaugdb;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -19,6 +21,8 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @SpringBootApplication
 public class Main {
+	private static final Logger log = LoggerFactory.getLogger(Main.class);
+	private static final StringBuilder rawOutput = new StringBuilder();
 
 	@Value("${application.title:SMAUG MUD DB}")
 	private String applicationTitle;
@@ -31,11 +35,11 @@ public class Main {
 	}
 
 	private static void print(String format, Object... args) {
-		System.out.print(String.format(format, args));
+		rawOutput.append(String.format(format, args));
 	}
 
 	private static void println(String format, Object... args) {
-		System.out.println(String.format(format, args));
+		rawOutput.append(String.format(format, args)).append(System.lineSeparator());
 	}
 
 	private static void dumpExits(String indent, Stream<Exit> stream) {
@@ -44,7 +48,7 @@ public class Main {
 				i.incrementAndGet() % 10 == 0 ? System.lineSeparator() + indent: ""));
 	}
 
-	private void dumpWorldGraphViz() {
+	public void dumpWorldGraphViz() {
 		println("digraph ROM {");
 		// Dump every area
 		for (Area area : world.getAreas()) {
@@ -63,11 +67,20 @@ public class Main {
 		println("%n}");
 	}
 
+	@Bean
 	public ApplicationRunner appRunner() {
 		return new ApplicationRunner() {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
-				dumpWorldGraphViz();
+				// Execute start-up tasks
+
+				
+				// Log any raw output produced
+				if (rawOutput.length() > 0) {
+					log.info("App runner produced raw output:\n{}", rawOutput);
+				} else {
+					log.info("App runner produced no output");
+				}
 			}
 		};
 	}

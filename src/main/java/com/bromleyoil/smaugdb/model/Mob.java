@@ -324,6 +324,10 @@ public class Mob {
 		return Range.of(damage).multiply((int)(100 * multiple)).divide(100);
 	}
 
+	public double getThreat() {
+		return getEhp().getAverage() * getDamagePerRound().getAverage() / 10;
+	}
+
 	public String getDamageType() {
 		return damageType;
 	}

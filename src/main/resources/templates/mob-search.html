@@ -68,32 +68,32 @@
 <table class="data results">
 	<caption></caption>
 	<tr>
-		<th scope="row">Level</th>
+		<th class="number" scope="row">Level</th>
 		<th scope="row">Mob Name</th>
 		<th scope="row">Area Name</th>
-		<th scope="row">eHP</th>
-		<th scope="row">Damage</th>
-		<th scope="row">Alignment</th>
-		<th scope="row">Spawns</th>
-		<th scope="row">Coins</th>
-		<th scope="row" th:if="${mobSearchForm.playerLevel != null}">Exp</th>
-		<th scope="row" th:if="${mobSearchForm.playerLevel != null}">Exp/HP</th>
-		<th scope="row">Threat</th>
+		<th scope="row" class="number">eHP</th>
+		<th scope="row" class="number">Damage</th>
+		<th scope="row" class="number">Alignment</th>
+		<th scope="row" class="number">Spawns</th>
+		<th scope="row" class="number">Coins</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.playerLevel != null}">Exp</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.playerLevel != null}">Exp/HP</th>
+		<th scope="row" class="number">Threat</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
-		<td th:text="${mob.level}"></td>
+		<td class="number" th:text="${mob.level}"></td>
 		<td><a th:replace="~{link::to(${mob})}"></a></td>
 		<td><a th:replace="~{link::area(${mob.area})}"></a></td>
-		<td th:text="${#numbers.formatDecimal(mob.hp.average, 1, 0)}"></td>
-		<td th:text="${#numbers.formatDecimal(mob.damagePerRound.average, 1, 1)}"></td>
-		<td th:text="${mob.alignment}"></td>
-		<td th:text="${mob.maxSpawnCount}"></td>
-		<td th:text="${#numbers.formatDecimal(mob.gold.average, 1, 0)}"></td>
-		<td th:text="${#numbers.formatDecimal(mobSearchForm.calcExp(mob), 1, 0)}"
+		<td class="number" th:text="${@utils.formatQty(mob.ehp.average)}"></td>
+		<td class="number" th:text="${#numbers.formatDecimal(mob.damagePerRound.average, 1, 1)}"></td>
+		<td class="number" th:text="${mob.alignment}"></td>
+		<td class="number" th:text="${mob.maxSpawnCount}"></td>
+		<td class="number" th:text="${@utils.formatQty(mob.gold.average)}"></td>
+		<td class="number" th:text="${@utils.formatQty(mobSearchForm.calcExp(mob))}"
 				th:if="${mobSearchForm.playerLevel != null}"></td>
-		<td th:text="${#numbers.formatDecimal(mobSearchForm.getExpPerHp(mob), 1, 1)}"
+		<td class="number" th:text="${@utils.formatAvg(mobSearchForm.getExpPerHp(mob))}"
 				th:if="${mobSearchForm.playerLevel != null}"></td>
-		<td th:text="${#numbers.formatDecimal(mob.ehp.average * mob.damagePerRound.average / 10d, 1, 1)}"></td>
+		<td class="number" th:text="${@utils.formatAvg(mob.threat)}"></td>
 	</tr>
 </table>
 

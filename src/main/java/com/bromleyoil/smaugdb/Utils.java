@@ -92,7 +92,15 @@ public class Utils {
 		return flags;
 	}
 
-	public String label(Collection<Labelable> items) {
+	public static String label(Collection<Labelable> items) {
 		return items.stream().map(Labelable::getLabel).collect(Collectors.joining(", "));
+	}
+
+	public static String formatQty(double quantity) {
+		return String.format("%,.0f", quantity);
+	}
+
+	public static String formatAvg(double average) {
+		return String.format("%,.1f", average);
 	}
 }

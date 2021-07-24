@@ -241,6 +241,10 @@ table.results tr:first-child {
 	top: 0;
 }
 
+table.results th.number, table.results td.number {
+	text-align: right;
+}
+
 /**
  * Multi-column layout tables
  */

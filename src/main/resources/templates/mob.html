@@ -75,16 +75,28 @@
 				<td th:text="${mob.thac0 + ' (' + mob.accuracy + ')'}"></td>
 			</tr>
 			<tr>
-				<th scope="row">Damage</th>
+				<th scope="row">Damage/Hit</th>
 				<td th:text="${mob.damage}"></td>
+			</tr>
+			<tr th:if="${mob.damagePerRound.average > mob.damage.average}">
+				<th scope="row">Damage/Round</th>
+				<td th:text="${mob.damagePerRound}"></td>
 			</tr>
 			<tr>
 				<th scope="row">Hit Points</th>
 				<td th:text="${mob.hp}"></td>
 			</tr>
+			<tr th:if="${mob.ehp.average > mob.hp.average}">
+				<th scope="row">Effective HP</th>
+				<td th:text="${mob.ehp}"></td>
+			</tr>
 			<tr>
 				<th scope="row">Armor</th>
 				<td th:text="${mob.armor}"></td>
+			</tr>
+			<tr>
+				<th scope="row">Threat</th>
+				<td th:text="${@utils.formatAvg(mob.threat)}"></td>
 			</tr>
 			<tbody th:if="${mob.isShopkeeper()}">
 				<tr>

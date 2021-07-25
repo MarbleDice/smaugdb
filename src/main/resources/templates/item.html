@@ -53,7 +53,7 @@
 			</tr>
 			<tr>
 				<th scope="row">Weight</th>
-				<td th:text="${item.weight}"></td>
+				<td th:text="${@utils.formatAvg(item.weight / 10)}"></td>
 			</tr>
 			<tr>
 				<th scope="row">Cost</th>

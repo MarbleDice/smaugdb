@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Exit;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -67,14 +68,38 @@ public class Main {
 		println("%n}");
 	}
 
+	public void dumpMazeGraphViz() {
+		println("digraph ROM {");
+		// Dump every area
+		for (Area area : world.getAreas()) {
+			println("\tsubgraph %s {", area.getUrlSafeName().replace("-", "_"));
+			print("\t\t");
+			dumpExits("\t\t", area.getRooms().stream().flatMap(x -> x.getExits().stream())
+					.filter(x -> x.getRoomFrom().getArea().equals(x.getRoomTo().getArea()))
+					.filter(x -> x.getRoomFrom().isMaze() || x.getRoomTo().isMaze()));
+			println("%n\t}");
+		}
+		// Dump all cross-area exits
+		print("\t");
+		dumpExits("\t", world.getAreas().stream()
+				.flatMap(x -> x.getRooms().stream())
+				.flatMap(x -> x.getExits().stream())
+				.filter(x -> !x.getRoomFrom().getArea().equals(x.getRoomTo().getArea()))
+				.filter(x -> x.getRoomFrom().isMaze() || x.getRoomTo().isMaze()));
+		println("%n}");
+	}
+
 	@Bean
 	public ApplicationRunner appRunner() {
 		return new ApplicationRunner() {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
 				// Execute start-up tasks
+				world.getMobs().stream()
+						.filter(x -> x.getPurchasedTypes().contains(ItemType.ARMOR))
+						.forEach(x -> println("%4d/%3d %s %.0f %s", x.getSellPercent(), x.getBuyPercent(), x.getName(),
+								x.getGold().getAverage(), x.getPurchasedTypes()));
 
-				
 				// Log any raw output produced
 				if (rawOutput.length() > 0) {
 					log.info("App runner produced raw output:\n{}", rawOutput);

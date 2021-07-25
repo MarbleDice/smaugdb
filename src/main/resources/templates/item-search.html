@@ -16,6 +16,7 @@
 	<caption>Search parameters</caption>
 	<tr>
 		<th class="subheader" scope="col">Name</th>
+		<th class="subheader" scope="col">Area</th>
 		<th class="subheader" scope="col">Min Level</th>
 		<th class="subheader" scope="col">Max Level</th>
 		<th class="subheader" scope="col">Item Type</th>
@@ -25,6 +26,12 @@
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
+		<td>
+			<select th:field="*{area}">
+				<option selected value="">any</option>
+				<option th:each="area : ${areas}" th:value="${area.urlSafeName}" th:text="${area.name}"></option>
+			</select>
+		</td>
 		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
 		<td>
@@ -59,6 +66,10 @@
 </table>
 <div class="actions">
 	<button name="search">Search</button>
+	<span>Format:</span>
+	<select th:field="*{format}">
+		<option th:each="format : ${formats}" th:value="${format.name()}" th:text="${format.label}"></option>
+	</select>
 </div>
 </form>
 
@@ -71,20 +82,22 @@
 		<th scope="col">Item Name</th>
 		<th scope="col">Area Name</th>
 		<th scope="col">Type</th>
-		<th scope="col">Wear</th>
+		<th scope="col" th:if="${itemSearchForm.showWear()}">Wear</th>
 		<th class="number" scope="col">Weight</th>
-		<th scope="col">Summary</th>
-		<th scope="col">Apply</th>
+		<th scope="col" th:if="${itemSearchForm.showCost()}">Cost</th>
+		<th scope="col" th:if="${itemSearchForm.showSummary()}">Summary</th>
+		<th scope="col" th:if="${itemSearchForm.showApply()}">Apply</th>
 	</tr>
 	<tr th:each="item : ${items}">
 		<td class="number" th:text="${item.level}"></td>
 		<td><a th:replace="~{link::to(${item})}"></a></td>
 		<td><a th:replace="~{link::area(${item.area})}"></a></td>
 		<td th:text="${item.subType}"></td>
-		<td th:text="${@utils.label(item.equipFlags)}"></td>
-		<td class="number" th:text="${item.weight}"></td>
-		<td th:text="${item.summary}" th:title="${item.tooltip}"></td>
-		<td th:text="${@utils.label(item.applies)}"></td>
+		<td th:text="${@utils.label(item.equipFlags)}" th:if="${itemSearchForm.showWear()}"></td>
+		<td class="number" th:text="${@utils.formatAvg(item.weight / 10)}"></td>
+		<td class="number" th:text="${@utils.formatQty(item.cost)}" th:if="${itemSearchForm.showCost()}"></td>
+		<td th:text="${item.summary}" th:title="${item.tooltip}" th:if="${itemSearchForm.showSummary()}"></td>
+		<td th:text="${@utils.label(item.applies)}" th:if="${itemSearchForm.showApply()}"></td>
 	</tr>
 </table>
 

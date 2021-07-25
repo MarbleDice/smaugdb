@@ -1,12 +1,16 @@
 package com.bromleyoil.smaugdb.form;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.Labelable;
 
 public class MobSearchForm {
 	private String name;
@@ -21,6 +25,58 @@ public class MobSearchForm {
 	private Integer playerLevel;
 	private Integer playerAlignment;
 	private Integer totalPartyLevel;
+
+	private Format format;
+
+	public enum Format implements Labelable {
+		DEFAULT, VALUE, EXP;
+	}
+
+	public List<Mob> apply(Collection<Mob> mobs) {
+		Stream<Mob> stream = mobs.stream();
+		if (getName() != null) {
+			stream = stream.filter(x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
+		}
+		if (getArea() != null) {
+			stream = stream.filter(x -> x.getArea().equals(getArea()));
+		}
+		if (getMinLevel() != null) {
+			stream = stream.filter(x -> x.getLevel().getAverage() >= getMinLevel());
+		}
+		if (getMaxLevel() != null) {
+			stream = stream.filter(x -> x.getLevel().getAverage() <= getMaxLevel());
+		}
+		if (getAlignment() != null) {
+			stream = stream.filter(x -> x.getAlignment() <= getAlignment());
+		}
+		if (getSpawnCount() != null) {
+			stream = stream.filter(x -> x.getMaxSpawnCount() >= getSpawnCount());
+		}
+		if (getDamage() != null) {
+			stream = stream.filter(x -> x.getDamagePerRound().getAverage() <= getDamage());
+		}
+		if (getActFlag() != null) {
+			stream = stream.filter(x -> x.hasActFlag(getActFlag()));
+		}
+
+		return stream.filter(Mob::getExists)
+				.sorted(getComparator())
+				.collect(Collectors.toList());
+	}
+
+	protected Comparator<Mob> getComparator() {
+		if (format == Format.EXP && playerLevel != null) {
+			return Comparator.comparingDouble(this::getExpPerHp).reversed();
+		} else if (format == Format.VALUE) {
+			return Comparator.comparing(x ->  x.getGold().getAverage(), Comparator.reverseOrder());
+		} else {
+			return Comparator.comparingDouble(x -> x.getLevel().getAverage());
+		}
+	}
+
+	public boolean showExp() {
+		return format == Format.EXP && playerLevel != null;
+	}
 
 	public double calcExp(Mob mob) {
 		// Base exp based on level diff ranges, from -9 to +4 inclusive
@@ -113,10 +169,6 @@ public class MobSearchForm {
 		return 100d * exp / modifiedHp;
 	}
 
-	public Comparator<Mob> getExpPerHpComparator() {
-		return Comparator.comparingDouble(this::getExpPerHp).reversed();
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -203,5 +255,13 @@ public class MobSearchForm {
 
 	public void setTotalPartyLevel(Integer totalPartyLevel) {
 		this.totalPartyLevel = totalPartyLevel;
+	}
+
+	public Format getFormat() {
+		return format;
+	}
+
+	public void setFormat(Format format) {
+		this.format = format;
 	}
 }

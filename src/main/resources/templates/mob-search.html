@@ -54,12 +54,16 @@
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{playerLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
-		<td><input type="text" th:field="*{playerAlignment}" maxlength="4" placeholder="1000" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td><input type="text" th:field="*{playerAlignment}" maxlength="5" placeholder="1000" class="numberBoxW" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{totalPartyLevel}" maxlength="3" placeholder="150" class="numberBox" th:errorclass="field-error" /></td>
 	</tr>
 </table>
 <div class="actions">
 	<button name="search">Search</button>
+	<span>Format:</span>
+	<select th:field="*{format}">
+		<option th:each="format : ${formats}" th:value="${format.name()}" th:text="${format.label}"></option>
+	</select>
 </div>
 </form>
 
@@ -72,12 +76,12 @@
 		<th scope="row">Mob Name</th>
 		<th scope="row">Area Name</th>
 		<th scope="row" class="number">eHP</th>
-		<th scope="row" class="number">Damage</th>
-		<th scope="row" class="number">Alignment</th>
+		<th scope="row" class="number">Dam/R</th>
+		<th scope="row" class="number">Align</th>
 		<th scope="row" class="number">Spawns</th>
 		<th scope="row" class="number">Coins</th>
-		<th scope="row" class="number" th:if="${mobSearchForm.playerLevel != null}">Exp</th>
-		<th scope="row" class="number" th:if="${mobSearchForm.playerLevel != null}">Exp/HP</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp/HP</th>
 		<th scope="row" class="number">Threat</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
@@ -90,9 +94,9 @@
 		<td class="number" th:text="${mob.maxSpawnCount}"></td>
 		<td class="number" th:text="${@utils.formatQty(mob.gold.average)}"></td>
 		<td class="number" th:text="${@utils.formatQty(mobSearchForm.calcExp(mob))}"
-				th:if="${mobSearchForm.playerLevel != null}"></td>
+				th:if="${mobSearchForm.showExp()}"></td>
 		<td class="number" th:text="${@utils.formatAvg(mobSearchForm.getExpPerHp(mob))}"
-				th:if="${mobSearchForm.playerLevel != null}"></td>
+				th:if="${mobSearchForm.showExp()}"></td>
 		<td class="number" th:text="${@utils.formatAvg(mob.threat)}"></td>
 	</tr>
 </table>

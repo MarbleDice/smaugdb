@@ -8,6 +8,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -303,7 +304,10 @@ public class RomParser {
 		strings = nextStringValues(reader);
 		item.setType(ItemType.valueOf(strings.get(0).toUpperCase()));
 		item.setExtraFlags(convertCharVector(ExtraFlag.class, ExtraFlag::ofCode, strings.get(1)));
-		item.setWearFlags(convertCharVector(WearFlag.class, WearFlag::ofCode, strings.get(2)));
+
+		// ROM only support 1 wear flag through wear command priority
+		item.setWearFlags(pruneWearFlags(convertCharVector(WearFlag.class, WearFlag::ofCode, strings.get(2)),
+				item.getType() == ItemType.LIGHT));
 
 		// "the values line" requires interpretation by type
 		strings = nextStringValues(reader);
@@ -331,6 +335,25 @@ public class RomParser {
 			}
 			nextLine(reader);
 		}
+	}
+
+	/**
+	 * In ROM, objects can only be worn in one slot despite having multiple flags.
+	 */
+	private List<WearFlag> pruneWearFlags(List<WearFlag> wearFlags, boolean isLight) {
+		List<WearFlag> rv = new ArrayList<>();
+		if (wearFlags.contains(WearFlag.TAKE)) {
+			rv.add(WearFlag.TAKE);
+		}
+		wearFlags.remove(WearFlag.TAKE);
+		// Lights don't use a wear flag
+		if (!isLight) {
+			wearFlags.stream()
+					.sorted(Comparator.comparingInt(WearFlag::wearPriority))
+					.findFirst()
+					.ifPresent(rv::add);
+		}
+		return rv;
 	}
 
 	/**

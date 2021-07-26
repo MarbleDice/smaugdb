@@ -22,6 +22,17 @@ public enum WearFlag implements Labelable {
 		this.code = code;
 	}
 
+	public int wearPriority() {
+		// ROM wear priority (enums originally taken from smaug with slightly different order)
+		if (ordinal() >= WIELD.ordinal()) {
+			return ordinal() + 1;
+		} else if (this == SHIELD) {
+			return WIELD.ordinal();
+		} else {
+			return ordinal();
+		}
+	}
+
 	public static Optional<WearFlag> ofCode(String code) {
 		for (WearFlag flag : values()) {
 			if (code.equals(flag.code)) {

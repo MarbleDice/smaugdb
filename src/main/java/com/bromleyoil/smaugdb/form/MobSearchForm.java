@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
 
 public class MobSearchForm {
@@ -19,12 +20,16 @@ public class MobSearchForm {
 	private Integer maxLevel;
 	private Integer alignment;
 	private Integer spawnCount;
+	private Integer gold;
 	private Double damage;
 	private ActFlag actFlag;
 
 	private Integer playerLevel;
 	private Integer playerAlignment;
 	private Integer totalPartyLevel;
+
+	private Boolean isShopkeeper;
+	private ItemType buysItem;
 
 	private Format format;
 
@@ -52,11 +57,20 @@ public class MobSearchForm {
 		if (getSpawnCount() != null) {
 			stream = stream.filter(x -> x.getMaxSpawnCount() >= getSpawnCount());
 		}
+		if (gold != null) {
+			stream = stream.filter(x -> x.getGold().getAverage() >= gold);
+		}
 		if (getDamage() != null) {
 			stream = stream.filter(x -> x.getDamagePerRound().getAverage() <= getDamage());
 		}
 		if (getActFlag() != null) {
 			stream = stream.filter(x -> x.hasActFlag(getActFlag()));
+		}
+		if (isShopkeeper != null) {
+			stream = stream.filter(x -> x.isShopkeeper() == isShopkeeper);
+		}
+		if (buysItem != null) {
+			stream = stream.filter(x -> x.getPurchasedTypes().contains(buysItem));
 		}
 
 		return stream.filter(Mob::getExists)
@@ -76,6 +90,14 @@ public class MobSearchForm {
 
 	public boolean showExp() {
 		return format == Format.EXP && playerLevel != null;
+	}
+
+	public boolean showShop() {
+		return buysItem != null || (isShopkeeper != null && isShopkeeper);
+	}
+
+	public boolean showCombat() {
+		return !showShop();
 	}
 
 	public double calcExp(Mob mob) {
@@ -209,6 +231,14 @@ public class MobSearchForm {
 		this.spawnCount = spawnCount;
 	}
 
+	public Integer getGold() {
+		return gold;
+	}
+
+	public void setGold(Integer gold) {
+		this.gold = gold;
+	}
+
 	public Double getDamage() {
 		return damage;
 	}
@@ -255,6 +285,22 @@ public class MobSearchForm {
 
 	public void setTotalPartyLevel(Integer totalPartyLevel) {
 		this.totalPartyLevel = totalPartyLevel;
+	}
+
+	public Boolean getIsShopkeeper() {
+		return isShopkeeper;
+	}
+
+	public void setIsShopkeeper(Boolean isShopkeeper) {
+		this.isShopkeeper = isShopkeeper;
+	}
+
+	public ItemType getBuysItem() {
+		return buysItem;
+	}
+
+	public void setBuysItem(ItemType buysItem) {
+		this.buysItem = buysItem;
 	}
 
 	public Format getFormat() {

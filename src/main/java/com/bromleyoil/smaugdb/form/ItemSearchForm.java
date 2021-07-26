@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
+import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
@@ -21,6 +22,7 @@ public class ItemSearchForm {
 	private Integer maxLevel;
 	private boolean notItemType;
 	private ItemType itemType;
+	private ExtraFlag extraFlag;
 	private WeaponType weaponType;
 	private WearFlag wearFlag;
 	private ApplyType applyType;
@@ -52,6 +54,9 @@ public class ItemSearchForm {
 			} else {
 				stream = stream.filter(x -> x.getType() == getItemType());
 			}
+		}
+		if (extraFlag != null) {
+			stream = stream.filter(x -> x.hasExtraFlag(extraFlag));
 		}
 		if (getWeaponType() != null) {
 			stream = stream.filter(x -> x.getWeaponType() == getWeaponType());
@@ -142,6 +147,14 @@ public class ItemSearchForm {
 
 	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
+	}
+
+	public ExtraFlag getExtraFlag() {
+		return extraFlag;
+	}
+
+	public void setExtraFlag(ExtraFlag extraFlag) {
+		this.extraFlag = extraFlag;
 	}
 
 	public WeaponType getWeaponType() {

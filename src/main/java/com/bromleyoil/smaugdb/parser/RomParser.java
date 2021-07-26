@@ -527,7 +527,13 @@ public class RomParser {
 		log.trace("Got a shopkeeper {}", shopkeeperVnum);
 		Mob mob = world.getMob(shopkeeperVnum);
 		mob.setShopkeeper(true);
-		mob.setPurchasedTypes(purchasedItemTypes.stream().filter(i -> i > 0).map(i -> ItemType.values()[i])
+		mob.setPurchasedTypes(purchasedItemTypes.stream()
+				.filter(x -> x > 0)
+				.map(x -> ItemType.ofCode(x).orElseGet(() -> {
+					warnOnce(String.format("Unrecognized ItemType: %d", x));
+					return ItemType.NONE;
+				}))
+				.filter(x -> x != ItemType.NONE)
 				.collect(Collectors.toList()));
 		mob.setSellPercent(sellPercent);
 		mob.setBuyPercent(buyPercent);

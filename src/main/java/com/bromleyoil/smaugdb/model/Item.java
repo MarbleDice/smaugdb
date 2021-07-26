@@ -185,6 +185,10 @@ public class Item {
 		return extraFlags;
 	}
 
+	public boolean hasExtraFlag(ExtraFlag extraFlag) {
+		return extraFlags.contains(extraFlag);
+	}
+
 	public boolean hasExtraFlag(String extraFlag) {
 		return extraFlags.contains(ExtraFlag.valueOf(extraFlag));
 	}

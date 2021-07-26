@@ -20,9 +20,7 @@
 		<th class="subheader" scope="col">Min Level</th>
 		<th class="subheader" scope="col">Max Level</th>
 		<th class="subheader" scope="col">Item Type</th>
-		<th class="subheader" scope="col">Weapon Type</th>
-		<th class="subheader" scope="col">Wear</th>
-		<th class="subheader" scope="col">Applies</th>
+		<th class="subheader" scope="col">Extra Flag</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{name}" th:errorclass="field-error" /></td>
@@ -42,6 +40,22 @@
 				<option th:each="itemType : ${itemTypes}" th:value="${itemType.name()}" th:text="${itemType.label}"></option>
 			</select>
 		</td>
+		<td>
+			<select th:field="*{extraFlag}">
+				<option selected value="">any</option>
+				<option th:each="extraFlag : ${extraFlags}" th:value="${extraFlag.name()}" th:text="${extraFlag.label}"></option>
+			</select>
+		</td>
+	</tr>
+</table>
+<table class="form">
+	<caption>Equipment parameters</caption>
+	<tr>
+		<th class="subheader" scope="col">Weapon Type</th>
+		<th class="subheader" scope="col">Wear</th>
+		<th class="subheader" scope="col">Applies</th>
+	</tr>
+	<tr>
 		<td>
 			<select th:field="*{weaponType}">
 				<option selected value="">any</option>

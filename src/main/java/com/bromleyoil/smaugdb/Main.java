@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Exit;
 import com.bromleyoil.smaugdb.model.World;
-import com.bromleyoil.smaugdb.model.enums.ItemType;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -95,10 +94,7 @@ public class Main {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
 				// Execute start-up tasks
-				world.getMobs().stream()
-						.filter(x -> x.getPurchasedTypes().contains(ItemType.ARMOR))
-						.forEach(x -> println("%4d/%3d %s %.0f %s", x.getSellPercent(), x.getBuyPercent(), x.getName(),
-								x.getGold().getAverage(), x.getPurchasedTypes()));
+
 
 				// Log any raw output produced
 				if (rawOutput.length() > 0) {

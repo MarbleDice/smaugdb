@@ -58,6 +58,30 @@
 		<td><input type="text" th:field="*{totalPartyLevel}" maxlength="3" placeholder="150" class="numberBox" th:errorclass="field-error" /></td>
 	</tr>
 </table>
+<table class="form">
+	<caption>Commerce parameters</caption>
+	<tr>
+		<th class="subheader" scope="col">Coins</th>
+		<th class="subheader" scope="col">Shopkeeper</th>
+		<th class="subheader" scope="col">Buys</th>
+	</tr>
+	<tr>
+		<td><input type="text" th:field="*{gold}" maxlength="6" placeholder="5000" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td>
+			<select th:field="*{isShopkeeper}">
+				<option selected value="">any</option>
+				<option value="true">yes</option>
+				<option value="false">no</option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{buysItem}">
+				<option selected value="">any</option>
+				<option th:each="itemType : ${itemTypes}" th:value="${itemType.name()}" th:text="${itemType.label}"></option>
+			</select>
+		</td>
+	</tr>
+</table>
 <div class="actions">
 	<button name="search">Search</button>
 	<span>Format:</span>
@@ -75,29 +99,35 @@
 		<th class="number" scope="row">Level</th>
 		<th scope="row">Mob Name</th>
 		<th scope="row">Area Name</th>
-		<th scope="row" class="number">eHP</th>
-		<th scope="row" class="number">Dam/R</th>
-		<th scope="row" class="number">Align</th>
-		<th scope="row" class="number">Spawns</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showCombat()}">eHP</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showCombat()}">Dam/R</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showCombat()}">Align</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showCombat()}">Spawns</th>
+		<th scope="row" th:if="${mobSearchForm.showShop()}">Buy Items</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showShop()}">Sell Rate</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showShop()}">Buy Rate</th>
 		<th scope="row" class="number">Coins</th>
 		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp</th>
 		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp/HP</th>
-		<th scope="row" class="number">Threat</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showCombat()}">Threat</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
 		<td class="number" th:text="${mob.level}"></td>
 		<td><a th:replace="~{link::to(${mob})}"></a></td>
 		<td><a th:replace="~{link::area(${mob.area})}"></a></td>
-		<td class="number" th:text="${@utils.formatQty(mob.ehp.average)}"></td>
-		<td class="number" th:text="${#numbers.formatDecimal(mob.damagePerRound.average, 1, 1)}"></td>
-		<td class="number" th:text="${mob.alignment}"></td>
-		<td class="number" th:text="${mob.maxSpawnCount}"></td>
+		<td class="number" th:text="${@utils.formatQty(mob.ehp.average)}" th:if="${mobSearchForm.showCombat()}"></td>
+		<td class="number" th:text="${#numbers.formatDecimal(mob.damagePerRound.average, 1, 1)}" th:if="${mobSearchForm.showCombat()}"></td>
+		<td class="number" th:text="${mob.alignment}" th:if="${mobSearchForm.showCombat()}"></td>
+		<td class="number" th:text="${mob.maxSpawnCount}" th:if="${mobSearchForm.showCombat()}"></td>
+		<td th:text="${@utils.label(mob.purchasedTypes)}" th:if="${mobSearchForm.showShop()}"></td>
+		<td class="number" th:text="${mob.sellPercent}" th:if="${mobSearchForm.showShop()}"></td>
+		<td class="number" th:text="${mob.buyPercent}" th:if="${mobSearchForm.showShop()}"></td>
 		<td class="number" th:text="${@utils.formatQty(mob.gold.average)}"></td>
 		<td class="number" th:text="${@utils.formatQty(mobSearchForm.calcExp(mob))}"
 				th:if="${mobSearchForm.showExp()}"></td>
 		<td class="number" th:text="${@utils.formatAvg(mobSearchForm.getExpPerHp(mob))}"
 				th:if="${mobSearchForm.showExp()}"></td>
-		<td class="number" th:text="${@utils.formatAvg(mob.threat)}"></td>
+		<td class="number" th:text="${@utils.formatAvg(mob.threat)}" th:if="${mobSearchForm.showCombat()}"></td>
 	</tr>
 </table>
 

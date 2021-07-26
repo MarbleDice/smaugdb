@@ -1,5 +1,7 @@
 package com.bromleyoil.smaugdb.controller;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,10 @@ public class MainController {
 		ModelAndView mav = new ModelAndView("item-search");
 		mav.addObject("areas", world.getAreas());
 		mav.addObject("itemTypes", world.getItemTypes());
+		mav.addObject("extraFlags", world.getItems().stream()
+				.flatMap(x -> x.getExtraFlags().stream())
+				.distinct()
+				.collect(Collectors.toList()));
 		mav.addObject("weaponTypes", world.getWeaponTypes());
 		mav.addObject("wearFlags", world.getWearFlags());
 		mav.addObject("applyTypes", world.getApplyTypes());
@@ -66,6 +72,10 @@ public class MainController {
 		ModelAndView mav = new ModelAndView("mob-search");
 		mav.addObject("areas", world.getAreas());
 		mav.addObject("actFlags", world.getActFlags());
+		mav.addObject("itemTypes", world.getMobs().stream()
+				.flatMap(x -> x.getPurchasedTypes().stream())
+				.distinct()
+				.collect(Collectors.toList()));
 		mav.addObject("formats", MobSearchForm.Format.values());
 		return mav;
 	}

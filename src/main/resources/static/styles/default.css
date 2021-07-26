@@ -137,6 +137,10 @@ button {
 	text-decoration: line-through;
 }
 
+.extra-info {
+	color: #999;
+}
+
 /**
  * Links
  */

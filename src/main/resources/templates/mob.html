@@ -70,25 +70,31 @@
 				<th scope="row">Defenses</th>
 				<td th:text="${@utils.label(mob.defenseFlags)}"></td>
 			</tr>
+			<tr th:if="${mob.special != null}">
+				<th scope="row">Special</th>
+				<td th:text="${mob.special.label}"></td>
+			</tr>
 			<tr>
 				<th scope="row">THAC0</th>
-				<td th:text="${mob.thac0 + ' (' + mob.accuracy + ')'}"></td>
+				<td>
+					<span th:text="${mob.thac0}"></span>
+					<span th:text="${'(' + mob.accuracy + ')'}" class="extra-info"></span>
+				</td>
 			</tr>
 			<tr>
-				<th scope="row">Damage/Hit</th>
-				<td th:text="${mob.damage}"></td>
-			</tr>
-			<tr th:if="${mob.damagePerRound.average > mob.damage.average}">
 				<th scope="row">Damage/Round</th>
-				<td th:text="${mob.damagePerRound}"></td>
+				<td>
+					<span th:text="${@utils.formatAvg(mob.damagePerRound.average)}">12.1</span>
+					<span th:text="${'(' + mob.damage + ' per hit)'}" class="extra-info">12.1</span>
+				</td>
 			</tr>
 			<tr>
-				<th scope="row">Hit Points</th>
-				<td th:text="${mob.hp}"></td>
-			</tr>
-			<tr th:if="${mob.ehp.average > mob.hp.average}">
 				<th scope="row">Effective HP</th>
-				<td th:text="${mob.ehp}"></td>
+				<td>
+					<span th:text="${@utils.formatAvg(mob.ehp.average)}">340</span>
+					<span th:text="${'(base ' + mob.hp + ')'}" class="extra-info"
+							th:if="${mob.ehp.average > mob.hp.average}">(base 150)</span>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row">Armor</th>

@@ -15,6 +15,7 @@ import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.ResistFlag;
+import com.bromleyoil.smaugdb.model.enums.Special;
 
 /**
  * Represents a mobile.
@@ -64,6 +65,7 @@ public class Mob {
 	private int openHour;
 	private int closeHour;
 
+	private Special special;
 	private List<Spawn> spawns = new ArrayList<>();
 	private int maxSpawnCount;
 
@@ -482,6 +484,14 @@ public class Mob {
 
 	public void setCloseHour(int closeHour) {
 		this.closeHour = closeHour;
+	}
+
+	public Special getSpecial() {
+		return special;
+	}
+
+	public void setSpecial(Special special) {
+		this.special = special;
 	}
 
 	public Collection<Prog> getProgs() {

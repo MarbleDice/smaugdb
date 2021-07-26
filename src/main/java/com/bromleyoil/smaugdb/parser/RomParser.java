@@ -49,6 +49,7 @@ import com.bromleyoil.smaugdb.model.enums.ProgType;
 import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 import com.bromleyoil.smaugdb.model.enums.RoomFlag;
 import com.bromleyoil.smaugdb.model.enums.SectorType;
+import com.bromleyoil.smaugdb.model.enums.Special;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class RomParser {
@@ -60,6 +61,7 @@ public class RomParser {
 	private static final Pattern shopPattern = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)"
 			+ "\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
 	private static final Pattern doorPattern = Pattern.compile("^\\s*D(\\d+)\\s*$");
+	private static final Pattern specialPattern = Pattern.compile("^\\s*M\\s+(\\d+)\\s+(\\w+)\\s*");
 	private static final Pattern progPattern = Pattern.compile("^>\\s+(\\w+)\\s+(.+)~$");
 
 	private Set<String> warnings = new HashSet<>();
@@ -149,6 +151,8 @@ public class RomParser {
 					parseResets(reader);
 				} else if (line.startsWith("#SHOPS")) {
 					parseShops(reader);
+				} else if (line.startsWith("#SPECIALS")) {
+					parseSpecials(reader);
 				} else {
 					nextLine(reader);
 				}
@@ -529,6 +533,18 @@ public class RomParser {
 		mob.setBuyPercent(buyPercent);
 		mob.setOpenHour(openHour);
 		mob.setCloseHour(closeHour);
+	}
+
+	private void parseSpecials(BufferedReader reader) {
+		nextLine(reader);
+
+		Matcher matcher = specialPattern.matcher(line);
+		while (matcher.find()) {
+			world.getMob(Integer.parseInt(matcher.group(1))).setSpecial(Special.valueOf(matcher.group(2).toUpperCase()));
+
+			nextLine(reader);
+			matcher = specialPattern.matcher(line);
+		}
 	}
 
 	/**

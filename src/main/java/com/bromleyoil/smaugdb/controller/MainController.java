@@ -61,7 +61,7 @@ public class MainController {
 	@PostMapping("/item-search")
 	public ModelAndView itemSearchPost(ItemSearchForm form) {
 		ModelAndView mav = itemSearchMav();
-		mav.addObject("items", form.apply(world.getItems()));
+		mav.addObject("items", form.search(world.getItems()));
 		return mav;
 	}
 
@@ -91,7 +91,7 @@ public class MainController {
 	@PostMapping("/mob-search")
 	public ModelAndView mobSearchPost(MobSearchForm form) {
 		ModelAndView mav = getMobSearchMav();
-		mav.addObject("mobs", form.apply(world.getMobs()));
+		mav.addObject("mobs", form.search(world.getMobs()));
 		return mav;
 	}
 

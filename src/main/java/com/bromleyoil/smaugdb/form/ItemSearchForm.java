@@ -1,9 +1,6 @@
 package com.bromleyoil.smaugdb.form;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.bromleyoil.smaugdb.model.Area;
@@ -16,7 +13,8 @@ import com.bromleyoil.smaugdb.model.enums.WeaponFlag;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
-public class ItemSearchForm {
+public class ItemSearchForm extends AbstractSearchForm<Item> {
+
 	private String name;
 	private Area area;
 	private Integer minLevel;
@@ -33,58 +31,34 @@ public class ItemSearchForm {
 	private Format format;
 
 	public enum Format implements Labelable {
-		DEFAULT, VALUE;
+		DEFAULT, COST;
 	}
 
-	public List<Item> apply(Collection<Item> items) {
-		Stream<Item> stream = items.stream();
-		if (getName() != null) {
-			stream = stream.filter(x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
-		}
-		if (getArea() != null) {
-			stream = stream.filter(x -> x.getArea().equals(getArea()));
-		}
-		if (getMinLevel() != null) {
-			stream = stream.filter(x -> x.getLevel().getMax() >= getMinLevel());
-		}
-		if (getMaxLevel() != null) {
-			stream = stream.filter(x -> x.getLevel().getMin() <= getMaxLevel());
-		}
-		if (getItemType() != null) {
-			if (getNotItemType()) {
-				stream = stream.filter(x -> x.getType() != getItemType());
-			} else {
-				stream = stream.filter(x -> x.getType() == getItemType());
-			}
-		}
-		if (extraFlag != null) {
-			stream = stream.filter(x -> x.hasExtraFlag(extraFlag));
-		}
-		if (weaponType != null) {
-			stream = stream.filter(x -> x.getWeaponType() == weaponType);
-		}
-		if (weaponFlag != null) {
-			stream = stream.filter(x -> x.hasWeaponFlag(weaponFlag));
-		}
-		if (getWearFlag() != null) {
-			stream = stream.filter(x -> x.hasWearFlag(getWearFlag()));
-		}
-		if (getApplyType() != null) {
-			if (getApplyValue() != null) {
-				stream = stream.filter(x -> x.hasApply(getApplyType(), getApplyValue()));
-			} else {
-				stream = stream.filter(x -> x.hasApply(getApplyType()));
-			}
-		}
+	@Override
+	public Stream<Item> applyFilters(Stream<Item> stream) {
+		stream = maybeFilter(stream, name!= null, x -> x.getName().toLowerCase().contains(name));
+		stream = maybeFilter(stream, area != null, x -> x.getArea().equals(area));
+		stream = maybeFilter(stream, minLevel != null, x -> x.getLevel().getMax() >= minLevel);
+		stream = maybeFilter(stream, maxLevel != null, x -> x.getLevel().getMin() <= maxLevel);
+		stream = maybeInvertFilter(stream, itemType != null, notItemType, x -> x.getType() == itemType);
+		stream = maybeFilter(stream, extraFlag != null, x -> x.hasExtraFlag(extraFlag));
+		stream = maybeFilter(stream, weaponType != null, x -> x.getWeaponType() == weaponType);
+		stream = maybeFilter(stream, weaponFlag != null, x -> x.hasWeaponFlag(weaponFlag));
+		stream = maybeFilter(stream, wearFlag != null, x -> x.hasWearFlag(wearFlag));
+		stream = maybeFilter(stream, applyType != null,	applyValue != null
+				? x -> x.hasApply(applyType, applyValue)
+				: x -> x.hasApply(applyType));
+		stream = maybeFilter(stream, true, Item::getExists);
 
-		return stream.filter(Item::getExists)
-				.sorted(getComparator())
-				.collect(Collectors.toList());
+		return stream;
 	}
 
+	@Override
 	protected Comparator<Item> getComparator() {
-		if (format == Format.VALUE) {
+		if (format == Format.COST) {
 			return Comparator.comparingInt(Item::getCost).reversed();
+		} else if (showWeapon()) {
+			return Comparator.comparingDouble((Item x) -> x.getDamage().getAverage()).reversed();
 		} else {
 			return Comparator.comparingDouble(x -> x.getLevel().getAverage());
 		}
@@ -104,7 +78,7 @@ public class ItemSearchForm {
 	}
 
 	public boolean showCost() {
-		return format == Format.VALUE;
+		return format == Format.COST;
 	}
 
 	public boolean showApply() {

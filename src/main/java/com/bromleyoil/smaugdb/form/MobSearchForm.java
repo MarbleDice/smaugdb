@@ -1,10 +1,8 @@
 package com.bromleyoil.smaugdb.form;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.bromleyoil.smaugdb.model.Area;
@@ -13,7 +11,7 @@ import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
 
-public class MobSearchForm {
+public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private String name;
 	private Area area;
 	private Integer minLevel;
@@ -34,55 +32,31 @@ public class MobSearchForm {
 	private Format format;
 
 	public enum Format implements Labelable {
-		DEFAULT, VALUE, EXP;
+		DEFAULT, COINS, EXP;
 	}
 
-	public List<Mob> apply(Collection<Mob> mobs) {
-		Stream<Mob> stream = mobs.stream();
-		if (getName() != null) {
-			stream = stream.filter(x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
-		}
-		if (getArea() != null) {
-			stream = stream.filter(x -> x.getArea().equals(getArea()));
-		}
-		if (getMinLevel() != null) {
-			stream = stream.filter(x -> x.getLevel().getAverage() >= getMinLevel());
-		}
-		if (getMaxLevel() != null) {
-			stream = stream.filter(x -> x.getLevel().getAverage() <= getMaxLevel());
-		}
-		if (getAlignment() != null) {
-			stream = stream.filter(x -> x.getAlignment() <= getAlignment());
-		}
-		if (getSpawnCount() != null) {
-			stream = stream.filter(x -> x.getMaxSpawnCount() >= getSpawnCount());
-		}
-		if (gold != null) {
-			stream = stream.filter(x -> x.getGold().getAverage() >= gold);
-		}
-		if (getDamage() != null) {
-			stream = stream.filter(x -> x.getDamagePerRound().getAverage() <= getDamage());
-		}
-		if (getActFlag() != null) {
-			stream = stream.filter(x -> x.hasActFlag(getActFlag()));
-		}
-		if (isShopkeeper != null) {
-			stream = stream.filter(x -> x.isShopkeeper() == isShopkeeper);
-		}
-		if (buysItem != null) {
-			stream = stream.filter(x -> x.getPurchasedTypes().contains(buysItem));
-		}
+	@Override
+	public Stream<Mob> applyFilters(Stream<Mob> stream) {
+		maybeFilter(stream, name != null, x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
+		maybeFilter(stream, area != null, x -> x.getArea().equals(getArea()));
+		maybeFilter(stream, minLevel != null, x -> x.getLevel().getAverage() >= getMinLevel());
+		maybeFilter(stream, maxLevel != null, x -> x.getLevel().getAverage() <= getMaxLevel());
+		maybeFilter(stream, alignment != null, x -> x.getAlignment() <= getAlignment());
+		maybeFilter(stream, spawnCount != null, x -> x.getMaxSpawnCount() >= getSpawnCount());
+		maybeFilter(stream, gold != null, x -> x.getGold().getAverage() >= gold);
+		maybeFilter(stream, damage != null, x -> x.getDamagePerRound().getAverage() <= getDamage());
+		maybeFilter(stream, actFlag != null, x -> x.hasActFlag(getActFlag()));
+		maybeFilter(stream, isShopkeeper != null, x -> x.isShopkeeper() == isShopkeeper);
+		maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
 
-		return stream.filter(Mob::getExists)
-				.filter(x -> showExp() ? !x.isShopkeeper() : true)
-				.sorted(getComparator())
-				.collect(Collectors.toList());
+		return stream;
 	}
 
+	@Override
 	protected Comparator<Mob> getComparator() {
 		if (format == Format.EXP && playerLevel != null) {
 			return Comparator.comparingDouble(this::getExpPerHp).reversed();
-		} else if (format == Format.VALUE) {
+		} else if (format == Format.COINS) {
 			return Comparator.comparing(x ->  x.getGold().getAverage(), Comparator.reverseOrder());
 		} else {
 			return Comparator.comparingDouble(x -> x.getLevel().getAverage());

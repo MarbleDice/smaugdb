@@ -37,17 +37,17 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 
 	@Override
 	public Stream<Mob> applyFilters(Stream<Mob> stream) {
-		maybeFilter(stream, name != null, x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
-		maybeFilter(stream, area != null, x -> x.getArea().equals(getArea()));
-		maybeFilter(stream, minLevel != null, x -> x.getLevel().getAverage() >= getMinLevel());
-		maybeFilter(stream, maxLevel != null, x -> x.getLevel().getAverage() <= getMaxLevel());
-		maybeFilter(stream, alignment != null, x -> x.getAlignment() <= getAlignment());
-		maybeFilter(stream, spawnCount != null, x -> x.getMaxSpawnCount() >= getSpawnCount());
-		maybeFilter(stream, gold != null, x -> x.getGold().getAverage() >= gold);
-		maybeFilter(stream, damage != null, x -> x.getDamagePerRound().getAverage() <= getDamage());
-		maybeFilter(stream, actFlag != null, x -> x.hasActFlag(getActFlag()));
-		maybeFilter(stream, isShopkeeper != null, x -> x.isShopkeeper() == isShopkeeper);
-		maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
+		stream = maybeFilter(stream, name != null, x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
+		stream = maybeFilter(stream, area != null, x -> x.getArea().equals(getArea()));
+		stream = maybeFilter(stream, minLevel != null, x -> x.getLevel().getAverage() >= getMinLevel());
+		stream = maybeFilter(stream, maxLevel != null, x -> x.getLevel().getAverage() <= getMaxLevel());
+		stream = maybeFilter(stream, alignment != null, x -> x.getAlignment() <= getAlignment());
+		stream = maybeFilter(stream, spawnCount != null, x -> x.getMaxSpawnCount() >= getSpawnCount());
+		stream = maybeFilter(stream, gold != null, x -> x.getGold().getAverage() >= gold);
+		stream = maybeFilter(stream, damage != null, x -> x.getDamagePerRound().getAverage() <= getDamage());
+		stream = maybeFilter(stream, actFlag != null, x -> x.hasActFlag(getActFlag()));
+		stream = maybeFilter(stream, isShopkeeper != null, x -> x.isShopkeeper() == isShopkeeper);
+		stream = maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
 
 		return stream;
 	}

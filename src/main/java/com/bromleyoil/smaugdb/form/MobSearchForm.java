@@ -74,6 +74,7 @@ public class MobSearchForm {
 		}
 
 		return stream.filter(Mob::getExists)
+				.filter(x -> showExp() ? !x.isShopkeeper() : true)
 				.sorted(getComparator())
 				.collect(Collectors.toList());
 	}
@@ -188,7 +189,7 @@ public class MobSearchForm {
 		// Add 1 to make 1 hp monsters behave more reasonably
 		double modifiedHp = mob.getEhp().getAverage() + 1d;
 		double exp = calcExp(mob);
-		return 100d * exp / modifiedHp;
+		return 10d * playerLevel * exp / modifiedHp;
 	}
 
 	public String getName() {

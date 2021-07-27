@@ -340,6 +340,10 @@ public class Item {
 		this.weaponFlags = weaponFlags;
 	}
 
+	public boolean hasWeaponFlag(WeaponFlag weaponFlag) {
+		return weaponFlags.contains(weaponFlag);
+	}
+
 	public int getLightHours() {
 		return type == ItemType.LIGHT ? getValue(2) : 0;
 	}

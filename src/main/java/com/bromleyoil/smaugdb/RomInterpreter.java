@@ -26,6 +26,7 @@ import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.PopType;
+import com.bromleyoil.smaugdb.model.enums.WeaponFlag;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 /**
@@ -155,6 +156,21 @@ public class RomInterpreter {
 					.filter(x -> x.getType() == ApplyType.DAMROLL)
 					.collect(Collectors.summingInt(Apply::getValue));
 			item.getDamage().add(bonusDam);
+			if (item.hasWeaponFlag(WeaponFlag.SHARP)) {
+				item.getDamage().multiply(11725).divide(10000);
+			}
+			if (item.hasWeaponFlag(WeaponFlag.FLAMING)) {
+				item.getDamage().adjust(1, item.getLevel().getMin() / 4 + 1);
+			}
+			if (item.hasWeaponFlag(WeaponFlag.VAMPIRIC)) {
+				item.getDamage().adjust(1, item.getLevel().getMin() / 5 + 1);
+			}
+			if (item.hasWeaponFlag(WeaponFlag.FROST)) {
+				item.getDamage().adjust(1, item.getLevel().getMin() / 6 + 2);
+			}
+			if (item.hasWeaponFlag(WeaponFlag.SHOCKING)) {
+				item.getDamage().adjust(1, item.getLevel().getMin() / 5 + 2);
+			}
 			item.setSummary(String.format("%.1f damage", item.getDamage().getAverage()));
 			item.setTooltip(String.format("%dd%d+%d", item.getValue(1), item.getValue(2), bonusDam));
 

@@ -23,6 +23,7 @@ public class Path {
 	private boolean cannotPass;
 	private int hostileTo;
 	private int hostileToInvis;
+	List<Item> keys = new ArrayList<>();
 
 	private Path() {
 		exits = new ArrayList<>();
@@ -42,6 +43,7 @@ public class Path {
 		cannotPass = path.cannotPass;
 		hostileTo = path.hostileTo;
 		hostileToInvis = path.hostileToInvis;
+		keys = new ArrayList<>(path.keys);
 
 		// Add the new exit
 		addExit(exit);
@@ -124,6 +126,7 @@ public class Path {
 		requiresMaze = exit.getRoomFrom().isMaze() || requiresMaze;
 		if (exit.isLocked()) {
 			requiresKey = true;
+			keys.add(exit.getKey());
 			cannotPick = exit.isPickProof() || cannotPick;
 			cannotPass = exit.isPassProof() || cannotPass;
 			accumulateMove("K" + dirCode + "O" + dirCode);
@@ -191,5 +194,9 @@ public class Path {
 			rv.add(String.format("Requires key (%s)", type));
 		}
 		return rv;
+	}
+
+	public List<Item> getKeys() {
+		return keys;
 	}
 }

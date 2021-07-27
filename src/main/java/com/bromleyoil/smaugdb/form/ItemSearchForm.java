@@ -64,7 +64,7 @@ public class ItemSearchForm {
 			stream = stream.filter(x -> x.getWeaponType() == weaponType);
 		}
 		if (weaponFlag != null) {
-			stream = stream.filter(x -> x.getWeaponFlags().contains(weaponFlag));
+			stream = stream.filter(x -> x.hasWeaponFlag(weaponFlag));
 		}
 		if (getWearFlag() != null) {
 			stream = stream.filter(x -> x.hasWearFlag(getWearFlag()));

@@ -32,7 +32,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private Format format;
 
 	public enum Format implements Labelable {
-		DEFAULT, COINS, EXP;
+		DEFAULT, COINS;
 	}
 
 	@Override
@@ -48,23 +48,25 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 		stream = maybeFilter(stream, actFlag != null, x -> x.hasActFlag(getActFlag()));
 		stream = maybeFilter(stream, isShopkeeper != null, x -> x.isShopkeeper() == isShopkeeper);
 		stream = maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
+		stream = maybeFilter(stream, showExp(), Mob::canKill);
+		stream = maybeFilter(stream, showExp(), x -> x.getLevel().getMax() >= playerLevel - 9);
 
 		return stream;
 	}
 
 	@Override
 	protected Comparator<Mob> getComparator() {
-		if (format == Format.EXP && playerLevel != null) {
-			return Comparator.comparingDouble(this::getExpPerHp).reversed();
-		} else if (format == Format.COINS) {
+		if (format == Format.COINS) {
 			return Comparator.comparing(x ->  x.getGold().getAverage(), Comparator.reverseOrder());
+		} else if (showExp()) {
+			return Comparator.comparingDouble(this::getExpPerHp).reversed();
 		} else {
 			return Comparator.comparingDouble(x -> x.getLevel().getAverage());
 		}
 	}
 
 	public boolean showExp() {
-		return format == Format.EXP && playerLevel != null;
+		return playerLevel != null;
 	}
 
 	public boolean showShop() {
@@ -75,6 +77,9 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 		return !showShop();
 	}
 
+	/**
+	 * @return The XP awarded for the slaying the given Mob.
+	 */
 	public double calcExp(Mob mob) {
 		// Base exp based on level diff ranges, from -9 to +4 inclusive
 		List<Integer> baseExpTable = Arrays.asList(1, 2, 5, 9, 11, 22, 33, 50, 66, 83, 99, 121, 143, 165);
@@ -159,11 +164,26 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 		return exp;
 	}
 
+	/**
+	 * @return The expected average HP for a mob of the given level
+	 */
+	protected static double calcAverageHp(int level) {
+		// Values determined through manual regression analysis
+		if (level <= 15) {
+			return -8.8178 + 14.6767 * level;
+		} else {
+			return 61.1928 * Math.pow(Math.E, 0.0875 * level);
+		}
+	}
+
+	/**
+	 * @return The XP awarded per expected health pool, for slaying the given Mob
+	 */
 	public double getExpPerHp(Mob mob) {
 		// Add 1 to make 1 hp monsters behave more reasonably
 		double modifiedHp = mob.getEhp().getAverage() + 1d;
 		double exp = calcExp(mob);
-		return 10d * playerLevel * exp / modifiedHp;
+		return calcAverageHp(playerLevel) * exp / modifiedHp;
 	}
 
 	public String getName() {

@@ -170,6 +170,11 @@ public class Mob {
 		this.actFlags = actFlags;
 	}
 
+	public boolean canKill() {
+		return !isShopkeeper && !hasActFlag(ActFlag.HEALER) && !hasActFlag(ActFlag.TRAIN) && !hasActFlag(ActFlag.GAIN)
+				&& !hasActFlag(ActFlag.PRACTICE) && !hasActFlag(ActFlag.CHANGER);
+	}
+
 	public List<AffectFlag> getAffectFlags() {
 		return affectFlags;
 	}

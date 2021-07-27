@@ -43,6 +43,10 @@ public class MainController {
 				.distinct()
 				.collect(Collectors.toList()));
 		mav.addObject("weaponTypes", world.getWeaponTypes());
+		mav.addObject("weaponFlags", world.getItems().stream()
+				.flatMap(x -> x.getWeaponFlags().stream())
+				.distinct()
+				.collect(Collectors.toList()));
 		mav.addObject("wearFlags", world.getWearFlags());
 		mav.addObject("applyTypes", world.getApplyTypes());
 		mav.addObject("formats", ItemSearchForm.Format.values());

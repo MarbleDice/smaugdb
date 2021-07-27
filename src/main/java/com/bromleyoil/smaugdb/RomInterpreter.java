@@ -26,7 +26,6 @@ import com.bromleyoil.smaugdb.model.World;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.PopType;
-import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 /**
@@ -151,7 +150,6 @@ public class RomInterpreter {
 			item.setSummary(String.format("C %d M %d%s", item.getCapacity(), item.getValue(3), reduction));
 		} else if (item.getType() == WEAPON) {
 			// type num size verb flags
-			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));
 			item.setDamage(Range.of(item.getValue(1), item.getValue(1) * item.getValue(2)));
 			int bonusDam = item.getApplies().stream()
 					.filter(x -> x.getType() == ApplyType.DAMROLL)
@@ -159,8 +157,6 @@ public class RomInterpreter {
 			item.getDamage().add(bonusDam);
 			item.setSummary(String.format("%.1f damage", item.getDamage().getAverage()));
 			item.setTooltip(String.format("%dd%d+%d", item.getValue(1), item.getValue(2), bonusDam));
-			// 3 verb
-			// TODO 4 weapon flag (burning, etc)
 
 		} else if (item.getType() == ARMOR) {
 			// pierce bash slash exotic bulk

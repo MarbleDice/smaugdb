@@ -51,6 +51,8 @@ import com.bromleyoil.smaugdb.model.enums.ResistFlag;
 import com.bromleyoil.smaugdb.model.enums.RoomFlag;
 import com.bromleyoil.smaugdb.model.enums.SectorType;
 import com.bromleyoil.smaugdb.model.enums.Special;
+import com.bromleyoil.smaugdb.model.enums.WeaponFlag;
+import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
 public class RomParser {
@@ -312,6 +314,7 @@ public class RomParser {
 		// "the values line" requires interpretation by type
 		strings = nextStringValues(reader);
 		item.setStringValues(strings);
+		parseObjectValues(item);
 
 		// level weight cost condition(unused)
 		strings = nextStringValues(reader);
@@ -319,7 +322,7 @@ public class RomParser {
 		item.setWeight(Integer.valueOf(strings.get(1)));
 		item.setCost(Integer.valueOf(strings.get(2)));
 
-		// Extra/Apply sections
+		// Extra/Apply/Flag sections
 		nextLine(reader);
 		while ("E".equals(line) || "A".equals(line)) {
 			if ("A".equals(line)) {
@@ -332,8 +335,22 @@ public class RomParser {
 			} else if ("E".equals(line)) {
 				nextString(reader);
 				nextBlock(reader);
+			} else if ("F".equals(line)) {
+				// Unloaded
 			}
 			nextLine(reader);
+		}
+	}
+
+	/**
+	 * Parses any type-specific values. See also RomInterpreter::interpretValues
+	 * @param item
+	 */
+	private void parseObjectValues(Item item) {
+		if (item.getType() == ItemType.WEAPON) {
+			// 0=weapon_type 1=num_dice 2=dice_size 3=verb 4=weapon_flags
+			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));
+			item.setWeaponFlags(convertCharVector(WeaponFlag.class, WeaponFlag::ofCode, item.getStringValue(4)));
 		}
 	}
 

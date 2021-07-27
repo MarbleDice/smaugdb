@@ -52,6 +52,7 @@
 	<caption>Equipment parameters</caption>
 	<tr>
 		<th class="subheader" scope="col">Weapon Type</th>
+		<th class="subheader" scope="col">Weapon Flag</th>
 		<th class="subheader" scope="col">Wear</th>
 		<th class="subheader" scope="col">Applies</th>
 	</tr>
@@ -60,6 +61,12 @@
 			<select th:field="*{weaponType}">
 				<option selected value="">any</option>
 				<option th:each="weaponType : ${weaponTypes}" th:value="${weaponType.name()}" th:text="${weaponType.label}"></option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{weaponFlag}">
+				<option selected value="">any</option>
+				<option th:each="weaponFlag : ${weaponFlags}" th:value="${weaponFlag.name()}" th:text="${weaponFlag.label}"></option>
 			</select>
 		</td>
 		<td>
@@ -96,6 +103,7 @@
 		<th scope="col">Item Name</th>
 		<th scope="col">Area Name</th>
 		<th scope="col">Type</th>
+		<th scope="col" th:if="${itemSearchForm.showWeapon()}">Weapon Flags</th>
 		<th scope="col" th:if="${itemSearchForm.showWear()}">Wear</th>
 		<th class="number" scope="col">Weight</th>
 		<th scope="col" th:if="${itemSearchForm.showCost()}">Cost</th>
@@ -107,6 +115,7 @@
 		<td><a th:replace="~{link::to(${item})}"></a></td>
 		<td><a th:replace="~{link::area(${item.area})}"></a></td>
 		<td th:text="${item.subType}"></td>
+		<td th:text="${@utils.label(item.weaponFlags)}" th:if="${itemSearchForm.showWeapon()}"></td>
 		<td th:text="${@utils.label(item.equipFlags)}" th:if="${itemSearchForm.showWear()}"></td>
 		<td class="number" th:text="${@utils.formatAvg(item.weight / 10)}"></td>
 		<td class="number" th:text="${@utils.formatQty(item.cost)}" th:if="${itemSearchForm.showCost()}"></td>

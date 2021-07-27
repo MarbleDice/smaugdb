@@ -12,6 +12,7 @@ import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
+import com.bromleyoil.smaugdb.model.enums.WeaponFlag;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
 
@@ -24,6 +25,7 @@ public class ItemSearchForm {
 	private ItemType itemType;
 	private ExtraFlag extraFlag;
 	private WeaponType weaponType;
+	private WeaponFlag weaponFlag;
 	private WearFlag wearFlag;
 	private ApplyType applyType;
 	private Integer applyValue;
@@ -58,8 +60,11 @@ public class ItemSearchForm {
 		if (extraFlag != null) {
 			stream = stream.filter(x -> x.hasExtraFlag(extraFlag));
 		}
-		if (getWeaponType() != null) {
-			stream = stream.filter(x -> x.getWeaponType() == getWeaponType());
+		if (weaponType != null) {
+			stream = stream.filter(x -> x.getWeaponType() == weaponType);
+		}
+		if (weaponFlag != null) {
+			stream = stream.filter(x -> x.getWeaponFlags().contains(weaponFlag));
 		}
 		if (getWearFlag() != null) {
 			stream = stream.filter(x -> x.hasWearFlag(getWearFlag()));
@@ -85,8 +90,13 @@ public class ItemSearchForm {
 		}
 	}
 
+	public boolean showWeapon() {
+		return (itemType == ItemType.WEAPON && !notItemType)
+				|| weaponType != null || weaponFlag != null;
+	}
+
 	public boolean showWear() {
-		return format == Format.DEFAULT;
+		return !showWeapon() && format == Format.DEFAULT;
 	}
 
 	public boolean showSummary() {
@@ -163,6 +173,14 @@ public class ItemSearchForm {
 
 	public void setWeaponType(WeaponType weaponType) {
 		this.weaponType = weaponType;
+	}
+
+	public WeaponFlag getWeaponFlag() {
+		return weaponFlag;
+	}
+
+	public void setWeaponFlag(WeaponFlag weaponFlag) {
+		this.weaponFlag = weaponFlag;
 	}
 
 	public WearFlag getWearFlag() {

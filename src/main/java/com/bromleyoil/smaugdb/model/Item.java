@@ -18,6 +18,7 @@ import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.WeaponFlag;
 import com.bromleyoil.smaugdb.model.enums.WeaponSkill;
 import com.bromleyoil.smaugdb.model.enums.WeaponType;
 import com.bromleyoil.smaugdb.model.enums.WearFlag;
@@ -44,6 +45,7 @@ public class Item {
 	private String summary;
 	private String tooltip;
 	private WeaponType weaponType;
+	private List<WeaponFlag> weaponFlags = new ArrayList<>();
 	private Range totalArmor;
 	private int pierceArmor;
 	private int bashArmor;
@@ -328,6 +330,14 @@ public class Item {
 
 	public void setWeaponType(WeaponType weaponType) {
 		this.weaponType = weaponType;
+	}
+
+	public List<WeaponFlag> getWeaponFlags() {
+		return weaponFlags;
+	}
+
+	public void setWeaponFlags(List<WeaponFlag> weaponFlags) {
+		this.weaponFlags = weaponFlags;
 	}
 
 	public int getLightHours() {

@@ -94,7 +94,9 @@ public class Main {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
 				// Execute start-up tasks
-
+				world.getItems().stream()
+						.filter(x -> x.getKeywords().contains("two"))
+						.forEach(x -> println("%d %s [%s]", x.getVnum(), x.getName(), x.getKeywords()));
 
 				// Log any raw output produced
 				if (rawOutput.length() > 0) {

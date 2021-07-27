@@ -75,6 +75,10 @@
 				<th scope="row">Damage</th>
 				<td th:text="${item.damage}"></td>
 			</tr>
+			<tr th:if="${!item.weaponFlags.isEmpty()}">
+				<th scope="row">Weapon Flags</th>
+				<td th:text="${@utils.label(item.weaponFlags)}"></td>
+			</tr>
 			<tr th:if="${item.totalArmor?.average > 0}">
 				<th scope="row">Armor</th>
 				<td>

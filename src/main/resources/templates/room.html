@@ -31,6 +31,12 @@
 				<td>
 					<span th:text="${@utils.label(room.directions)}"></span>
 					<span th:text="${'(randomized ' + room.randomExitCount + '-way)'}" th:if="${room.isMaze}"></span>
+					<ul class="unstyled">
+						<li th:each="exit : ${room.exits}">
+							<span th:text="${exit.direction.label}"></span>
+							<a th:replace="~{link::to(${exit.roomTo})}"></a>
+						</li>
+					</ul>
 				</td>
 			</tr>
 			<tr>

@@ -20,6 +20,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private Integer spawnCount;
 	private Integer gold;
 	private Double damage;
+	private Double threat;
 	private ActFlag actFlag;
 
 	private Integer playerLevel;
@@ -37,14 +38,15 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 
 	@Override
 	public Stream<Mob> applyFilters(Stream<Mob> stream) {
-		stream = maybeFilter(stream, name != null, x -> x.getName().toLowerCase().contains(getName().toLowerCase()));
-		stream = maybeFilter(stream, area != null, x -> x.getArea().equals(getArea()));
-		stream = maybeFilter(stream, minLevel != null, x -> x.getLevel().getAverage() >= getMinLevel());
-		stream = maybeFilter(stream, maxLevel != null, x -> x.getLevel().getAverage() <= getMaxLevel());
-		stream = maybeFilter(stream, alignment != null, x -> x.getAlignment() <= getAlignment());
-		stream = maybeFilter(stream, spawnCount != null, x -> x.getMaxSpawnCount() >= getSpawnCount());
+		stream = maybeFilter(stream, name != null, x -> x.getName().toLowerCase().contains(name.toLowerCase()));
+		stream = maybeFilter(stream, area != null, x -> x.getArea().equals(area));
+		stream = maybeFilter(stream, minLevel != null, x -> x.getLevel().getAverage() >= minLevel);
+		stream = maybeFilter(stream, maxLevel != null, x -> x.getLevel().getAverage() <= maxLevel);
+		stream = maybeFilter(stream, alignment != null, x -> x.getAlignment() <= alignment);
+		stream = maybeFilter(stream, spawnCount != null, x -> x.getMaxSpawnCount() >= spawnCount);
 		stream = maybeFilter(stream, gold != null, x -> x.getGold().getAverage() >= gold);
-		stream = maybeFilter(stream, damage != null, x -> x.getDamagePerRound().getAverage() <= getDamage());
+		stream = maybeFilter(stream, damage != null, x -> x.getDamagePerRound().getAverage() <= damage);
+		stream = maybeFilter(stream, threat != null, x -> x.getThreat() <= threat);
 		stream = maybeFilter(stream, actFlag != null, x -> x.hasActFlag(getActFlag()));
 		stream = maybeFilter(stream, isShopkeeper != null, x -> x.isShopkeeper() == isShopkeeper);
 		stream = maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
@@ -240,6 +242,14 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 
 	public void setDamage(Double damage) {
 		this.damage = damage;
+	}
+
+	public Double getThreat() {
+		return threat;
+	}
+
+	public void setThreat(Double threat) {
+		this.threat = threat;
 	}
 
 	public Area getArea() {

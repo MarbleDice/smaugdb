@@ -20,8 +20,6 @@
 		<th class="subheader" scope="col">Min Level</th>
 		<th class="subheader" scope="col">Max Level</th>
 		<th class="subheader" scope="col">Alignment</th>
-		<th class="subheader" scope="col">Spawns</th>
-		<th class="subheader" scope="col">Damage</th>
 		<th class="subheader" scope="col">Act</th>
 	</tr>
 	<tr>
@@ -34,9 +32,7 @@
 		</td>
 		<td><input type="text" th:field="*{minLevel}" maxlength="2" placeholder="0" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{maxLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
-		<td><span>&leq;</span> <input type="text" th:field="*{alignment}" maxlength="4" placeholder="-750" class="numberBoxW" th:errorclass="field-error" /></td>
-		<td><span>&geq;</span> <input type="text" th:field="*{spawnCount}" maxlength="3" placeholder="5" class="numberBox" th:errorclass="field-error" /></td>
-		<td><span>&leq;</span> <input type="text" th:field="*{damage}" maxlength="4" placeholder="10" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td><span>&leq;</span> <input type="text" th:field="*{alignment}" maxlength="4" placeholder="&plusmn;1000" class="numberBoxW" th:errorclass="field-error" /></td>
 		<td>
 			<select th:field="*{actFlag}">
 				<option selected value="">any</option>
@@ -46,16 +42,22 @@
 	</tr>
 </table>
 <table class="form">
-	<caption>Player parameters</caption>
+	<caption>Experience parameters</caption>
 	<tr>
 		<th class="subheader" scope="col">Player Level</th>
 		<th class="subheader" scope="col">Player Alignment</th>
 		<th class="subheader" scope="col">Total Party Level</th>
+		<th class="subheader" scope="col">Spawns</th>
+		<th class="subheader" scope="col">Damage</th>
+		<th class="subheader" scope="col">Threat</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{playerLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{playerAlignment}" maxlength="5" placeholder="1000" class="numberBoxW" th:errorclass="field-error" /></td>
 		<td><input type="text" th:field="*{totalPartyLevel}" maxlength="3" placeholder="150" class="numberBox" th:errorclass="field-error" /></td>
+		<td><span>&geq;</span> <input type="text" th:field="*{spawnCount}" maxlength="3" class="numberBox" th:errorclass="field-error" /></td>
+		<td><span>&leq;</span> <input type="text" th:field="*{damage}" maxlength="4" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td><span>&leq;</span> <input type="text" th:field="*{threat}" maxlength="8" class="numberBoxW" th:errorclass="field-error" /></td>
 	</tr>
 </table>
 <table class="form">
@@ -84,7 +86,7 @@
 </table>
 <div class="actions">
 	<button name="search">Search</button>
-	<span>Format:</span>
+	<span>Sort:</span>
 	<select th:field="*{format}">
 		<option th:each="format : ${formats}" th:value="${format.name()}" th:text="${format.label}"></option>
 	</select>

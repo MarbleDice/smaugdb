@@ -87,7 +87,7 @@
 </table>
 <div class="actions">
 	<button name="search">Search</button>
-	<span>Format:</span>
+	<span>Sort:</span>
 	<select th:field="*{format}">
 		<option th:each="format : ${formats}" th:value="${format.name()}" th:text="${format.label}"></option>
 	</select>

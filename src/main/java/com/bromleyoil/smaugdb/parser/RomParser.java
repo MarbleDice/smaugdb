@@ -262,9 +262,9 @@ public class RomParser {
 		// pierce bash slash magic
 		values = nextValues(reader);
 		mob.setPierceArmor(values.get(0));
-		mob.setBashArmor(values.get(0));
-		mob.setSlashArmor(values.get(0));
-		mob.setMagicArmor(values.get(0));
+		mob.setBashArmor(values.get(1));
+		mob.setSlashArmor(values.get(2));
+		mob.setMagicArmor(values.get(3));
 		
 		// attack_flags imm_flags res_flags vuln_flags
 		strings = nextStringValues(reader);

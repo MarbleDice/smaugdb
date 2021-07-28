@@ -48,6 +48,7 @@
 							<ul th:if="${!room.path.requirements.isEmpty()}">
 								<li th:each="req : ${room.path.requirements}"><span th:text="${req}">Requires flight</span></li>
 								<li th:each="key : ${room.path.keys}"><a th:replace="~{link::to(${key})}"></a></li>
+								<li th:each="mob : ${room.path.mobs}"><a th:replace="~{link::to(${mob})}"></a></li>
 							</ul>
 						</li>
 					</ul>

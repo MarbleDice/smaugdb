@@ -31,7 +31,7 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 	private Format format;
 
 	public enum Format implements Labelable {
-		DEFAULT, COST;
+		DEFAULT, HIGHEST_LEVEL, COST;
 	}
 
 	@Override
@@ -57,6 +57,8 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 	protected Comparator<Item> getComparator() {
 		if (format == Format.COST) {
 			return Comparator.comparingInt(Item::getCost).reversed();
+		} else if (format == Format.HIGHEST_LEVEL) {
+			return Comparator.comparingDouble((Item x) -> x.getLevel().getAverage()).reversed();
 		} else if (showWeapon()) {
 			return Comparator.comparingDouble((Item x) -> x.getDamage().getAverage()).reversed();
 		} else {
@@ -70,11 +72,11 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 	}
 
 	public boolean showWear() {
-		return !showWeapon() && format == Format.DEFAULT;
+		return !showWeapon();
 	}
 
 	public boolean showSummary() {
-		return format == Format.DEFAULT;
+		return true;
 	}
 
 	public boolean showCost() {
@@ -82,7 +84,7 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 	}
 
 	public boolean showApply() {
-		return format == Format.DEFAULT;
+		return true;
 	}
 
 	public String getName() {

@@ -2,8 +2,13 @@ package com.bromleyoil.smaugdb.model;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +28,8 @@ public class Path {
 	private boolean cannotPass;
 	private int hostileTo;
 	private int hostileToInvis;
-	List<Item> keys = new ArrayList<>();
+	private List<Item> keys = new ArrayList<>();
+	private Set<Mob> mobs = new TreeSet<>(Comparator.comparingDouble(x -> x.getLevel().getAverage()));
 
 	private Path() {
 		exits = new ArrayList<>();
@@ -44,6 +50,8 @@ public class Path {
 		hostileTo = path.hostileTo;
 		hostileToInvis = path.hostileToInvis;
 		keys = new ArrayList<>(path.keys);
+		mobs = new TreeSet<>(Comparator.comparingDouble(x -> x.getLevel().getAverage()));
+		mobs.addAll(path.mobs);
 
 		// Add the new exit
 		addExit(exit);
@@ -114,6 +122,7 @@ public class Path {
 
 		// Check for aggressive mobs
 		roomTo.getContainedSpawns().stream().map(Spawn::getMob).filter(Mob::isAggressive).forEach(x -> {
+			mobs.add(x);
 			if (x.hasAffectFlag(AffectFlag.DETECT_INVIS)) {
 				hostileToInvis = Integer.max(hostileToInvis, x.getLevel().getMax() + 5);
 			} else {
@@ -196,7 +205,11 @@ public class Path {
 		return rv;
 	}
 
-	public List<Item> getKeys() {
-		return keys;
+	public Collection<Item> getKeys() {
+		return Collections.unmodifiableCollection(keys);
+	}
+
+	public Collection<Mob> getMobs() {
+		return Collections.unmodifiableCollection(mobs);
 	}
 }

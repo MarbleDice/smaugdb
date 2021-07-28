@@ -42,6 +42,7 @@ import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.AttackFlag;
+import com.bromleyoil.smaugdb.model.enums.DamageVerb;
 import com.bromleyoil.smaugdb.model.enums.Direction;
 import com.bromleyoil.smaugdb.model.enums.EquipSlot;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
@@ -250,14 +251,14 @@ public class RomParser {
 		mob.setAlignment(Integer.parseInt(strings.get(2)));
 		mob.setAssistGroup(strings.get(3));
 
-		// level thac0 hphpdice manadice damdice damtype
+		// level thac0 hphpdice manadice damdice damverb
 		strings = nextStringValues(reader);
 		mob.setSuggestedLevel(Integer.parseInt(strings.get(0)));
 		mob.setThac0(Integer.parseInt(strings.get(1)));
 		mob.setHp(Range.of(strings.get(2)));
 		mob.setMana(Range.of(strings.get(3)));
 		mob.setDamage(Range.of(strings.get(4)));
-		mob.setDamageType(strings.get(5));
+		mob.setDamageVerb(DamageVerb.valueOf(strings.get(5).toUpperCase()));
 
 		// pierce bash slash magic
 		values = nextValues(reader);
@@ -350,6 +351,7 @@ public class RomParser {
 		if (item.getType() == ItemType.WEAPON) {
 			// 0=weapon_type 1=num_dice 2=dice_size 3=verb 4=weapon_flags
 			item.setWeaponType(WeaponType.valueOf(item.getStringValue(0).toUpperCase()));
+			item.setDamageVerb(DamageVerb.valueOf(item.getStringValue(3).toUpperCase()));
 			item.setWeaponFlags(convertCharVector(WeaponFlag.class, WeaponFlag::ofCode, item.getStringValue(4)));
 		}
 	}

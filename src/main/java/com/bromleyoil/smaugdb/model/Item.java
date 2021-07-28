@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
 import com.bromleyoil.smaugdb.model.enums.ContainerFlag;
 import com.bromleyoil.smaugdb.model.enums.DamageType;
+import com.bromleyoil.smaugdb.model.enums.DamageVerb;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.WeaponFlag;
@@ -45,6 +47,7 @@ public class Item {
 	private String summary;
 	private String tooltip;
 	private WeaponType weaponType;
+	private DamageVerb damageVerb;
 	private List<WeaponFlag> weaponFlags = new ArrayList<>();
 	private Range totalArmor;
 	private int pierceArmor;
@@ -172,8 +175,8 @@ public class Item {
 
 		if (isWeapon() && getWeaponType() != null) {
 			subType = String.format(" / %s", getWeaponType().getLabel());
-		} else if (isWeapon() && getDamageType() != null) {
-			subType = String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageType().getLabel());
+		} else if (isWeapon() && getDamageVerb() != null) {
+			subType = String.format(" / %s / %s", getWeaponSkill().getLabel(), getDamageVerb().getLabel());
 		}
 
 		return String.format("%s%s", type.getLabel(), subType);
@@ -332,6 +335,18 @@ public class Item {
 		this.weaponType = weaponType;
 	}
 
+	public DamageVerb getDamageVerb() {
+		return damageVerb;
+	}
+
+	public void setDamageVerb(DamageVerb damageVerb) {
+		this.damageVerb = damageVerb;
+	}
+
+	public DamageType getDamageType() {
+		return Optional.ofNullable(damageVerb).map(DamageVerb::getDamageType).orElse(null);
+	}
+
 	public List<WeaponFlag> getWeaponFlags() {
 		return weaponFlags;
 	}
@@ -377,12 +392,8 @@ public class Item {
 		this.damage = damage;
 	}
 
-	public DamageType getDamageType() {
-		return type == ItemType.WEAPON ? DamageType.values()[getValue(3)] : DamageType.NONE;
-	}
-
 	public WeaponSkill getWeaponSkill() {
-		return getDamageType().getWeaponSkill();
+		return getDamageVerb().getWeaponSkill();
 	}
 
 	public int getArmor() {

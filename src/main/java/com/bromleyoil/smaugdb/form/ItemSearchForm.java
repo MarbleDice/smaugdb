@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Item;
 import com.bromleyoil.smaugdb.model.enums.ApplyType;
+import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
@@ -23,6 +24,7 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 	private ItemType itemType;
 	private ExtraFlag extraFlag;
 	private WeaponType weaponType;
+	private DamageType damageType;
 	private WeaponFlag weaponFlag;
 	private WearFlag wearFlag;
 	private ApplyType applyType;
@@ -43,6 +45,7 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 		stream = maybeInvertFilter(stream, itemType != null, notItemType, x -> x.getType() == itemType);
 		stream = maybeFilter(stream, extraFlag != null, x -> x.hasExtraFlag(extraFlag));
 		stream = maybeFilter(stream, weaponType != null, x -> x.getWeaponType() == weaponType);
+		stream = maybeFilter(stream, damageType != null, x -> x.getDamageType() == damageType);
 		stream = maybeFilter(stream, weaponFlag != null, x -> x.hasWeaponFlag(weaponFlag));
 		stream = maybeFilter(stream, wearFlag != null, x -> x.hasWearFlag(wearFlag));
 		stream = maybeFilter(stream, applyType != null,	applyValue != null
@@ -149,6 +152,14 @@ public class ItemSearchForm extends AbstractSearchForm<Item> {
 
 	public void setWeaponType(WeaponType weaponType) {
 		this.weaponType = weaponType;
+	}
+
+	public DamageType getDamageType() {
+		return damageType;
+	}
+
+	public void setDamageType(DamageType damageType) {
+		this.damageType = damageType;
 	}
 
 	public WeaponFlag getWeaponFlag() {

@@ -52,6 +52,7 @@
 	<caption>Equipment parameters</caption>
 	<tr>
 		<th class="subheader" scope="col">Weapon Type</th>
+		<th class="subheader" scope="col">Damage Type</th>
 		<th class="subheader" scope="col">Weapon Flag</th>
 		<th class="subheader" scope="col">Wear</th>
 		<th class="subheader" scope="col">Applies</th>
@@ -61,6 +62,12 @@
 			<select th:field="*{weaponType}">
 				<option selected value="">any</option>
 				<option th:each="weaponType : ${weaponTypes}" th:value="${weaponType.name()}" th:text="${weaponType.label}"></option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{damageType}">
+				<option selected value="">any</option>
+				<option th:each="damageType : ${damageTypes}" th:value="${damageType.name()}" th:text="${damageType.label}"></option>
 			</select>
 		</td>
 		<td>

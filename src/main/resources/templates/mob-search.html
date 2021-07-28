@@ -50,6 +50,7 @@
 		<th class="subheader" scope="col">Spawns</th>
 		<th class="subheader" scope="col">Damage</th>
 		<th class="subheader" scope="col">Threat</th>
+		<th class="subheader" scope="col">Damage Type</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{playerLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
@@ -58,6 +59,12 @@
 		<td><span>&geq;</span> <input type="text" th:field="*{spawnCount}" maxlength="3" class="numberBox" th:errorclass="field-error" /></td>
 		<td><span>&leq;</span> <input type="text" th:field="*{damage}" maxlength="4" class="numberBoxW" th:errorclass="field-error" /></td>
 		<td><span>&leq;</span> <input type="text" th:field="*{threat}" maxlength="8" class="numberBoxW" th:errorclass="field-error" /></td>
+		<td>
+			<select th:field="*{damageType}">
+				<option selected value="">any</option>
+				<option th:each="damageType : ${damageTypes}" th:value="${damageType.name()}" th:text="${damageType.label}"></option>
+			</select>
+		</td>
 	</tr>
 </table>
 <table class="form">

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bromleyoil.smaugdb.form.ItemSearchForm;
 import com.bromleyoil.smaugdb.form.MobSearchForm;
+import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.World;
 
 @Controller
@@ -43,6 +44,10 @@ public class MainController {
 				.distinct()
 				.collect(Collectors.toList()));
 		mav.addObject("weaponTypes", world.getWeaponTypes());
+		mav.addObject("damageTypes", world.getMobs().stream()
+				.map(Mob::getDamageType)
+				.distinct()
+				.collect(Collectors.toList()));
 		mav.addObject("weaponFlags", world.getItems().stream()
 				.flatMap(x -> x.getWeaponFlags().stream())
 				.distinct()
@@ -78,6 +83,10 @@ public class MainController {
 		mav.addObject("actFlags", world.getActFlags());
 		mav.addObject("itemTypes", world.getMobs().stream()
 				.flatMap(x -> x.getPurchasedTypes().stream())
+				.distinct()
+				.collect(Collectors.toList()));
+		mav.addObject("damageTypes", world.getMobs().stream()
+				.map(Mob::getDamageType)
 				.distinct()
 				.collect(Collectors.toList()));
 		mav.addObject("formats", MobSearchForm.Format.values());

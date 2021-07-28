@@ -75,6 +75,13 @@
 				<th scope="row">Damage</th>
 				<td th:text="${item.damage}"></td>
 			</tr>
+			<tr th:if="${item.isWeapon()}">
+				<th scope="row">Damage Type</th>
+				<td>
+					<span th:text="${item.damageType.label}"></span>
+					<span th:text="${'(' + item.damageVerb.label + ')'}" class="extra-info"></span>
+				</td>
+			</tr>
 			<tr th:if="${!item.weaponFlags.isEmpty()}">
 				<th scope="row">Weapon Flags</th>
 				<td th:text="${@utils.label(item.weaponFlags)}"></td>

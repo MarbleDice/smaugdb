@@ -89,6 +89,13 @@
 				</td>
 			</tr>
 			<tr>
+				<th scope="row">Damage Type</th>
+				<td>
+					<span th:text="${mob.damageType.label}"></span>
+					<span th:text="${'(' + mob.damageVerb.label + ')'}" class="extra-info"></span>
+				</td>
+			</tr>
+			<tr>
 				<th scope="row">Effective HP</th>
 				<td>
 					<span th:text="${@utils.formatAvg(mob.ehp.average)}">340</span>

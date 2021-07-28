@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +12,8 @@ import com.bromleyoil.smaugdb.Utils;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.AffectFlag;
 import com.bromleyoil.smaugdb.model.enums.AttackFlag;
+import com.bromleyoil.smaugdb.model.enums.DamageType;
+import com.bromleyoil.smaugdb.model.enums.DamageVerb;
 import com.bromleyoil.smaugdb.model.enums.DefenseFlag;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
@@ -49,7 +52,7 @@ public class Mob {
 	private int hitroll;
 	private Range damage;
 	private int damroll;
-	private String damageType;
+	private DamageVerb damageVerb;
 	private List<ExtraFlag> extraFlags = new ArrayList<>();
 	private List<ResistFlag> resistFlags = new ArrayList<>();
 	private List<ResistFlag> immuneFlags = new ArrayList<>();
@@ -335,12 +338,8 @@ public class Mob {
 		return getEhp().getAverage() * getDamagePerRound().getAverage() / 10;
 	}
 
-	public String getDamageType() {
-		return damageType;
-	}
-
-	public void setDamageType(String damageType) {
-		this.damageType = damageType;
+	public DamageType getDamageType() {
+		return Optional.ofNullable(damageVerb).map(DamageVerb::getDamageType).orElse(null);
 	}
 
 	public Range getGold() {
@@ -365,6 +364,14 @@ public class Mob {
 
 	public void setDamroll(int damroll) {
 		this.damroll = damroll;
+	}
+
+	public DamageVerb getDamageVerb() {
+		return damageVerb;
+	}
+
+	public void setDamageVerb(DamageVerb damageVerb) {
+		this.damageVerb = damageVerb;
 	}
 
 	public List<ExtraFlag> getExtraFlags() {

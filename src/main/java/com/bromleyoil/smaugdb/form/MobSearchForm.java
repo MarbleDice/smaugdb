@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.enums.ActFlag;
+import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
 
@@ -21,6 +22,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private Integer gold;
 	private Double damage;
 	private Double threat;
+	private DamageType damageType;
 	private ActFlag actFlag;
 
 	private Integer playerLevel;
@@ -47,6 +49,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 		stream = maybeFilter(stream, gold != null, x -> x.getGold().getAverage() >= gold);
 		stream = maybeFilter(stream, damage != null, x -> x.getDamagePerRound().getAverage() <= damage);
 		stream = maybeFilter(stream, threat != null, x -> x.getThreat() <= threat);
+		stream = maybeFilter(stream, damageType != null, x -> x.getDamageType() == damageType);
 		stream = maybeFilter(stream, actFlag != null, x -> x.hasActFlag(getActFlag()));
 		stream = maybeFilter(stream, isShopkeeper != null, x -> x.isShopkeeper() == isShopkeeper);
 		stream = maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
@@ -250,6 +253,14 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 
 	public void setThreat(Double threat) {
 		this.threat = threat;
+	}
+
+	public DamageType getDamageType() {
+		return damageType;
+	}
+
+	public void setDamageType(DamageType damageType) {
+		this.damageType = damageType;
 	}
 
 	public Area getArea() {

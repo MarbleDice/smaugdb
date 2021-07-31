@@ -504,16 +504,19 @@ public class RomParser {
 			Pop.found(world.reserveItem(arg1), area, world.getRoom(arg3));
 		} else if (code == 'P') {
 			// arg1=item_vnum arg2=world_limit arg3=container arg4=container_limit
-			Pop.contained(world.reserveItem(arg1), area, world.reserveItem(arg3));
+			Pop pop = Pop.contained(world.reserveItem(arg1), area, world.reserveItem(arg3));
+			pop.setSoftLimit(getSoftLimit(arg2));
 		} else if (code == 'M') {
 			// arg1=mob_vnum arg2=world_limit arg3=room_vnum arg4=room_limit
 			lastSpawn = Spawn.in(world.getMob(arg1), world.getRoom(arg3), arg2, arg4);
 		} else if (code == 'E') {
 			// arg1=item_vnum arg2=soft_world_limit arg3=wear_flag arg4=unused
-			Pop.worn(world.reserveItem(arg1), area, lastSpawn, EquipSlot.values()[arg3].getWearFlag());
+			Pop pop = Pop.worn(world.reserveItem(arg1), area, lastSpawn, EquipSlot.values()[arg3].getWearFlag());
+			pop.setSoftLimit(getSoftLimit(arg2));
 		} else if (code == 'G') {
 			// arg1=item_vnum arg2=soft_world_limit arg3=unused arg4=unused
-			Pop.held(world.reserveItem(arg1), area, lastSpawn);
+			Pop pop = Pop.held(world.reserveItem(arg1), area, lastSpawn);
+			pop.setSoftLimit(getSoftLimit(arg2));
 		} else if (code == 'D') {
 			// arg1=room_vnum arg2=direction arg3=flags(1=closed,2=locked)
 			world.getRoom(arg1).getExit(Direction.values()[arg2]).setIsLocked(arg3 == 2);
@@ -522,6 +525,14 @@ public class RomParser {
 			world.getRoom(arg1).setRandomExitCount(arg2);
 		} else {
 			throw new ParseException("Unknown reset code: " + code);
+		}
+	}
+
+	private static int getSoftLimit(int value) {
+		if (value >= 50) {
+			return 6;
+		} else {
+			return value == -1 ? 999 : value;
 		}
 	}
 

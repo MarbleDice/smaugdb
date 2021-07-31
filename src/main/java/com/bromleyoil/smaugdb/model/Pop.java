@@ -40,6 +40,7 @@ public class Pop {
 	private int id;
 	private Item item;
 	private Range itemLevel = Range.of(0, 0);
+	private Integer softLimit;
 
 	/** PopType.SOLD is handled in the getter */
 	private PopType type;
@@ -276,6 +277,14 @@ public class Pop {
 
 	public void setItemLevel(Range itemLevel) {
 		this.itemLevel = itemLevel;
+	}
+
+	public Integer getSoftLimit() {
+		return softLimit;
+	}
+
+	public void setSoftLimit(Integer softLimit) {
+		this.softLimit = softLimit;
 	}
 
 	/** The specific spawn to which the item is assigned */

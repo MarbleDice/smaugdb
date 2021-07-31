@@ -1,5 +1,6 @@
 package com.bromleyoil.smaugdb.controller;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.bromleyoil.smaugdb.form.ItemSearchForm;
 import com.bromleyoil.smaugdb.form.MobSearchForm;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
 
 @Controller
 public class MainController {
@@ -42,6 +44,7 @@ public class MainController {
 		mav.addObject("extraFlags", world.getItems().stream()
 				.flatMap(x -> x.getExtraFlags().stream())
 				.distinct()
+				.sorted(Comparator.comparing(ExtraFlag::getLabel))
 				.collect(Collectors.toList()));
 		mav.addObject("weaponTypes", world.getWeaponTypes());
 		mav.addObject("damageTypes", world.getMobs().stream()

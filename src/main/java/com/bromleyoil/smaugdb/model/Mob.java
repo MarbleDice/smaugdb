@@ -499,7 +499,7 @@ public class Mob {
 	}
 
 	public Special getSpecial() {
-		return special;
+		return special == null ? Special.NONE : special;
 	}
 
 	public void setSpecial(Special special) {

@@ -112,6 +112,7 @@
 		<th scope="col">Type</th>
 		<th scope="col" th:if="${itemSearchForm.showWeapon()}">Weapon Flags</th>
 		<th scope="col" th:if="${itemSearchForm.showWear()}">Wear</th>
+		<th scope="col" th:if="${itemSearchForm.showWear()}">Align</th>
 		<th class="number" scope="col">Weight</th>
 		<th scope="col" th:if="${itemSearchForm.showCost()}">Cost</th>
 		<th scope="col" th:if="${itemSearchForm.showSummary()}">Summary</th>
@@ -124,6 +125,11 @@
 		<td th:text="${item.subType}"></td>
 		<td th:text="${@utils.label(item.weaponFlags)}" th:if="${itemSearchForm.showWeapon()}"></td>
 		<td th:text="${@utils.label(item.equipFlags)}" th:if="${itemSearchForm.showWear()}"></td>
+		<td th:if="${itemSearchForm.showWear()}">
+			<span th:class="${item.hasExtraFlag('ANTI_EVIL') ? 'invalid' : ''}">E</span>
+			<span th:class="${item.hasExtraFlag('ANTI_NEUTRAL') ? 'invalid' : ''}">N</span>
+			<span th:class="${item.hasExtraFlag('ANTI_GOOD') ? 'invalid' : ''}">G</span>
+		</td>
 		<td class="number" th:text="${@utils.formatAvg(item.weight / 10)}"></td>
 		<td class="number" th:text="${@utils.formatQty(item.cost)}" th:if="${itemSearchForm.showCost()}"></td>
 		<td th:text="${item.summary}" th:title="${item.tooltip}" th:if="${itemSearchForm.showSummary()}"></td>

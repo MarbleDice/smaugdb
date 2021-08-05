@@ -15,7 +15,10 @@ import com.bromleyoil.smaugdb.form.ItemSearchForm;
 import com.bromleyoil.smaugdb.form.MobSearchForm;
 import com.bromleyoil.smaugdb.model.Mob;
 import com.bromleyoil.smaugdb.model.World;
+import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ExtraFlag;
+import com.bromleyoil.smaugdb.model.enums.ItemType;
+import com.bromleyoil.smaugdb.model.enums.Special;
 
 @Controller
 public class MainController {
@@ -87,10 +90,17 @@ public class MainController {
 		mav.addObject("itemTypes", world.getMobs().stream()
 				.flatMap(x -> x.getPurchasedTypes().stream())
 				.distinct()
+				.sorted(Comparator.comparing(ItemType::getLabel))
 				.collect(Collectors.toList()));
 		mav.addObject("damageTypes", world.getMobs().stream()
 				.map(Mob::getDamageType)
 				.distinct()
+				.sorted(Comparator.comparing(DamageType::getLabel))
+				.collect(Collectors.toList()));
+		mav.addObject("specials", world.getMobs().stream()
+				.map(Mob::getSpecial)
+				.distinct()
+				.sorted(Comparator.comparing(Special::getLabel))
 				.collect(Collectors.toList()));
 		mav.addObject("formats", MobSearchForm.Format.values());
 		return mav;

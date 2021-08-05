@@ -51,6 +51,7 @@
 		<th class="subheader" scope="col">Damage</th>
 		<th class="subheader" scope="col">Threat</th>
 		<th class="subheader" scope="col">Damage Type</th>
+		<th class="subheader" scope="col">Special</th>
 	</tr>
 	<tr>
 		<td><input type="text" th:field="*{playerLevel}" maxlength="2" placeholder="50" class="numberBox" th:errorclass="field-error" /></td>
@@ -63,6 +64,12 @@
 			<select th:field="*{damageType}">
 				<option selected value="">any</option>
 				<option th:each="damageType : ${damageTypes}" th:value="${damageType.name()}" th:text="${damageType.label}"></option>
+			</select>
+		</td>
+		<td>
+			<select th:field="*{special}">
+				<option selected value="">any</option>
+				<option th:each="special : ${specials}" th:value="${special.name()}" th:text="${special.label}"></option>
 			</select>
 		</td>
 	</tr>
@@ -119,6 +126,7 @@
 		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp</th>
 		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp/HP</th>
 		<th scope="row" class="number" th:if="${mobSearchForm.showCombat()}">Threat</th>
+		<th scope="row" class="number" th:if="${mobSearchForm.showExp()}">Exp/Threat</th>
 	</tr>
 	<tr th:each="mob : ${mobs}">
 		<td class="number" th:text="${mob.level}"></td>
@@ -137,6 +145,8 @@
 		<td class="number" th:text="${@utils.formatAvg(mobSearchForm.getExpPerHp(mob))}"
 				th:if="${mobSearchForm.showExp()}"></td>
 		<td class="number" th:text="${@utils.formatAvg(mob.threat)}" th:if="${mobSearchForm.showCombat()}"></td>
+		<td class="number" th:text="${@utils.formatAvg(mobSearchForm.getExpPerThreat(mob))}"
+				th:if="${mobSearchForm.showExp()}"></td>
 	</tr>
 </table>
 

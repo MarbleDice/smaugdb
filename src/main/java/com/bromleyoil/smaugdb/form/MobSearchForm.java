@@ -11,6 +11,7 @@ import com.bromleyoil.smaugdb.model.enums.ActFlag;
 import com.bromleyoil.smaugdb.model.enums.DamageType;
 import com.bromleyoil.smaugdb.model.enums.ItemType;
 import com.bromleyoil.smaugdb.model.enums.Labelable;
+import com.bromleyoil.smaugdb.model.enums.Special;
 
 public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private String name;
@@ -23,6 +24,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private Double damage;
 	private Double threat;
 	private DamageType damageType;
+	private Special special;
 	private ActFlag actFlag;
 
 	private Integer playerLevel;
@@ -35,7 +37,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 	private Format format;
 
 	public enum Format implements Labelable {
-		DEFAULT, COINS;
+		DEFAULT, COINS, EXP_HP, EXP_THREAT;
 	}
 
 	@Override
@@ -55,6 +57,7 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 		stream = maybeFilter(stream, buysItem != null, x -> x.getPurchasedTypes().contains(buysItem));
 		stream = maybeFilter(stream, showExp(), Mob::canKill);
 		stream = maybeFilter(stream, showExp(), x -> x.getLevel().getMax() >= playerLevel - 9);
+		stream = maybeFilter(stream, special != null, x -> x.getSpecial() == special);
 
 		return stream;
 	}
@@ -63,8 +66,12 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 	protected Comparator<Mob> getComparator() {
 		if (format == Format.COINS) {
 			return Comparator.comparing(x ->  x.getGold().getAverage(), Comparator.reverseOrder());
-		} else if (showExp()) {
+		} else if (format == Format.EXP_HP) {
 			return Comparator.comparingDouble(this::getExpPerHp).reversed();
+		} else if (format == Format.EXP_THREAT) {
+			return Comparator.comparingDouble(this::getExpPerThreat).reversed();
+		} else if (showExp()) {
+			return Comparator.comparingDouble(this::calcExp).reversed();
 		} else {
 			return Comparator.comparingDouble(x -> x.getLevel().getAverage());
 		}
@@ -191,6 +198,11 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 		return calcAverageHp(playerLevel) * exp / modifiedHp;
 	}
 
+	public double getExpPerThreat(Mob mob) {
+		double exp = calcExp(mob);
+		return 20d * calcAverageHp(playerLevel) * exp / mob.getThreat();
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -261,6 +273,14 @@ public class MobSearchForm extends AbstractSearchForm<Mob> {
 
 	public void setDamageType(DamageType damageType) {
 		this.damageType = damageType;
+	}
+
+	public Special getSpecial() {
+		return special;
+	}
+
+	public void setSpecial(Special special) {
+		this.special = special;
 	}
 
 	public Area getArea() {

@@ -92,7 +92,7 @@ public class Utils {
 		return flags;
 	}
 
-	public static String label(Collection<Labelable> items) {
+	public static String label(Collection<? extends Labelable> items) {
 		return items.stream().map(Labelable::getLabel).collect(Collectors.joining(", "));
 	}
 

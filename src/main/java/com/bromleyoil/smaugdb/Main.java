@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import com.bromleyoil.smaugdb.model.Area;
 import com.bromleyoil.smaugdb.model.Exit;
 import com.bromleyoil.smaugdb.model.World;
-import com.bromleyoil.smaugdb.model.enums.RoomFlag;
 
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 
@@ -46,7 +45,7 @@ public class Main {
 	private static void dumpExits(String indent, Stream<Exit> stream) {
 		AtomicInteger i = new AtomicInteger();
 		stream.forEach(x -> print("%d->%d;%s", x.getRoomFrom().getVnum(), x.getRoomTo().getVnum(),
-				i.incrementAndGet() % 10 == 0 ? System.lineSeparator() + indent: ""));
+				i.incrementAndGet() % 10 == 0 ? System.lineSeparator() + indent : ""));
 	}
 
 	public void dumpWorldGraphViz() {
@@ -90,7 +89,7 @@ public class Main {
 	}
 
 	@Bean
-	public ApplicationRunner appRunner() {
+	ApplicationRunner appRunner() {
 		return new ApplicationRunner() {
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
@@ -101,19 +100,19 @@ public class Main {
 				if (rawOutput.length() > 0) {
 					log.info("App runner produced raw output:\n{}", rawOutput);
 				} else {
-					log.info("App runner produced no output");
+					log.info("App runner produced no raw output");
 				}
 			}
 		};
 	}
 
 	@Bean
-	public String applicationTitle() {
+	String applicationTitle() {
 		return applicationTitle;
 	}
 
 	@Bean
-	public LayoutDialect layoutDialect() {
+	LayoutDialect layoutDialect() {
 		return new LayoutDialect();
 	}
 }
